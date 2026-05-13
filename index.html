@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<!-- 
+The Whispering Words Studio v2.2 - Stable
+Copyright (c) 2026 Vuyisani Madwakasa
+All Rights Reserved.
+Contact: vuvumadwakasa@gmail.com | WhatsApp: 065 706 1448
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, interactive-widget=resizes-content">
+<title>The Whispering Words Studio</title>
+<meta name="theme-color" content="#b56646">
+<meta name="description" content="Free writing studio for South African screenwriters, playwrights, and radio dramatists">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+:root{--bg:#fbf8f4;--ink:#2b2520;--accent:#b56646;--muted:#8a7f76;--line:#e6ddd3;--hint:#f2ebe3;--safe-bottom:env(safe-area-inset-bottom,0px)}
+[data-theme="dark"]{--bg:#1a1612;--ink:#fbf8f4;--accent:#d4846a;--muted:#a39a91;--line:#3a322c;--hint:#2a241f}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--bg);color:var(--ink);font-family:Inter,sans-serif;overscroll-behavior:none;transition:background.3s}
+body{display:flex;flex-direction:column}
+header{padding:14px 16px;border-bottom:1px solid var(--line);background:var(--bg);position:sticky;top:0;z-index:10}
+.h-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.logo{font-family:"Playfair Display",serif;font-weight:700;font-size:20px;display:flex;align-items:center;gap:8px}
+.logo svg{width:28px;height:28px}
+.format-select{display:flex;gap:8px}
+.format-select button{padding:6px 12px;border:1px solid var(--line);background:#fff;border-radius:8px;font-weight:600;font-size:14px;cursor:pointer}
+[data-theme="dark"].format-select button{background:#2a241f;color:var(--ink)}
+.format-select button.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.tools{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
+.tools button{padding:6px 10px;border:1px solid var(--line);background:#fff;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer}
+[data-theme="dark"].tools button{background:#2a241f;color:var(--ink)}
+.tools button:active{transform:scale(0.95)}
+#editor-wrap{flex:1;overflow:auto;padding:24px 16px 140px 16px}
+#editor{max-width:820px;margin:0 auto;font-family:"Courier Prime",monospace;font-size:12pt;line-height:1.15;outline:none;min-height:200px}
+.line{min-height:1.15em;white-space:pre-wrap;word-wrap:break-word}
+.scene{text-transform:uppercase;font-weight:700}
+.character{text-align:center;text-transform:uppercase;margin-top:1em}
+.parenthetical{text-align:center;padding:0 20%}
+.dialogue{padding:0 10% 0 20%}
+.transition{text-align:right;text-transform:uppercase;margin-top:1em}
+.act-scene{text-align:center;text-transform:uppercase;font-weight:700;margin:1em 0}
+.setting{text-align:center;font-style:italic;padding:0 10%;margin:.5em 0}
+.direction{padding-left:15%;font-style:italic;margin:.5em 0}
+.cue{font-weight:700;text-transform:uppercase;margin-top:1em}
+.sfx{text-transform:uppercase;font-weight:700}
+#hint{position:fixed;left:0;right:0;bottom:calc(84px + var(--safe-bottom));background:var(--hint);border-top:1px solid var(--line);padding:6px 16px;font-size:12px;color:var(--muted);text-align:center;z-index:5}
+#toolbar{position:fixed;left:0;right:0;bottom:calc(20px + var(--safe-bottom));background:#fff;border-top:1px solid var(--line);padding:8px;display:flex;gap:8px;overflow-x:auto;z-index:20}
+[data-theme="dark"] #toolbar{background:#2a241f}
+#toolbar button{flex:0 0 auto;min-width:64px;height:48px;border:1px solid var(--line);background:#fff;border-radius:10px;font-weight:600;font-size:12px;padding:4px 8px;cursor:pointer}
+[data-theme="dark"] #toolbar button{background:#1a1612;color:var(--ink)}
+#toolbar button.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+#toolbar button small{display:block;font-size:10px;font-weight:400;opacity:.8}
+#footer{position:fixed;left:0;right:0;bottom:0;background:var(--bg);border-top:1px solid var(--line);padding:4px 16px calc(4px + var(--safe-bottom)) 16px;text-align:center;font-size:11px;color:var(--muted);z-index:15}
+#footer a{color:var(--accent);text-decoration:none;font-weight:600}
+#lib-drawer{position:fixed;top:0;left:-320px;width:300px;height:100%;background:#fff;border-right:1px solid var(--line);transition:left.3s;z-index:30;padding:16px;overflow:auto}
+[data-theme="dark"] #lib-drawer{background:#1a1612}
+#lib-drawer.open{left:0}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.4);display:none;align-items:center;justify-content:center;z-index:40}
+.modal.open{display:flex}
+.modal-box{background:#fff;border-radius:12px;padding:20px;max-width:90%;width:420px;max-height:80vh;overflow:auto}
+[data-theme="dark"].modal-box{background:#2a241f}
+.modal-box h3{font-family:"Playfair Display",serif;margin-bottom:12px;font-size:24px}
+.modal-box h4{font-family:"Playfair Display",serif;margin:16px 0 8px;font-size:18px}
+.modal-box p{font-size:14px;line-height:1.5;margin:8px 0}
+.modal-box textarea{width:100%;height:120px;border:1px solid var(--line);border-radius:8px;padding:8px;font-family:inherit;margin:8px 0;background:var(--bg);color:var(--ink)}
+.modal-box select,.modal-box button{width:100%;padding:12px;border-radius:8px;border:1px solid var(--line);margin:6px 0;font-weight:600;font-size:15px;cursor:pointer;background:var(--bg);color:var(--ink)}
+.modal-box button.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+.modal-box button.secondary{background:var(--hint)}
+.modal-box.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.toast{position:fixed;left:50%;bottom:calc(100px + var(--safe-bottom));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:8px;font-size:14px;z-index:50;opacity:0;transition:opacity.3s}
+.toast.show{opacity:1}
+.badge{font-size:10px;padding:2px 6px;border-radius:4px;background:var(--hint);margin-left:6px}
+#install-banner{display:none;position:fixed;bottom:calc(104px + var(--safe-bottom));left:16px;right:16px;background:var(--accent);color:#fff;padding:12px;border-radius:12px;z-index:25;text-align:center;font-weight:600}
+#install-banner button{background:#fff;color:var(--accent);border:none;padding:8px 16px;border-radius:8px;margin-left:8px;font-weight:700;cursor:pointer}
+#autosave{position:fixed;top:60px;right:16px;font-size:11px;color:var(--muted);z-index:11;opacity:0;transition:opacity.3s}
+#autosave.show{opacity:1}
+@media (max-width:600px){#editor{font-size:11pt}.tools{width:100%;margin-left:0;margin-top:8px}.modal-box.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header>
+  <div class="h-row">
+    <div class="logo">
+      <svg viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="6" fill="#b56646"/><path d="M8 20L12 12L16 20L20 12L24 20" stroke="#fbf8f4" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      The Whispering Words
+    </div>
+    <div class="format-select" id="formatSelect">
+      <button data-format="screenplay" class="active">Screenplay</button>
+      <button data-format="theatre">Theatre</button>
+      <button data-format="radio">Radio</button>
+    </div>
+    <div class="tools">
+      <button id="btnDark"></button>
+      <button id="btnImport">Import</button>
+      <button id="btnLibrary">Library</button>
+      <button id="btnSave">Save</button>
+      <button id="btnShare">Share</button>
+      <button id="btnSubmit">Submit</button>
+      <button id="btnExportPDF">PDF</button>
+      <button id="btnExport">TXT</button>
+      <button id="btnTranslate">Translate</button>
+      <button id="btnAI">AI Help</button>
+    </div>
+  </div>
+</header>
+<div id="autosave">Auto-saved</div>
+<div id="editor-wrap"><div id="editor" contenteditable="true" spellcheck="false"></div></div>
+<div id="hint">ACTION ></div>
+<div id="toolbar"></div>
+<div id="install-banner">Install Whispering Words on your phone? <button id="btnInstall">Install</button></div>
+<div id="footer">© 2026 Built by Vuyisani Madwakasa · <a href="#" id="footerSubmit">Submit Your Script</a></div>
+<div id="lib-drawer"><h3 style="margin-bottom:12px;font-family:'Playfair Display',serif">Library</h3><div id="lib-list"></div><button id="btnCloseLib" style="margin-top:16px;width:100%;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);cursor:pointer;color:var(--ink)">Close</button></div>
+<div id="modal" class="modal"><div class="modal-box" id="modal-box"></div></div>
+<div id="toast" class="toast"></div>
+<input type="file" id="fileInput" accept=".txt,.fountain,.md,.pdf" style="display:none">
+
+<script>
+// === PWA SETUP ===
+(function(){
+  const manifest={name:"The Whispering Words",short_name:"WhisperingWords",description:"Writing studio by Vuyisani Madwakasa",start_url:"./",display:"standalone",background_color:"#fbf8f4",theme_color:"#b56646",icons:[{src:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='24' fill='%23b56646'/%3E%3Cpath d='M48 120L72 72L96 120L120 72L144 120' stroke='%23fbf8f4' stroke-width='12' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E",sizes:"192x192",type:"image/svg+xml"}]};
+  const manifestURL=URL.createObjectURL(new Blob([JSON.stringify(manifest)],{type:'application/json'}));
+  document.head.insertAdjacentHTML('beforeend',`<link rel="manifest" href="${manifestURL}">`);
+  if('serviceWorker' in navigator){
+    const sw=`self.addEventListener('install',e=>e.waitUntil(caches.open('ww-v3').then(c=>c.addAll(['./']))));self.addEventListener('fetch',e=>e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request))))`;
+    const swURL=URL.createObjectURL(new Blob([sw],{type:'text/javascript'}));
+    navigator.serviceWorker.register(swURL).catch(e=>console.log('SW failed:',e));
+  }
+})();
+
+const APP_OWNER="Vuyisani Madwakasa";
+const APP_EMAIL="vuvumadwakasa@gmail.com";
+const APP_PHONE="0657061448";
+
+const state={format:'screenplay',currentType:'action',scripts:JSON.parse(localStorage.getItem('ww_scripts')||'{}'),dark:localStorage.getItem('ww_dark')==='1'};
+const formats={
+  screenplay:{types:['scene','action','character','parenthetical','dialogue','transition'],labels:['SCENE','ACTION','CHARACTER','( )','DIALOGUE','TRANS'],next:{scene:'action',action:'action',character:'dialogue',parenthetical:'dialogue',dialogue:'action',transition:'scene'},classes:{scene:'scene',action:'action',character:'character',parenthetical:'parenthetical',dialogue:'dialogue',transition:'transition'}},
+  theatre:{types:['act-scene','setting','character','dialogue','direction'],labels:['ACT/SCENE','SETTING','CHAR','DIALOGUE','DIR'],next:{'act-scene':'setting',setting:'character',character:'dialogue',dialogue:'dialogue',direction:'dialogue'},classes:{'act-scene':'act-scene',setting:'setting',character:'character',dialogue:'dialogue',direction:'direction'}},
+  radio:{types:['cue','character','dialogue','sfx','music'],labels:['CUE #','CHAR','DIALOGUE','SFX','MUSIC'],next:{cue:'character',character:'dialogue',dialogue:'cue',sfx:'character',music:'character'},classes:{cue:'cue',character:'character',dialogue:'dialogue',sfx:'sfx',music:'sfx'}}
+};
+
+const editor=document.getElementById('editor');
+const toolbar=document.getElementById('toolbar');
+const hint=document.getElementById('hint');
+const fileInput=document.getElementById('fileInput');
+const autosaveEl=document.getElementById('autosave');
+let deferredPrompt,autosaveTimer;
+
+if(window.pdfjsLib)pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+document.addEventListener('DOMContentLoaded',init);
+
+function init(){
+  if(state.dark)document.documentElement.setAttribute('data-theme','dark');
+  document.getElementById('btnDark').textContent=state.dark?'':'';
+  renderToolbar();
+  newLine('action','');
+  loadLibrary();
+  bindEvents();
+  handleKeyboard();
+  initPWA();
+  initAutoSave();
+  if(!Object.keys(state.scripts).length)loadSamples();
+}
+
+function initPWA(){
+  window.addEventListener('beforeinstallprompt',(e)=>{
+    e.preventDefault();
+    deferredPrompt=e;
+    document.getElementById('install-banner').style.display='block';
+  });
+  document.getElementById('btnInstall').onclick=async()=>{
+    if(deferredPrompt){
+      deferredPrompt.prompt();
+      await deferredPrompt.userChoice;
+      deferredPrompt=null;
+      document.getElementById('install-banner').style.display='none';
+    }
+  };
+}
+
+function initAutoSave(){
+  editor.addEventListener('input',()=>{
+    clearTimeout(autosaveTimer);
+    autosaveTimer=setTimeout(()=>{
+      const content=getScriptText();
+      if(content.trim()){
+        localStorage.setItem('ww_autosave',JSON.stringify({content,format:state.format,date:new Date().toISOString()}));
+        autosaveEl.classList.add('show');
+        setTimeout(()=>autosaveEl.classList.remove('show'),2000);
+      }
+    },10000);
+  });
+  const draft=localStorage.getItem('ww_autosave');
+  if(draft&&!editor.textContent.trim()){
+    const data=JSON.parse(draft);
+    if(confirm('Restore auto-saved draft from '+new Date(data.date).toLocaleString()+'?')){
+      editor.innerHTML='';
+      data.content.split('\n').forEach(line=>newLine('action',line));
+      state.format=data.format;
+      document.querySelectorAll('#formatSelect button').forEach(b=>b.classList.toggle('active',b.dataset.format===data.format));
+      renderToolbar();
+    }
+  }
+}
+
+function renderToolbar(){
+  const f=formats[state.format];
+  toolbar.innerHTML='';
+  f.types.forEach(type=>{
+    const btn=document.createElement('button');
+    btn.innerHTML=f.labels[f.types.indexOf(type)]+'<small>'+type+'</small>';
+    btn.dataset.type=type;
+    if(type===state.currentType)btn.classList.add('active');
+    btn.onclick=()=>setType(type);
+    toolbar.appendChild(btn);
+  });
+}
+
+function setType(type){
+  state.currentType=type;
+  document.querySelectorAll('#toolbar button').forEach(b=>b.classList.toggle('active',b.dataset.type===type));
+  hint.textContent=type.toUpperCase().replace('-','/')+' >';
+  const sel=window.getSelection();
+  if(!sel.rangeCount)return;
+  let node=sel.anchorNode;
+  while(node&&node.nodeType!==1)node=node.parentNode;
+  if(!node||!node.classList.contains('line'))return;
+  const f=formats[state.format];
+  node.className='line '+(f.classes[type]||'');
+  applyFormatting(node,type);
+  if(navigator.vibrate)navigator.vibrate(10);
+  node.focus();
+}
+
+function applyFormatting(el,type){
+  let text=el.textContent;
+  if(state.format==='screenplay'){
+    if(type==='scene'&&!/^INT\.|EXT\./i.test(text))el.textContent='INT. '+text;
+    if(type==='transition'&&!/TO:$/i.test(text)&&text.trim())el.textContent=text.trim()+' TO:';
+    if(type==='parenthetical'&&!/^\(.*\)$/.test(text)&&text.trim())el.textContent='('+text.replace(/[()]/g,'')+')';
+  }
+  if(state.format==='theatre'){
+    if((type==='setting'||type==='direction')&&!/^\[.*\]$/.test(text)&&text.trim())el.textContent='['+text.replace(/[\[\]]/g,'')+']';
+  }
+  if(state.format==='radio'){
+    if(type==='cue'){const num=document.querySelectorAll('.cue').length+1;if(!/^\d+\./.test(text))el.textContent=num+'. '+text}
+    if(type==='sfx'&&!/^SFX:/i.test(text)&&text.trim())el.textContent='SFX: '+text;
+    if(type==='music'&&!/^MUSIC:/i.test(text)&&text.trim())el.textContent='MUSIC: '+text;
+  }
+}
+
+function newLine(type,text=''){
+  const div=document.createElement('div');
+  div.className='line '+(formats[state.format].classes[type]||'');
+  div.textContent=text;
+  div.setAttribute('contenteditable','true');
+  editor.appendChild(div);
+  setType(type);
+  const range=document.createRange();
+  range.selectNodeContents(div);
+  range.collapse(false);
+  const sel=window.getSelection();
+  sel.removeAllRanges();
+  sel.addRange(range);
+  div.focus();
+  return div;
+}
+
+function handleKeyboard(){
+  editor.addEventListener('keydown',e=>{
+    if(e.key==='Enter'){
+      e.preventDefault();
+      const next=formats[state.format].next[state.currentType]||'action';
+      newLine(next,'');
+    }
+  });
+  if(window.visualViewport){
+    const vv=window.visualViewport;
+    const adjust=()=>{
+      toolbar.style.bottom=(window.innerHeight-vv.height-vv.offsetTop+20)+'px';
+      hint.style.bottom=(window.innerHeight-vv.height-vv.offsetTop+84)+'px';
+    };
+    vv.addEventListener('resize',adjust);
+    vv.addEventListener('scroll',adjust);
+    adjust();
+  }
+}
+
+function bindEvents(){
+  document.querySelectorAll('#formatSelect button').forEach(btn=>{
+    btn.onclick=function(){
+      document.querySelectorAll('#formatSelect button').forEach(b=>b.classList.remove('active'));
+      this.classList.add('active');
+      state.format=this.dataset.format;
+      editor.innerHTML='';
+      newLine(formats[state.format].types[1],'');
+      renderToolbar();
+    };
+  });
+  document.getElementById('btnDark').onclick=toggleDark;
+  document.getElementById('btnSave').onclick=saveScript;
+  document.getElementById('btnLibrary').onclick=()=>document.getElementById('lib-drawer').classList.add('open');
+  document.getElementById('btnCloseLib').onclick=closeLib;
+  document.getElementById('btnExport').onclick=exportTxt;
+  document.getElementById('btnExportPDF').onclick=exportPDF;
+  document.getElementById('btnShare').onclick=shareScript;
+  document.getElementById('btnSubmit').onclick=openSubmit;
+  document.getElementById('footerSubmit').onclick=(e)=>{e.preventDefault();openSubmit()};
+  document.getElementById('btnImport').onclick=()=>fileInput.click();
+  fileInput.onchange=handleImport;
+  document.getElementById('btnTranslate').onclick=openTranslate;
+  document.getElementById('btnAI').onclick=openAI;
+}
+
+function toggleDark(){
+  state.dark=!state.dark;
+  document.documentElement.setAttribute('data-theme',state.dark?'dark':'');
+  localStorage.setItem('ww_dark',state.dark?'1':'0');
+  document.getElementById('btnDark').textContent=state.dark?'':'';
+}
+
+function saveScript(){
+  const title=prompt('Title for your script:','Untitled');
+  if(!title)return;
+  const content=getScriptText();
+  state.scripts[title]={content,format:state.format,date:new Date().toISOString(),source:'created',owner:APP_OWNER};
+  localStorage.setItem('ww_scripts',JSON.stringify(state.scripts));
+  loadLibrary();
+  toast('Saved to Library');
+}
+
+function loadLibrary(){
+  const list=document.getElementById('lib-list');
+  list.innerHTML='';
+  Object.keys(state.scripts).forEach(title=>{
+    const data=state.scripts[title];
+    const btn=document.createElement('button');
+    btn.style.cssText='width:100%;text-align:left;padding:10px;margin:4px 0;border:1px solid var(--line);border-radius:8px;background:var(--bg);cursor:pointer;color:var(--ink)';
+    const badge=data.source==='imported'?'<span class="badge">Imported</span>':'<span class="badge">Created</span>';
+    btn.innerHTML='<strong>'+title+'</strong>'+badge+'<br><small>'+data.format+' • '+new Date(data.date).toLocaleDateString()+'</small>';
+    btn.onclick=()=>{
+      editor.innerHTML='';
+      data.content.split('\n').forEach(line=>newLine('action',line));
+      state.format=data.format;
+      document.querySelectorAll('#formatSelect button').forEach(b=>b.classList.toggle('active',b.dataset.format===data.format));
+      renderToolbar();
+      closeLib();
+    };
+    list.appendChild(btn);
+  });
+}
+
+function closeLib(){document.getElementById('lib-drawer').classList.remove('open')}
+function getScriptText(){return Array.from(editor.getElementsByClassName('line')).map(l=>l.textContent).join('\n')}
+
+function exportTxt(){
+  const txt='<!-- Whispering Words Export v1 -->\n<!-- Format: '+state.format.toUpperCase()+' -->\n<!-- Created: '+new Date().toISOString()+' -->\n<!-- Owner: '+APP_OWNER+' -->\n\n'+getScriptText();
+  const blob=new Blob([txt],{type:'text/plain'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='script.txt';
+  a.click();
+  toast('Exported TXT');
+}
+
+function exportPDF(){
+  const {jsPDF}=window.jspdf;
+  const doc=new jsPDF({unit:'in',format:'letter'});
+  doc.setFont('Courier','normal');
+  doc.setFontSize(12);
+  const lines=getScriptText().split('\n');
+  let y=1;
+  const lineHeight=0.167;
+  const pageHeight=10;
+  lines.forEach(line=>{
+    if(y>pageHeight){doc.addPage();y=1;}
+    let x=1.5;
+    if(line.match(/^(INT\.|EXT\.)/i))x=1.5;
+    else if(line.match(/^[A-Z\s]+$/)&&line===line.toUpperCase()&&line.length<40)x=3.5;
+    else if(line.startsWith('(')&&line.endsWith(')'))x=3;
+    else if(line.length>0&&line===line.toUpperCase()&&!line.includes('INT.')&&!line.includes('EXT.')&&!line.includes('TO:'))x=3.7;
+    else if(line.includes('TO:'))x=5.5;
+    doc.text(line,x,y);
+    y+=lineHeight;
+  });
+  doc.setFontSize(8);
+  doc.text('Created with The Whispering Words by '+APP_OWNER,0.5,10.5);
+  doc.save('script.pdf');
+  toast('PDF Downloaded');
+}
+
+function shareScript(){
+  const text=getScriptText();
+  if(!text.trim()){toast('Write something first');return}
+  if(navigator.share){
+    navigator.share({title:'Script from Whispering Words',text:text}).then(()=>toast('Shared')).catch(()=>{});
+    return;
+  }
+  showModal('<h3>Share Script</h3><p style="font-size:14px;margin:12px 0">Send this script to '+APP_OWNER+':</p><div class="grid"><button class="primary" onclick="shareEmail()">Email</button><button class="primary" onclick="shareWhatsApp()">WhatsApp</button></div><button class="secondary" onclick="copyScript()">Copy Text</button><button class="secondary" onclick="exportPDF();closeModal()">Download PDF</button><button onclick="closeModal()">Cancel</button>');
+}
+
+function openSubmit(){
+  showModal('<h3>Submit Your Script to Vuyisani</h3><p>The Whispering Words is built for South African writers. All scripts remain your property.</p><h4>Option 1: Send from the app</h4><p>Write here, then tap <strong>Share</strong>  Email or WhatsApp</p><h4>Option 2: Send directly</h4><div class="grid"><button class="primary" onclick="window.location.href=\'mailto:'+APP_EMAIL+'?subject=Script Submission\'">Email Me</button><button class="primary" onclick="window.open(\'https://wa.me/27'+APP_PHONE.substring(1)+'?text=Hi%20Vuyisani,%20I%20want%20to%20submit%20a%20script\',\'_blank\')">WhatsApp Me</button></div><p style="margin-top:16px;padding:12px;background:var(--hint);border-radius:8px;font-size:13px"><strong>Copyright:</strong> You own your work. The Whispering Words never claims rights to your scripts.</p><button onclick="closeModal()">Close</button>');
+}
+
+function shareEmail(){
+  const text=encodeURIComponent(getScriptText());
+  window.location.href='mailto:'+APP_EMAIL+'?subject=Script from Whispering Words&body='+text;
+  closeModal();
+}
+
+function shareWhatsApp(){
+  const text=encodeURIComponent('Script from Whispering Words:\n\n'+getScriptText());
+  window.open('https://wa.me/27'+APP_PHONE.substring(1)+'?text='+text,'_blank');
+  closeModal();
+}
+
+function copyScript(){
+  navigator.clipboard.writeText(getScriptText()).then(()=>{
+    toast('Script copied to clipboard');
+    closeModal();
+  });
+}
+
+function handleImport(e){
+  const file=e.target.files[0];
+  if(!file)return;
+  if(file.name.endsWith('.pdf')&&window.pdfjsLib){
+    importPDF(file);
+  }else{
+    const reader=new FileReader();
+    reader.onload=()=>processImportText(reader.result,file.name);
+    reader.readAsText(file);
+  }
+  fileInput.value='';
+}
+
+async function importPDF(file){
+  toast('Reading PDF...');
+  const arrayBuffer=await file.arrayBuffer();
+  const pdf=await pdfjsLib.getDocument(arrayBuffer).promise;
+  let text='';
+  for(let i=1;i<=pdf.numPages;i++){
+    const page=await pdf.getPage(i);
+    const content=await page.getTextContent();
+    text+=content.items.map(item=>item.str).join(' ')+'\n';
+  }
+  processImportText(text,file.name,true);
+}
+
+function processImportText(text,filename){
+  const isWW=text.indexOf('Whispering Words Export')>-1;
+  if(isWW){
+    loadImportedText(text,filename,'created');
+    return;
+  }
+  showModal('<h3>Import Document</h3><p style="font-size:14px;margin:12px 0">You are about to import an external file.<br><br>By continuing, you confirm that you own the rights to this work or have permission to edit it.</p><button class="primary" id="confirmImport">I Confirm & Import</button><button class="secondary" onclick="closeModal()">Cancel</button>');
+  document.getElementById('confirmImport').onclick=()=>{
+    closeModal();
+    loadImportedText(text,filename,'imported');
+  };
+}
+
+function loadImportedText(text,filename,source){
+  editor.innerHTML='';
+  text.split('\n').forEach(line=>{
+    if(line.indexOf('Whispering Words Export')>-1||line.indexOf('Format:')>-1||line.indexOf('Created:')>-1||line.indexOf('Owner:')>-1)return;
+    newLine('action',line);
+  });
+  autoDetectFormat();
+  toast('Imported. Please ensure you have rights to edit this work.');
+  const title=filename.replace(/\.[^/.]+$/,"");
+  state.scripts[title]={content:text,format:state.format,date:new Date().toISOString(),source:source,owner:APP_OWNER};
+  localStorage.setItem('ww_scripts',JSON.stringify(state.scripts));
+  loadLibrary();
+}
+
+function autoDetectFormat(){
+  const allText=editor.innerText;
+  if(/INT\.|EXT\.|CUT TO:/i.test(allText))state.format='screenplay';
+  else if(/ACT\s+[IVX\d]|SCENE\s+\d|\[.*\]/.test(allText))state.format='theatre';
+  else if(/SFX:|MUSIC:|CUE\s*\d/i.test(allText))state.format='radio';
+  document.querySelectorAll('#formatSelect button').forEach(b=>b.classList.toggle('active',b.dataset.format===data.format));
+  renderToolbar();
+}
+
+function openTranslate(){
+  const sel=window.getSelection().toString()||editor.innerText;
+  showModal('<h3>Translate</h3><textarea id="tr-text">'+sel.slice(0,500)+'</textarea><select id="tr-lang"><option value="zu">isiZulu</option><option value="xh">isiXhosa</option><option value="af">Afrikaans</option><option value="st">Sesotho</option><option value="tn">Setswana</option><option value="en">English</option><option value="fr">French</option><option value="pt">Portuguese</option><option value="sw">Swahili</option><option value="hi">Hindi</option><option value="ar">Arabic</option><option value="zh">Mandarin</option><option value="es">Spanish</option></select><button class="primary" onclick="doTranslate()">Translate</button><button onclick="closeModal()">Close</button><div id="tr-out" style="margin-top:12px;font-size:14px"></div>');
+}
+
+function doTranslate(){
+  const text=document.getElementById('tr-text').value;
+  const lang=document.getElementById('tr-lang').value;
+  document.getElementById('tr-out').textContent='Translating...';
+  fetch('https://api.mymemory.translated.net/get?q='+encodeURIComponent(text)+'&langpair=en|'+lang)
+.then(r=>r.json())
+.then(d=>{document.getElementById('tr-out').textContent=d.responseData.translatedText||'Error'})
+.catch(()=>{document.getElementById('tr-out').textContent='Translation failed. Check connection.'});
+}
+
+function openAI(){
+  showModal('<h3>AI Help</h3><button onclick="aiInsert(\'Make the dialogue sound more natural and South African.\')">Make dialogue natural</button><button onclick="aiInsert(\'Add conflict or tension to this scene.\')">Add conflict</button><button onclick="aiInsert(\'Convert this to theatre format.\')">To theatre format</button><button onclick="aiInsert
