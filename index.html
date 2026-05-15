@@ -5,14 +5,38 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>The Whispering Words</title>
 <style>
-body{margin:0;font-family:Courier,monospace;background:#f5f5f5}
+body{margin:0;font-family:'Courier New',monospace;background:#f5f5f5}
 header{background:#8B4513;color:#fff;padding:12px;text-align:center;font-weight:bold}
 .quick-buttons{display:flex;flex-wrap:wrap;gap:6px;padding:8px;background:#fff;border-bottom:2px solid #8B4513}
 .quick-buttons button{padding:8px 10px;background:#8B4513;color:#fff;border:none;border-radius:4px;font-size:12px;font-weight:bold}
-#editor{width:100%;height:55vh;padding:16px;border:none;font-size:16px;line-height:1.5;box-sizing:border-box}
+#editor{width:100%;height:55vh;padding:16px;background:#fff;font-size:16px;line-height:1.5;box-sizing:border-box;font-family:'Courier New',monospace;overflow-y:auto;outline:none}
+#editor div{min-height:20px}
+/* Screenplay Format */
+.screenplay .scene{margin-left:0;text-transform:uppercase;font-weight:bold}
+.screenplay .action{margin-left:0}
+.screenplay .character{margin-left:3.7in;text-transform:uppercase}
+.screenplay .dialogue{margin-left:2.5in;margin-right:1.5in}
+.screenplay .paren{margin-left:3.1in}
+.screenplay .transition{text-align:right;text-transform:uppercase;font-weight:bold}
+/* Theatre Format */
+.theatre .scene{margin-left:0;font-weight:bold;text-decoration:underline}
+.theatre .action{margin-left:0;font-style:italic}
+.theatre .character{margin-left:0;text-transform:uppercase;font-weight:bold}
+.theatre .dialogue{margin-left:0.5in}
+.theatre .paren{margin-left:0.5in;font-style:italic}
+.theatre .transition{display:none}
+/* Radio Format */
+.radio .scene{margin-left:0;font-weight:bold}
+.radio .action{margin-left:0;font-style:italic}
+.radio .character{margin-left:0;text-transform:uppercase;font-weight:bold}
+.radio .dialogue{margin-left:0}
+.radio .paren{margin-left:0;font-style:italic}
+.radio .sfx{margin-left:0;text-transform:uppercase;font-weight:bold}
+.radio .music{margin-left:0;text-transform:uppercase;font-weight:bold}
+.radio .transition{display:none}
 .toolbar{display:flex;flex-wrap:wrap;gap:6px;padding:10px;background:#fff;border-top:1px solid #ddd}
 .toolbar button,.toolbar select{padding:8px 10px;background:#333;color:#fff;border:none;border-radius:4px;font-size:12px}
-#save{position:fixed;top:8px;right:8px;background:#2e7d32}
+#save{position:fixed;top:8px;right:8px;background:#2e7d32;z-index:10}
 footer{text-align:center;padding:8px;font-size:10px;color:#666}
 </style>
 </head>
@@ -20,20 +44,18 @@ footer{text-align:center;padding:8px;font-size:10px;color:#666}
 <header>The Whispering Words</header>
 <button id="save" onclick="saveScript()">Save</button>
 
-<!-- NEW: Simple tap buttons for beginners -->
-<div class="quick-buttons">
-<button onclick="add('INT. ')">INT/EXT</button>
-<button onclick="add('')">ACTION</button>
-<button onclick="add('')">CHARACTER</button>
-<button onclick="add('()')">()</button>
-<button onclick="add('FADE OUT.')">TRANSITION</button>
+<div class="quick-buttons" id="quickButtons">
+<button onclick="addScene()">INT/EXT</button>
+<button onclick="addAction()">ACTION</button>
+<button onclick="addCharacter()">CHARACTER</button>
+<button onclick="addParen()">()</button>
+<button onclick="addTransition()">TRANSITION</button>
 </div>
 
-<textarea id="editor" placeholder="Tap a button above to start, or start typing..."></textarea>
+<div id="editor" contenteditable="true" class="screenplay" placeholder="Tap a button above to start..."></div>
 
-<!-- Your existing pro toolbar -->
 <div class="toolbar">
-<select onchange="setMode(this.value)">
+<select id="modeSelect" onchange="setMode(this.value)">
 <option value="screenplay">Screenplay</option>
 <option value="theatre">Theatre</option>
 <option value="radio">Radio</option>
@@ -51,18 +73,112 @@ footer{text-align:center;padding:8px;font-size:10px;color:#666}
 
 <script>
 const e=document.getElementById('editor');
-e.value=localStorage.getItem('script')||'';
+const modeSelect=document.getElementById('modeSelect');
+const quickButtons=document.getElementById('quickButtons');
+let currentMode='screenplay';
 
-function add(t){e.value+=t;e.focus();saveScript()}
-function saveScript(){localStorage.setItem('script',e.value)}
-function setMode(m){alert('Mode: '+m+' — formatting coming soon')}
+e.innerHTML=localStorage.getItem('script')||'<div class="action"><br></div>';
+setMode(localStorage.getItem('mode')||'screenplay');
+
+function saveScript(){
+  localStorage.setItem('script',e.innerHTML);
+  localStorage.setItem('mode',currentMode);
+}
+
+function setMode(mode){
+  currentMode=mode;
+  e.className=mode;
+  modeSelect.value=mode;
+  updateButtons();
+  saveScript();
+}
+
+function updateButtons(){
+  if(currentMode==='screenplay'){
+    quickButtons.innerHTML=`
+      <button onclick="addScene()">INT/EXT</button>
+      <button onclick="addAction()">ACTION</button>
+      <button onclick="addCharacter()">CHARACTER</button>
+      <button onclick="addParen()">()</button>
+      <button onclick="addTransition()">TRANSITION</button>
+    `;
+  }else if(currentMode==='theatre'){
+    quickButtons.innerHTML=`
+      <button onclick="addScene()">SCENE</button>
+      <button onclick="addAction()">STAGE DIR</button>
+      <button onclick="addCharacter()">CHARACTER</button>
+      <button onclick="addParen()">()</button>
+    `;
+  }else if(currentMode==='radio'){
+    quickButtons.innerHTML=`
+      <button onclick="addScene()">SCENE</button>
+      <button onclick="addAction()">DIRECTION</button>
+      <button onclick="addCharacter()">CHARACTER</button>
+      <button onclick="addSFX()">SFX</button>
+      <button onclick="addMusic()">MUSIC</button>
+    `;
+  }
+}
+
+function addLine(className, text){
+  const div=document.createElement('div');
+  div.className=className;
+  div.innerHTML=text || '<br>';
+  e.appendChild(div);
+  placeCursor(div);
+  saveScript();
+}
+
+function placeCursor(el){
+  const range=document.createRange();
+  const sel=window.getSelection();
+  range.setStart(el, el.childNodes.length);
+  range.collapse(true);
+  sel.removeAllRanges();
+  sel.addRange(range);
+  e.focus();
+}
+
+function addScene(){
+  if(currentMode==='screenplay') addLine('scene','INT. ');
+  else addLine('scene','SCENE: ');
+}
+function addAction(){addLine('action','')}
+function addCharacter(){addLine('character','')}
+function addParen(){addLine('paren','()')}
+function addTransition(){addLine('transition','FADE OUT:')}
+function addSFX(){addLine('sfx','SFX: ')}
+function addMusic(){addLine('music','MUSIC: ')}
+
+e.addEventListener('keydown',function(ev){
+  if(ev.key==='Enter'){
+    ev.preventDefault();
+    if(currentMode==='screenplay') addAction();
+    else addLine('dialogue','');
+  }
+});
+
 function importFile(){alert('Import: Paste your script into the editor')}
 function showLibrary(){alert('Library: All saves are automatic')}
-function share(){navigator.share?navigator.share({text:e.value}):alert('Copied!');navigator.clipboard.writeText(e.value)}
-function exportPDF(){const w=window.open();w.document.write('<pre style="font-family:Courier;font-size:12pt">'+e.value+'</pre>');w.print()}
-function exportTXT(){const a=document.createElement('a');a.href='data:text/plain,'+encodeURIComponent(e.value);a.download='script.txt';a.click()}
-function translate(){alert('Translate: Coming soon for SA languages')}
-function aiHelp(){alert('AI Help: Ask me anything about your script')}
+function share(){
+  const text=e.innerText;
+  navigator.share?navigator.share({text:text}):alert('Copied!');
+  navigator.clipboard.writeText(text);
+}
+function exportPDF(){
+  const w=window.open();
+  w.document.write('<html><head><title>Script</title><style>body{font-family:Courier;font-size:12pt;line-height:1.5}'+document.querySelector('style').innerHTML+'</style></head><body class="'+currentMode+'">'+e.innerHTML+'</body></html>');
+  w.print();
+}
+function exportTXT(){
+  const a=document.createElement('a');
+  a.href='data:text/plain,'+encodeURIComponent(e.innerText);
+  a.download=currentMode+'-script.txt';
+  a.click();
+}
+function translate(){alert('Translate: Coming soon for isiZulu, isiXhosa, Sesotho, Setswana')}
+function aiHelp(){alert('AI Help: Ask me about '+currentMode+' structure')}
+e.addEventListener('input',saveScript);
 </script>
 </body>
 </html>
