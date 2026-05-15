@@ -2,74 +2,102 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>The Whispering Words</title>
 <style>
-body{margin:0;font-family:'Courier New',monospace;background:#f5f5f5}
-header{background:#8B4513;color:#fff;padding:12px;text-align:center;font-weight:bold}
-.quick-buttons{display:flex;flex-wrap:wrap;gap:6px;padding:8px;background:#fff;border-bottom:2px solid #8B4513}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Courier New',monospace;background:#f5f5f5;height:100vh;display:flex;flex-direction:column}
+header{background:#8B4513;color:#fff;padding:10px;text-align:center;font-weight:bold;flex-shrink:0}
+.top-bar{position:sticky;top:0;z-index:100;background:#fff;border-bottom:2px solid #8B4513;flex-shrink:0}
+.quick-buttons{display:flex;flex-wrap:wrap;gap:6px;padding:8px}
 .quick-buttons button{padding:8px 10px;background:#8B4513;color:#fff;border:none;border-radius:4px;font-size:12px;font-weight:bold}
-#editor{width:100%;height:55vh;padding:16px;background:#fff;font-size:16px;line-height:1.5;box-sizing:border-box;font-family:'Courier New',monospace;overflow-y:auto;outline:none}
+#editor{flex:1;padding:16px;background:#fff;font-size:16px;line-height:1.2;font-family:'Courier New',monospace;overflow-y:auto;outline:none}
 #editor div{min-height:20px}
-/* Screenplay Format */
-.screenplay .scene{margin-left:0;text-transform:uppercase;font-weight:bold}
-.screenplay .action{margin-left:0}
-.screenplay .character{margin-left:3.7in;text-transform:uppercase}
-.screenplay .dialogue{margin-left:2.5in;margin-right:1.5in}
-.screenplay .paren{margin-left:3.1in}
-.screenplay .transition{text-align:right;text-transform:uppercase;font-weight:bold}
+/* Screenplay Format - MOBILE FIXED */
+.screenplay .scene{margin-left:0;text-transform:uppercase;font-weight:bold;margin-top:16px}
+.screenplay .action{margin-left:0;max-width:100%}
+.screenplay .character{text-align:center;text-transform:uppercase;width:100%;margin-top:16px;font-weight:bold}
+.screenplay .dialogue{margin-left:10%;margin-right:10%;width:80%}
+.screenplay .paren{text-align:center;width:100%}
+.screenplay .transition{text-align:right;text-transform:uppercase;font-weight:bold;margin-top:16px}
 /* Theatre Format */
-.theatre .scene{margin-left:0;font-weight:bold;text-decoration:underline}
+.theatre .scene{margin-left:0;font-weight:bold;text-decoration:underline;margin-top:16px}
 .theatre .action{margin-left:0;font-style:italic}
-.theatre .character{margin-left:0;text-transform:uppercase;font-weight:bold}
-.theatre .dialogue{margin-left:0.5in}
-.theatre .paren{margin-left:0.5in;font-style:italic}
+.theatre .character{margin-left:0;text-transform:uppercase;font-weight:bold;margin-top:16px}
+.theatre .dialogue{margin-left:5%}
+.theatre .paren{margin-left:5%;font-style:italic}
 .theatre .transition{display:none}
 /* Radio Format */
-.radio .scene{margin-left:0;font-weight:bold}
+.radio .scene{margin-left:0;font-weight:bold;margin-top:16px}
 .radio .action{margin-left:0;font-style:italic}
-.radio .character{margin-left:0;text-transform:uppercase;font-weight:bold}
+.radio .character{margin-left:0;text-transform:uppercase;font-weight:bold;margin-top:16px}
 .radio .dialogue{margin-left:0}
 .radio .paren{margin-left:0;font-style:italic}
 .radio .sfx{margin-left:0;text-transform:uppercase;font-weight:bold}
 .radio .music{margin-left:0;text-transform:uppercase;font-weight:bold}
 .radio .transition{display:none}
-.toolbar{display:flex;flex-wrap:wrap;gap:6px;padding:10px;background:#fff;border-top:1px solid #ddd}
+.bottom-bar{position:sticky;bottom:0;z-index:100;background:#fff;border-top:1px solid #ddd;flex-shrink:0}
+.toolbar{display:flex;flex-wrap:wrap;gap:6px;padding:8px}
 .toolbar button,.toolbar select{padding:8px 10px;background:#333;color:#fff;border:none;border-radius:4px;font-size:12px}
-#save{position:fixed;top:8px;right:8px;background:#2e7d32;z-index:10}
-footer{text-align:center;padding:8px;font-size:10px;color:#666}
+#save{position:fixed;top:8px;right:8px;background:#2e7d32;z-index:200;padding:6px 12px;border:none;color:#fff;border-radius:4px}
+footer{text-align:center;padding:6px;font-size:10px;color:#666;background:#eee}
+.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);z-index:300}
+.modal-content{background:#fff;margin:10% auto;padding:20px;width:90%;max-width:500px;border-radius:8px}
+.modal textarea{width:100%;height:200px;margin:10px 0}
 </style>
 </head>
 <body>
 <header>The Whispering Words</header>
 <button id="save" onclick="saveScript()">Save</button>
 
-<div class="quick-buttons" id="quickButtons">
-<button onclick="addScene()">INT/EXT</button>
-<button onclick="addAction()">ACTION</button>
-<button onclick="addCharacter()">CHARACTER</button>
-<button onclick="addParen()">()</button>
-<button onclick="addTransition()">TRANSITION</button>
+<div class="top-bar">
+  <div class="quick-buttons" id="quickButtons"></div>
 </div>
 
-<div id="editor" contenteditable="true" class="screenplay" placeholder="Tap a button above to start..."></div>
+<div id="editor" contenteditable="true" class="screenplay"></div>
 
-<div class="toolbar">
-<select id="modeSelect" onchange="setMode(this.value)">
-<option value="screenplay">Screenplay</option>
-<option value="theatre">Theatre</option>
-<option value="radio">Radio</option>
-</select>
-<button onclick="importFile()">Import</button>
-<button onclick="showLibrary()">Library</button>
-<button onclick="share()">Share</button>
-<button onclick="exportPDF()">PDF</button>
-<button onclick="exportTXT()">TXT</button>
-<button onclick="translate()">Translate</button>
-<button onclick="aiHelp()">AI Help</button>
+<div class="bottom-bar">
+  <div class="toolbar">
+    <select id="modeSelect" onchange="setMode(this.value)">
+      <option value="screenplay">Screenplay</option>
+      <option value="theatre">Theatre</option>
+      <option value="radio">Radio</option>
+    </select>
+    <button onclick="showImport()">Import</button>
+    <button onclick="showLibrary()">Library</button>
+    <button onclick="share()">Share</button>
+    <button onclick="exportPDF()">PDF</button>
+    <button onclick="exportTXT()">TXT</button>
+    <button onclick="showTranslate()">Translate</button>
+    <button onclick="showAIHelp()">AI Help</button>
+  </div>
+  <footer>2026 Built by Vuyisani Madwakasa for SA Creatives</footer>
 </div>
 
-<footer>2026 Built by Vuyisani Madwakasa for SA Creatives</footer>
+<!-- Import Modal -->
+<div id="importModal" class="modal">
+  <div class="modal-content">
+    <h3>Import Script</h3>
+    <p>Paste your script below:</p>
+    <textarea id="importText"></textarea>
+    <button onclick="doImport()">Import</button>
+    <button onclick="closeModal('importModal')">Cancel</button>
+  </div>
+</div>
+
+<!-- AI Help Modal -->
+<div id="aiModal" class="modal">
+  <div class="modal-content">
+    <h3>AI Help for SA Creatives</h3>
+    <p><b>Quick Tips:</b></p>
+    <p>1. <b>INT/EXT</b> = Inside or Outside location<br>
+    2. <b>ACTION</b> = What we see<br>
+    3. <b>CHARACTER</b> = Who speaks, auto-centered<br>
+    4. <b>DIALOGUE</b> = What they say, hit Enter after CHARACTER<br>
+    5. Keep scenes under 3 pages</p>
+    <button onclick="closeModal('aiModal')">Got it</button>
+  </div>
+</div>
 
 <script>
 const e=document.getElementById('editor');
@@ -99,6 +127,7 @@ function updateButtons(){
       <button onclick="addScene()">INT/EXT</button>
       <button onclick="addAction()">ACTION</button>
       <button onclick="addCharacter()">CHARACTER</button>
+      <button onclick="addDialogue()">DIALOGUE</button>
       <button onclick="addParen()">()</button>
       <button onclick="addTransition()">TRANSITION</button>
     `;
@@ -107,6 +136,7 @@ function updateButtons(){
       <button onclick="addScene()">SCENE</button>
       <button onclick="addAction()">STAGE DIR</button>
       <button onclick="addCharacter()">CHARACTER</button>
+      <button onclick="addDialogue()">DIALOGUE</button>
       <button onclick="addParen()">()</button>
     `;
   }else if(currentMode==='radio'){
@@ -114,6 +144,7 @@ function updateButtons(){
       <button onclick="addScene()">SCENE</button>
       <button onclick="addAction()">DIRECTION</button>
       <button onclick="addCharacter()">CHARACTER</button>
+      <button onclick="addDialogue()">DIALOGUE</button>
       <button onclick="addSFX()">SFX</button>
       <button onclick="addMusic()">MUSIC</button>
     `;
@@ -132,8 +163,8 @@ function addLine(className, text){
 function placeCursor(el){
   const range=document.createRange();
   const sel=window.getSelection();
-  range.setStart(el, el.childNodes.length);
-  range.collapse(true);
+  range.selectNodeContents(el);
+  range.collapse(false);
   sel.removeAllRanges();
   sel.addRange(range);
   e.focus();
@@ -145,6 +176,7 @@ function addScene(){
 }
 function addAction(){addLine('action','')}
 function addCharacter(){addLine('character','')}
+function addDialogue(){addLine('dialogue','')}
 function addParen(){addLine('paren','()')}
 function addTransition(){addLine('transition','FADE OUT:')}
 function addSFX(){addLine('sfx','SFX: ')}
@@ -153,22 +185,33 @@ function addMusic(){addLine('music','MUSIC: ')}
 e.addEventListener('keydown',function(ev){
   if(ev.key==='Enter'){
     ev.preventDefault();
-    if(currentMode==='screenplay') addAction();
-    else addLine('dialogue','');
+    const sel=window.getSelection();
+    const node=sel.anchorNode.parentElement;
+    if(node.classList.contains('character')||node.classList.contains('paren')){
+      addDialogue();
+    }else{
+      addAction();
+    }
   }
 });
 
-function importFile(){alert('Import: Paste your script into the editor')}
-function showLibrary(){alert('Library: All saves are automatic')}
+// Fixed Functions
+function showImport(){document.getElementById('importModal').style.display='block'}
+function doImport(){
+  e.innerHTML='<div class="action">'+document.getElementById('importText').value.replace(/\n/g,'</div><div class="action">')+'</div>';
+  closeModal('importModal');
+  saveScript();
+}
+function showLibrary(){alert('Library: All scripts auto-save. Close/reopen app to see your work.')}
 function share(){
   const text=e.innerText;
-  navigator.share?navigator.share({text:text}):alert('Copied!');
-  navigator.clipboard.writeText(text);
+  if(navigator.share){navigator.share({title:'My Script',text:text})}
+  else{navigator.clipboard.writeText(text);alert('Script copied to clipboard!')}
 }
 function exportPDF(){
   const w=window.open();
-  w.document.write('<html><head><title>Script</title><style>body{font-family:Courier;font-size:12pt;line-height:1.5}'+document.querySelector('style').innerHTML+'</style></head><body class="'+currentMode+'">'+e.innerHTML+'</body></html>');
-  w.print();
+  w.document.write('<html><head><title>Script</title><style>body{font-family:Courier;font-size:12pt;line-height:1.2}'+document.querySelector('style').innerHTML+'</style></head><body class="'+currentMode+'">'+e.innerHTML+'</body></html>');
+  setTimeout(()=>w.print(),500);
 }
 function exportTXT(){
   const a=document.createElement('a');
@@ -176,9 +219,11 @@ function exportTXT(){
   a.download=currentMode+'-script.txt';
   a.click();
 }
-function translate(){alert('Translate: Coming soon for isiZulu, isiXhosa, Sesotho, Setswana')}
-function aiHelp(){alert('AI Help: Ask me about '+currentMode+' structure')}
+function showTranslate(){alert('Translate: Coming soon for isiZulu, isiXhosa, Sesotho, Setswana. For now, write in your language!')}
+function showAIHelp(){document.getElementById('aiModal').style.display='block'}
+function closeModal(id){document.getElementById(id).style.display='none'}
 e.addEventListener('input',saveScript);
+setInterval(saveScript,5000);
 </script>
 </body>
 </html>
