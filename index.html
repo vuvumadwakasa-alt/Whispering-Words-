@@ -2,57 +2,80 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>The Whispering Words - Celtx for SA</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>The Whispering Words - For SA Creatives</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Courier New',monospace;background:#e8e8e8;height:100vh;display:flex;flex-direction:column}
-header{background:#1a1a1a;color:#fff;padding:8px;text-align:center;font-weight:bold;font-size:14px;position:relative}
+html,body{height:100%;overflow:hidden}
+body{font-family:'Courier New',monospace;background:#e8e8e8;display:flex;flex-direction:column}
+header{background:#1a1a1a;color:#fff;padding:8px;text-align:center;font-weight:bold;font-size:14px;position:relative;flex-shrink:0}
 #save{position:absolute;top:6px;right:8px;background:#2e7d32;color:#fff;border:none;padding:4px 10px;border-radius:3px;font-size:11px}
 
-/* CELTX-STYLE TOP TOOLBAR - STICKS FOREVER */
-.top-toolbar{position:sticky;top:0;z-index:100;background:#2d2d2d;padding:6px;border-bottom:1px solid #000}
+/* CELTX TOOLBAR - STICKS ABOVE KEYBOARD */
+.top-toolbar{
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  z-index:1000;
+  background:#2d2d2d;
+  padding:6px;
+  padding-bottom:calc(6px + env(safe-area-inset-bottom));
+  border-top:1px solid #000;
+}
 .format-row{display:flex;gap:3px;margin-bottom:4px;overflow-x:auto;padding-bottom:2px}
-.format-row button{background:#4a4a4a;color:#fff;border:1px solid #1a1a1a;border-radius:3px;padding:8px 6px;font-size:10px;font-weight:bold;white-space:nowrap;min-width:fit-content}
+.format-row button{background:#4a4a4a;color:#fff;border:1px solid #1a1a1a;border-radius:3px;padding:8px 6px;font-size:10px;font-weight:bold;white-space:nowrap}
 .format-row button.active{background:#8B4513;border-color:#5a2d0c}
 .util-row{display:flex;gap:3px;overflow-x:auto}
 .util-row button,.util-row select{background:#1a1a1a;color:#fff;border:1px solid #000;border-radius:3px;padding:6px 8px;font-size:10px}
 
-/* EDITOR - CELTX MARGINS */
-#editor{flex:1;padding:24px;background:#fff;overflow-y:auto;outline:none;font-size:12pt;line-height:1}
+/* EDITOR - PADDING TO AVOID KEYBOARD OVERLAP */
+#editor{
+  flex:1;
+  padding:24px;
+  padding-bottom:120px;
+  background:#fff;
+  overflow-y:auto;
+  outline:none;
+  font-size:12pt;
+  line-height:1.15;
+}
 #editor div{min-height:14pt}
 
-/* SCREENPLAY FORMAT - EXACT CELTX SPECS */
-.screenplay.act{text-align:center;font-weight:bold;text-decoration:underline;margin:24pt 0 12pt 0}
-.screenplay.scene-heading{margin:12pt 0;text-transform:uppercase;font-weight:bold}
+/* TRUE CELTX MARGINS - FINALLY FIXED */
+.screenplay.scene-heading{text-transform:uppercase;font-weight:bold;margin:12pt 0}
 .screenplay.action{margin:0 0 12pt 0}
-.screenplay.character{display:block!important;text-align:center!important;margin:12pt auto 0 auto!important;text-transform:uppercase;width:100%!important}
-.screenplay.dialogue{margin:0 1in 12pt 1.5in}
-.screenplay.parenthetical{display:block!important;text-align:center!important;margin:0 auto!important;width:100%!important}
+.screenplay.character{text-align:center!important;text-transform:uppercase;margin:12pt 0 0 0!important;width:3.5in!important;margin-left:auto!important;margin-right:auto!important;display:block!important}
+.screenplay.dialogue{margin:0 1in 12pt 1.5in!important;max-width:3.5in}
+.screenplay.parenthetical{text-align:left!important;margin:0 0 0 2.2in!important;width:2in!important}
 .screenplay.transition{text-align:right!important;text-transform:uppercase;font-weight:bold;margin:12pt 0}
 .screenplay.shot{text-transform:uppercase;font-weight:bold;margin:12pt 0}
 
 /* THEATRE + RADIO */
-.theatre.scene{font-weight:bold;text-decoration:underline;margin:12pt 0}
+.theatre.scene{text-align:center;font-weight:bold;text-decoration:underline;margin:12pt 0}
 .theatre.character{font-weight:bold;text-transform:uppercase;margin:12pt 0 0 0}
-.theatre.dialogue{margin-left:0.5in;margin-bottom:12pt}
+.theatre.dialogue{margin:0 0 12pt 0.5in}
 .radio.character{font-weight:bold;text-transform:uppercase;margin:12pt 0 0 0}
-.radio.sfx,.radio.music{font-weight:bold;text-transform:uppercase}
+.radio.sfx,.radio.music{font-weight:bold;text-transform:uppercase;text-align:center;margin:12pt 0}
 
-footer{text-align:center;padding:3px;font-size:8px;color:#666;background:#ddd}
-.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);z-index:300}
+.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);z-index:2000}
 .modal-box{background:#fff;margin:5% auto;width:90%;height:85%;border-radius:4px;display:flex;flex-direction:column}
 .modal-head{background:#1a1a1a;color:#fff;padding:10px;font-weight:bold;display:flex;justify-content:space-between}
-.modal-body{flex:1;padding:10px;overflow-y:auto}
+.modal-body{flex:1;padding:10px;overflow-y:auto;font-size:13px}
+.ai-msg{background:#f5f5f5;padding:8px;margin:8px 0;border-radius:4px}
+.user-msg{background:#e3f2fd;padding:8px;margin:8px 0;border-radius:4px;text-align:right}
+footer{text-align:center;padding:3px;font-size:8px;color:#666;background:#ddd;flex-shrink:0}
 </style>
 </head>
 <body>
 <header>The Whispering Words <button id="save" onclick="saveScript()">Save</button></header>
 
-<!-- CELTX-STYLE TOP TOOLBAR -->
+<div id="editor" contenteditable="true" class="screenplay"></div>
+
+<!-- CELTX TOOLBAR - NOW STUCK ABOVE KEYBOARD -->
 <div class="top-toolbar">
   <div class="format-row">
-    <button onclick="setElement('act')">ACT</button>
     <button onclick="setElement('scene-heading')">SCENE HEADING</button>
     <button onclick="setElement('action')">ACTION</button>
     <button onclick="setElement('character')">CHARACTER</button>
@@ -67,40 +90,23 @@ footer{text-align:center;padding:3px;font-size:8px;color:#666;background:#ddd}
       <option value="theatre">Theatre</option>
       <option value="radio">Radio</option>
     </select>
-    <button onclick="showImport()">Import</button>
-    <button onclick="showLibrary()">Library</button>
-    <button onclick="share()">Share</button>
     <button onclick="exportPDF()">PDF</button>
     <button onclick="exportTXT()">TXT</button>
-    <button onclick="showAI()">AI Ghost</button>
+    <button onclick="showAI()">Sibali AI</button>
   </div>
 </div>
 
-<div id="editor" contenteditable="true" class="screenplay"></div>
 <footer>2026 Built by Vuyisani Madwakasa for SA Creatives</footer>
 
-<!-- IMPORT MODAL -->
-<div id="importModal" class="modal">
-  <div class="modal-box">
-    <div class="modal-head">Import Script <span onclick="closeModal('importModal')" style="cursor:pointer">✕</span></div>
-    <div class="modal-body">
-      <input type="file" id="fileInput" accept=".txt,.fdx,.fountain" style="margin:10px 0">
-      <p>Or paste entire script:</p>
-      <textarea id="importText" style="width:100%;height:300px;font-family:Courier"></textarea><br><br>
-      <button onclick="doImport()" style="background:#8B4513;color:#fff;padding:10px 20px;border:none;border-radius:3px">Import Whole File</button>
-    </div>
-  </div>
-</div>
-
-<!-- AI GHOST WRITER MODAL -->
+<!-- SIBALI AI - YOUR WRITING PARTNER -->
 <div id="aiModal" class="modal">
   <div class="modal-box">
-    <div class="modal-head">AI Ghost Writer <span onclick="closeModal('aiModal')" style="cursor:pointer">✕</span></div>
-    <div class="modal-body" id="aiChat" style="font-size:13px">
-      <div style="background:#f0f0f0;padding:8px;margin:8px 0;border-radius:4px"><b>AI:</b> I read your script. Ask me: "Fix my scene heading" "Is this dialogue SA enough?" "What happens next?"</div>
+    <div class="modal-head">Sibali — Your Script Partner <span onclick="closeModal('aiModal')" style="cursor:pointer">✕</span></div>
+    <div class="modal-body" id="aiChat">
+      <div class="ai-msg"><b>Sibali:</b> Ewe Vuyisani. I'm Sibali, your writing sibali. I only do stories — screenplay, theatre, radio. Ask me: "Make this scene more Alex township" or "Fix my CHARACTER margins" or "What do SABC drama judges want?"</div>
     </div>
     <div style="padding:10px;border-top:1px solid #ddd;display:flex">
-      <input type="text" id="aiInput" placeholder="Ask about your script..." style="flex:1;padding:8px" onkeypress="if(event.key==='Enter')sendAI()">
+      <input type="text" id="aiInput" placeholder="Ask Sibali about writing..." style="flex:1;padding:8px" onkeypress="if(event.key==='Enter')sendAI()">
       <button onclick="sendAI()" style="margin-left:8px;padding:8px 16px;background:#8B4513;color:#fff;border:none;border-radius:3px">Ask</button>
     </div>
   </div>
@@ -108,6 +114,7 @@ footer{text-align:center;padding:3px;font-size:8px;color:#666;background:#ddd}
 
 <script>
 const e=document.getElementById('editor');
+const { jsPDF } = window.jspdf;
 let currentMode='screenplay';
 
 // INIT
@@ -117,7 +124,6 @@ setMode(localStorage.getItem('mode')||'screenplay');
 function saveScript(){localStorage.setItem('script',e.innerHTML);localStorage.setItem('mode',currentMode)}
 function setMode(mode){currentMode=mode;e.className=mode;document.getElementById('modeSelect').value=mode;saveScript()}
 
-// CELTX BEHAVIOR - BUTTONS SET ELEMENT TYPE
 function setElement(type){
   document.querySelectorAll('.format-row button').forEach(b=>b.classList.remove('active'));
   event.target.classList.add('active');
@@ -125,105 +131,125 @@ function setElement(type){
   div.className=type;
   if(type==='scene-heading')div.innerHTML='INT. ';
   if(type==='transition')div.innerHTML='FADE OUT:';
-  if(type==='character'||type==='parenthetical')div.innerHTML='<br>';
-  if(type==='shot')div.innerHTML='ANGLE ON ';
+  if(type==='character'||type==='parenthetical'||type==='dialogue')div.innerHTML='<br>';
   e.appendChild(div);
   placeCursor(div);
   saveScript();
 }
 
-// CELTX ENTER KEY BEHAVIOR
+// AUTO-FORMAT + CELTX ENTER KEY
 e.addEventListener('keydown',function(ev){
   if(ev.key==='Enter'){
     ev.preventDefault();
     const sel=window.getSelection();
     const node=sel.anchorNode.parentElement;
+    const text=node.textContent.trim();
+    
+    // Auto-caps scene headings
+    if(text.match(/^(int|ext)\.?\s/i)){
+      node.className='scene-heading';
+      node.textContent=text.toUpperCase().replace(/\s+/g,' ').replace(' - ',' - ');
+      if(!text.includes('-'))node.textContent+=' - DAY';
+    }
+    // Auto-caps character on enter
+    if(node.classList.contains('character')){
+      node.textContent=node.textContent.toUpperCase();
+    }
+    
     let nextType='action';
     if(node.classList.contains('character')||node.classList.contains('parenthetical'))nextType='dialogue';
     if(node.classList.contains('scene-heading')||node.classList.contains('shot'))nextType='action';
     if(node.classList.contains('dialogue'))nextType='action';
+    
     const div=document.createElement('div');
     div.className=nextType;
     div.innerHTML='<br>';
     node.after(div);
     placeCursor(div);
-    document.querySelectorAll('.format-row button').forEach(b=>b.classList.remove('active'));
     saveScript();
   }
 });
 
 function placeCursor(el){const r=document.createRange();const s=window.getSelection();r.selectNodeContents(el);r.collapse(false);s.removeAllRanges();s.addRange(r);e.focus()}
 
-// IMPORT - READS WHOLE FILE
-function showImport(){document.getElementById('importModal').style.display='block'}
-function doImport(){
-  const f=document.getElementById('fileInput');const t=document.getElementById('importText');
-  if(f.files.length>0){
-    const r=new FileReader();
-    r.onload=ev=>{parseScript(ev.target.result);closeModal('importModal')};
-    r.readAsText(f.files[0]);
-  }else if(t.value){
-    parseScript(t.value);closeModal('importModal');
-  }
-}
-function parseScript(txt){
-  e.innerHTML='';
-  txt.split('\n').forEach(line=>{
-    line=line.trim();if(!line)return;
-    const div=document.createElement('div');
-    if(line.startsWith('INT.')||line.startsWith('EXT.'))div.className='scene-heading';
-    else if(line.startsWith('FADE')||line.startsWith('CUT TO'))div.className='transition';
-    else if(line===line.toUpperCase()&&line.length<30&&!line.startsWith('('))div.className='character';
-    else if(line.startsWith('(')&&line.endsWith(')'))div.className='parenthetical';
-    else div.className='action';
-    div.textContent=line;
-    e.appendChild(div);
-  });
-  saveScript();
-}
-
-// AI GHOST WRITER
+// SIBALI AI - SOUNDS LIKE ME, ONLY DOES WRITING
 function showAI(){document.getElementById('aiModal').style.display='block'}
-function sendAI(){
+function closeModal(id){document.getElementById(id).style.display='none'}
+
+async function sendAI(){
   const input=document.getElementById('aiInput');
   const msg=input.value.trim();if(!msg)return;
   addAIMsg(msg,'user');input.value='';
-  setTimeout(()=>{addAIMsg(getAIResponse(msg),'ai')},400);
+  
+  const script=e.innerText;
+  const q=msg.toLowerCase();
+  let response="";
+  
+  // Sibali's scope: Writing only. Refuses everything else.
+  if(q.includes('weather')||q.includes('news')||q.includes('code')||q.includes('python')){
+    response="Hayi tata, I’m Sibali. My career is stories only — screenplay, theatre, radio. For that question, ask Vuyisani. Now, what scene are we fixing?";
+  }
+  else if(q.includes('rewrite')||q.includes('fix')||q.includes('scene')){
+    response=`Sharp. Here's your scene in proper Celtx format with SA stakes:\n\nINT. VUYISANI'S ROOM - NIGHT\nVuyisani paces. Phone pressed to ear. Sweat on his brow.\n\nVUYISANI\n(on phone, desperate)\nBaba... eish, I'm in deep trouble. I broke a guy's phone at Bara taxi rank. The mashonisa are outside.\n\nFATHER (V.O.)\n(filtered)\nAgain, Vuyisani? I have no more money for your mess.\n\nVUYISANI\nThen they're gonna moer me, baba!\n\nSudden KNOCK at the door. Vuyisani freezes.\n\nFADE OUT.\n\nWhy it works: 1. CHARACTER centered 2. DIALOGUE indented 3. SA words + stakes + sound. Copy it.`;
+  }
+  else if(q.includes('3 ways')||q.includes('end')||q.includes('what happens next')){
+    response=`3 SA endings for Vuyisani's scene:\n\n1. SABC DRAMA: Father arrives with sjambok. Saves him, but beats him. Lesson learned.\n\n2. NETFLIX SA: Mashonisa break in. Vuyisani must fight. Cliffhanger.\n\n3. STAGE PLAY: Vuyisani talks to audience: "You think your father will save you?" Blackout.\n\nWhich market are you writing for? I'll write the full beats.`;
+  }
+  else if(q.includes('margin')||q.includes('center')||q.includes('format')){
+    response=`Celtx Rules, Vuyisani style:\n\nCHARACTER: Always CENTERED, UPPERCASE. Tap CHARACTER button before typing name.\nDIALOGUE: Starts 1.5 inches from left. Tap DIALOGUE after CHARACTER.\nPARENTHETICAL: Small direction, centered under CHARACTER.\nTRANSITION: FADE OUT: Always RIGHT aligned.\n\nIf your CHARACTER is left-aligned, you typed it as ACTION. Delete it, tap CHARACTER button, retype VUYISANI.`;
+  }
+  else if(q.includes('sabc')||q.includes('nfvf')||q.includes('industry')){
+    response=`SA Industry Research:\n\nSABC wants: Township stories, family conflict, moral lesson, 26min episodes.\nNFVF wants: 3-act structure, clear logline, South African identity.\nShowmax wants: High stakes in first 10 pages, cliffhangers.\n\nYour scene needs: 1. Higher stakes than money 2. Visual action 3. SA language. Want me to rewrite for SABC spec?`;
+  }
+  else{
+    response=`I read your script, mfethu. You have Vuyisani begging his father for cash. Missing: 1. Visual action 2. Ticking clock 3. Proper Celtx margins.\n\nTry this: After "I need money", add: "The KNOCK comes again. Louder." Now we have tension.\n\nAsk me: "Make this scene more Alex township" or "Write the next 3 beats".`;
+  }
+  
+  setTimeout(()=>addAIMsg(response,'ai'),600);
 }
+
 function addAIMsg(text,type){
   const div=document.createElement('div');
-  div.style.cssText=`background:${type==='user'?'#e3f2fd':'#f5f5f5'};padding:8px;margin:8px 0;border-radius:4px;text-align:${type==='user'?'right':'left'}`;
-  div.innerHTML=`<b>${type==='user'?'You':'AI'}:</b> ${text}`;
+  div.className=type==='user'?'user-msg':'ai-msg';
+  div.innerHTML=`<b>${type==='user'?'You':'Sibali'}:</b> ${text.replace(/\n/g,'<br>')}`;
   document.getElementById('aiChat').appendChild(div);
   document.getElementById('aiChat').scrollTop=99999;
 }
-function getAIResponse(q){
-  q=q.toLowerCase();const script=e.innerText;
-  if(q.includes('scene heading')||q.includes('int.')){
-    if(script.includes('BeBethany'))return 'Fix: Change "INT. BeBethany-day." to "INT. BETHANY - DAY". Format: INT/EXT. LOCATION - TIME OF DAY';
-    return 'Scene Heading Rule: INT. HOUSE - DAY. INT=Inside, EXT=Outside. Always add DAY/NIGHT.';
-  }
-  if(q.includes('dialogue')||q.includes('good')||q.includes('sa')){
-    if(script.includes('I need money'))return 'Your line: "Hello, I need money for transport." SA Tip: Add stakes + dialect. Try: VUYISANI (desperate) Eish baba... taxi fare? Please?';
-    return 'SA Dialogue tip: Use "Eish", "Sharp", "Yebo", "Aikona". Read it aloud. Does it sound like Alex or Soweto?';
-  }
-  if(q.includes('next')||q.includes('what happens')){
-    return 'Story rule: After asking for money, add conflict. 3 options: 1. FATHER hangs up. 2. KNOCK at door - it’s mashonisa. 3. VUYISANI sees last taxi leaving. Pick 1.';
-  }
-  if(q.includes('format')||q.includes('center')){
-    return 'CHARACTER must be CENTERED + UPPERCASE. DIALOGUE indented. Tap CHARACTER button before typing name. If VUYISANI is left-aligned, your old code is still cached.';
-  }
-  return `I read your script. You have: ${script.slice(0,50)}... Missing: Conflict + proper format. Ask: "Give me 3 ways this scene can end"`;
+
+// WORKING PDF - DOWNLOADS FOR REAL
+function exportPDF(){
+  const doc = new jsPDF({unit:'pt',format:'letter'});
+  doc.setFont('Courier');
+  doc.setFontSize(12);
+  
+  let y=72;const lineHeight=14;const pageHeight=792;const marginLeft=108;
+  
+  e.querySelectorAll('div').forEach(div=>{
+    if(y > pageHeight - 72){doc.addPage();y=72;}
+    const text=div.textContent;if(!text.trim()){y+=lineHeight;return;}
+    let x=marginLeft;let align='left';
+    
+    if(div.classList.contains('character')){x=306;align='center';}
+    if(div.classList.contains('dialogue')){x=252;}
+    if(div.classList.contains('parenthetical')){x=324;align='left';}
+    if(div.classList.contains('transition')){x=540;align='right';}
+    
+    doc.text(text,x,y,{align:align,maxWidth:468});
+    y+=lineHeight*1.15;
+    if(div.classList.contains('scene-heading')||div.classList.contains('character'))y+=lineHeight;
+  });
+  
+  doc.save('WhisperingWords.pdf');
 }
 
-// UTILITIES
-function showLibrary(){alert('Library: Auto-saved. Your script is safe. v2 will have multiple scripts.')}
-function share(){const t=e.innerText;if(navigator.share){navigator.share({title:'My Script',text:t})}else{navigator.clipboard.writeText(t);alert('Copied to clipboard!')}}
-function exportPDF(){const w=window.open();w.document.write('<html><head><style>@page{margin:1in 1in 1in 1.5in}body{font-family:Courier;font-size:12pt;line-height:1}'+document.querySelector('style').innerHTML+'</style></head><body class="'+currentMode+'">'+e.innerHTML+'</body></html>');setTimeout(()=>w.print(),300)}
 function exportTXT(){const a=document.createElement('a');a.href='data:text/plain,'+encodeURIComponent(e.innerText);a.download='WhisperingWords.txt';a.click()}
-function closeModal(id){document.getElementById(id).style.display='none'}
 e.addEventListener('input',saveScript);
 setInterval(saveScript,3000);
+
+// FIX KEYBOARD OVERLAP
+window.visualViewport.addEventListener('resize',()=>{
+  document.body.style.height=window.visualViewport.height+'px';
+});
 </script>
 </body>
-  </html>
+</html>
