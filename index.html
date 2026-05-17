@@ -8,7 +8,7 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{height:100%;overflow:hidden}
-body{font-family:'Courier New',monospace;background:#e8e8;display:flex;flex-direction:column}
+body{font-family:'Courier New',monospace;background:#e8e8e8;display:flex;flex-direction:column}
 
 .header-bar{position:sticky;top:0;z-index:1000;background:#1a1a1a;color:#fff;padding:8px;text-align:center;font-weight:bold;font-size:14px;flex-shrink:0}
 #currentScript{font-size:10px;color:#8B4513;font-weight:normal}
@@ -103,12 +103,11 @@ footer{text-align:center;padding:3px;font-size:8px;color:#666;background:#ddd;fl
 </div>
 
 <footer>2026 Built by Vuyisani Madwakasa for SA Creatives</footer>
-
 <!-- LIBRARY MODAL -->
 <div id="libraryModal" class="modal">
   <div class="modal-box">
     <div class="modal-head">
-      Your Script Library 
+      Your Script Library
       <span>
         <button onclick="createNewScript()" style="background:#2e7d32;color:#fff;border:none;padding:4px 8px;border-radius:2px;margin-right:8px">+ New Script</button>
         <span onclick="closeModal('libraryModal')" style="cursor:pointer">✕</span>
@@ -148,7 +147,6 @@ footer{text-align:center;padding:3px;font-size:8px;color:#666;background:#ddd;fl
       <input type="text" id="dateInput" class="title-input" placeholder="17 May 2026">
       <br><br>
       <button onclick="saveTitlePage()" style="background:#8B4513;color:#fff;padding:10px 20px;border:none;border-radius:3px">Save Title Page</button>
-      <p style="font-size:10px;color:#666;margin-top:10px">NFVF/SABC/BBC require this page. Auto-inserts in PDF as Page 1.</p>
     </div>
   </div>
 </div>
@@ -158,7 +156,7 @@ footer{text-align:center;padding:3px;font-size:8px;color:#666;background:#ddd;fl
   <div class="modal-box">
     <div class="modal-head">Sibali — Industry Standards Only <span onclick="closeModal('aiModal')" style="cursor:pointer">✕</span></div>
     <div class="modal-body" id="aiChat">
-      <div class="ai-msg"><b>Sibali:</b> Ewe Vuyisani. I enforce AMPAS/BBC/Samuel French rules. I see your cast: <span id="aiCharList">None yet</span>. Type a CHARACTER + Enter and I auto-save it.</div>
+      <div class="ai-msg"><b>Sibali:</b> Ewe Vuyisani. I enforce AMPAS/BBC/Samuel French rules. Cast: <span id="aiCharList">None yet</span></div>
     </div>
     <div style="padding:10px;border-top:1px solid #ddd;display:flex">
       <input type="text" id="aiInput" placeholder="Ask about industry format..." style="flex:1;padding:8px" onkeypress="if(event.key==='Enter')sendAI()">
@@ -261,293 +259,47 @@ function createNewScript(){
 function renameScript(id){const newName=prompt('Rename script:',scripts[id].name);if(newName){scripts[id].name=newName;scripts[id].titlePage.title=newName.toUpperCase();saveScripts();showLibrary();loadScript(currentScriptId)}}
 function deleteScript(id){
   if(Object.keys(scripts).length===1){alert('Cannot delete your only script');return}
-  if(confirm('Delete "'+scripts[id].name+'"? This cannot be undone.')){
-    delete scripts[id];saveScripts();
-    if(currentScriptId===id)loadScript(Object.keys(scripts)[0]);
-    showLibrary();
-  }
+  if(confirm('Delete "'+scripts[id].name+'"?')){delete scripts[id];saveScripts();if(currentScriptId===id)loadScript(Object.keys(scripts)[0]);showLibrary();}
 }
 function showLibrary(){
-  const list=document.getElementById('libraryList');
-  list.innerHTML='';
+  const list=document.getElementById('libraryList');list.innerHTML='';
   Object.keys(scripts).sort((a,b)=>scripts[b].updated-scripts[a].updated).forEach(id=>{
-    const div=document.createElement('div');
-    div.className='script-item'+(id===currentScriptId?' active':'');
-    div.innerHTML=`
-      <div onclick="loadScript('${id}');closeModal('libraryModal')" style="flex:1;cursor:pointer">
-        <b>${scripts[id].name}</b><br>
-        <span style="font-size:10px">Updated: ${new Date(scripts[id].updated).toLocaleDateString()} | ${scripts[id].mode} | ${scripts[id].characters.length} chars</span>
-      </div>
-      <div class="script-actions">
-        <button onclick="renameScript('${id}')" style="background:#555;color:#fff">Rename</button>
-        <button onclick="deleteScript('${id}')" style="background:#c62828;color:#fff">Delete</button>
-      </div>
-    `;
+    const div=document.createElement('div');div.className='script-item'+(id===currentScriptId?' active':'');
+    div.innerHTML=`<div onclick="loadScript('${id}');closeModal('libraryModal')" style="flex:1;cursor:pointer"><b>${scripts[id].name}</b><br><span style="font-size:10px">${new Date(scripts[id].updated).toLocaleDateString()} | ${scripts[id].mode}</span></div><div class="script-actions"><button onclick="renameScript('${id}')" style="background:#555;color:#fff">Rename</button><button onclick="deleteScript('${id}')" style="background:#c62828;color:#fff">Delete</button></div>`;
     list.appendChild(div);
   });
   document.getElementById('libraryModal').style.display='block';
 }
-
 function showCharacters(){
   document.getElementById('charScriptName').textContent=scripts[currentScriptId].name;
-  const list=document.getElementById('charactersList');
-  list.innerHTML='';
-  if(scripts[currentScriptId].characters.length===0){
-    list.innerHTML='<div style="text-align:center;color:#666;margin-top:20px">No characters yet. Type a CHARACTER name + Enter — it auto-saves here.</div>';
-  }else{
-    scripts[currentScriptId].characters.forEach(char=>{
-      const div=document.createElement('div');
-      div.className='char-item';
-      div.innerHTML=`<b>${char}</b><button onclick="deleteCharacter('${char}')" style="background:#c62828;color:#fff;border:none;padding:2px 6px;border-radius:2px;font-size:10px">Delete</button>`;
-      list.appendChild(div);
-    });
-  }
+  const list=document.getElementById('charactersList');list.innerHTML='';
+  if(scripts[currentScriptId].characters.length===0){list.innerHTML='<div style="text-align:center;color:#666;margin-top:20px">No characters yet. Type a CHARACTER + Enter</div>';}
+  else{scripts[currentScriptId].characters.forEach(char=>{const div=document.createElement('div');div.className='char-item';div.innerHTML=`<b>${char}</b><button onclick="deleteCharacter('${char}')" style="background:#c62828;color:#fff;border:none;padding:2px 6px;border-radius:2px;font-size:10px">Delete</button>`;list.appendChild(div);});}
   document.getElementById('charactersModal').style.display='block';
 }
-function deleteCharacter(name){
-  scripts[currentScriptId].characters=scripts[currentScriptId].characters.filter(c=>c!==name);
-  saveScripts();showCharacters();document.getElementById('aiCharList').textContent=scripts[currentScriptId].characters.join(', ')||'None yet';
-}
-function addCharacter(name){
-  name=name.toUpperCase().trim().replace(':','');
-  if(name&&!scripts[currentScriptId].characters.includes(name)){
-    scripts[currentScriptId].characters.push(name);
-    saveScripts();
-    document.getElementById('aiCharList').textContent=scripts[currentScriptId].characters.join(', ');
-  }
-}
-
-function showTitlePage(){
-  const tp=scripts[currentScriptId].titlePage;
-  document.getElementById('titleInput').value=tp.title;
-  document.getElementById('writerInput').value=tp.writer;
-  document.getElementById('emailInput').value=tp.email;
-  document.getElementById('phoneInput').value=tp.phone;
-  document.getElementById('draftInput').value=tp.draft;
-  document.getElementById('dateInput').value=tp.date;
-  document.getElementById('titleModal').style.display='block';
-}
-function saveTitlePage(){
-  scripts[currentScriptId].titlePage={
-    title:document.getElementById('titleInput').value,
-    writer:document.getElementById('writerInput').value,
-    email:document.getElementById('emailInput').value,
-    phone:document.getElementById('phoneInput').value,
-    draft:document.getElementById('draftInput').value,
-    date:document.getElementById('dateInput').value
-  };
-  saveScripts();closeModal('titleModal');
-  alert('Title Page saved. It will appear as Page 1 in your PDF.');
-}
+function deleteCharacter(name){scripts[currentScriptId].characters=scripts[currentScriptId].characters.filter(c=>c!==name);saveScripts();showCharacters();document.getElementById('aiCharList').textContent=scripts[currentScriptId].characters.join(', ')||'None yet';}
+function addCharacter(name){name=name.toUpperCase().trim().replace(':','');if(name&&!scripts[currentScriptId].characters.includes(name)){scripts[currentScriptId].characters.push(name);saveScripts();document.getElementById('aiCharList').textContent=scripts[currentScriptId].characters.join(', ');}}
+function showTitlePage(){const tp=scripts[currentScriptId].titlePage;document.getElementById('titleInput').value=tp.title;document.getElementById('writerInput').value=tp.writer;document.getElementById('emailInput').value=tp.email;document.getElementById('phoneInput').value=tp.phone;document.getElementById('draftInput').value=tp.draft;document.getElementById('dateInput').value=tp.date;document.getElementById('titleModal').style.display='block';}
+function saveTitlePage(){scripts[currentScriptId].titlePage={title:document.getElementById('titleInput').value,writer:document.getElementById('writerInput').value,email:document.getElementById('emailInput').value,phone:document.getElementById('phoneInput').value,draft:document.getElementById('draftInput').value,date:document.getElementById('dateInput').value};saveScripts();closeModal('titleModal');alert('Title Page saved.');}
 
 loadScripts();
-
-if(window.visualViewport){
-  window.visualViewport.addEventListener('resize',()=>{
-    const offset=window.innerHeight - window.visualViewport.height;
-    formatBar.style.transform=`translateY(-${offset}px)`;
-    e.style.paddingBottom=(80+offset)+'px';
-  });
-}
-
-function setMode(mode){
-  currentMode=mode;
-  e.className=mode;
-  document.getElementById('modeSelect').value=mode;
-  updateFormatButtons();
-  saveScript();
-}
-
-function setElement(type){
-  document.querySelectorAll('.format-row button').forEach(b=>b.classList.remove('active'));
-  event.target.classList.add('active');
-  const div=document.createElement('div');
-  div.className=type;
-  
-  if(currentMode==='screenplay'){
-    if(type==='scene-heading')div.innerHTML='INT. ';
-    if(type==='transition')div.innerHTML='FADE OUT:';
-    if(type==='act')div.innerHTML='ACT ONE';
-    if(type==='shot')div.innerHTML='ANGLE ON ';
-  }
-  if(currentMode==='theatre'){
-    if(type==='act')div.innerHTML='ACT I';
-    if(type==='scene')div.innerHTML='SCENE 1';
-    if(type==='character')div.innerHTML='CHARACTER:';
-    if(type==='stage-direction')div.innerHTML=' ';
-  }
-  if(currentMode==='radio'){
-    if(type==='scene')div.innerHTML='SCENE 1.';
-    if(type==='character')div.innerHTML='CHARACTER:';
-    if(type==='sfx')div.innerHTML='SFX:';
-    if(type==='music')div.innerHTML='MUSIC:';
-    if(type==='fx')div.innerHTML='FX:';
-  }
-  
-  if(['character','parenthetical','dialogue','dual-dialogue','stage-direction'].includes(type))div.innerHTML='<br>';
-  e.appendChild(div);
-  placeCursor(div);
-  
-  if(type==='character'){
-    div.addEventListener('input',showCharAutocomplete);
-  }
-  saveScript();
-}
-
-function showCharAutocomplete(ev){
-  const text=ev.target.textContent.toUpperCase();
-  const matches=scripts[currentScriptId].characters.filter(c=>c.startsWith(text)&&c!==text);
-  if(matches.length>0&&text.length>0){
-    const rect=ev.target.getBoundingClientRect();
-    autocomplete.style.left=rect.left+'px';
-    autocomplete.style.top=(rect.bottom+5)+'px';
-    autocomplete.innerHTML='';
-    matches.forEach(m=>{
-      const div=document.createElement('div');
-      div.textContent=m;
-      div.onclick=()=>{ev.target.textContent=m;autocomplete.style.display='none';placeCursor(ev.target)};
-      autocomplete.appendChild(div);
-    });
-    autocomplete.style.display='block';
-  }else{
-    autocomplete.style.display='none';
-  }
-}
-
-// AUTO-FORMAT ON ENTER - INDUSTRY STANDARD
-e.addEventListener('keydown',function(ev){
-  if(ev.key==='Enter'){
-    ev.preventDefault();
-    autocomplete.style.display='none';
-    const sel=window.getSelection();
-    const node=sel.anchorNode.parentElement;
-    const text=node.textContent.trim();
-    
-    // AUTO-SAVE CHARACTER TO BIBLE
-    if(node.classList.contains('character')&&text){
-      addCharacter(text);
-    }
-    
-    // AUTO-FORMAT: INT. house -> INT. HOUSE - DAY
-    if(currentMode==='screenplay'&&text.match(/^(int|ext)\.?\s/i)){
-      node.className='scene-heading';
-      node.textContent=text.toUpperCase().replace(/\s+/g,' ');
-      if(!text.includes('-'))node.textContent+=' - DAY';
-    }
-    
-    // AUTO-FORMAT: vuyisani -> VUYISANI (if saved character)
-    if(node.classList.contains('character')){
-      node.textContent=node.textContent.toUpperCase();
-      addCharacter(node.textContent);
-    }
-    
-    // AUTO-FORMAT: THEATRE CHARACTER: Vuyisani -> VUYISANI:
-    if(currentMode==='theatre'&&node.classList.contains('character')){
-      if(!node.textContent.endsWith(':'))node.textContent+=':';
-    }
-    
-    // AUTO-FORMAT: RADIO CHARACTER: Vuyisani -> VUYISANI:
-    if(currentMode==='radio'&&node.classList.contains('character')){
-      if(!node.textContent.endsWith(':'))node.textContent+=':';
-    }
-    
-    // SMART NEXT ELEMENT
-    let nextType='action';
-    if(currentMode==='screenplay'){
-      if(node.classList.contains('character')||node.classList.contains('parenthetical'))nextType='dialogue';
-      if(node.classList.contains('scene-heading')||node.classList.contains('shot'))nextType='action';
-      if(node.classList.contains('dialogue'))nextType='action';
-    }
-    if(currentMode==='theatre'){
-      if(node.classList.contains('character'))nextType='dialogue';
-      if(node.classList.contains('dialogue')||node.classList.contains('stage-direction'))nextType='dialogue';
-    }
-    if(currentMode==='radio'){
-      if(node.classList.contains('character'))nextType='dialogue';
-      if(node.classList.contains('dialogue')||node.classList.contains('sfx')||node.classList.contains('music'))nextType='dialogue';
-    }
-    
-    const div=document.createElement('div');div.className=nextType;div.innerHTML='<br>';node.after(div);placeCursor(div);saveScript();
-  }
-});
-
+if(window.visualViewport){window.visualViewport.addEventListener('resize',()=>{const offset=window.innerHeight-window.visualViewport.height;formatBar.style.transform=`translateY(-${offset}px)`;e.style.paddingBottom=(80+offset)+'px';});}
+function setMode(mode){currentMode=mode;e.className=mode;document.getElementById('modeSelect').value=mode;updateFormatButtons();saveScript();}
+function setElement(type){document.querySelectorAll('.format-row button').forEach(b=>b.classList.remove('active'));event.target.classList.add('active');const div=document.createElement('div');div.className=type;if(currentMode==='screenplay'){if(type==='scene-heading')div.innerHTML='INT. ';if(type==='transition')div.innerHTML='FADE OUT:';if(type==='act')div.innerHTML='ACT ONE';if(type==='shot')div.innerHTML='ANGLE ON ';}if(currentMode==='theatre'){if(type==='act')div.innerHTML='ACT I';if(type==='scene')div.innerHTML='SCENE 1';if(type==='character')div.innerHTML='CHARACTER:';if(type==='stage-direction')div.innerHTML=' ';}if(currentMode==='radio'){if(type==='scene')div.innerHTML='SCENE 1.';if(type==='character')div.innerHTML='CHARACTER:';if(type==='sfx')div.innerHTML='SFX:';if(type==='music')div.innerHTML='MUSIC:';if(type==='fx')div.innerHTML='FX:';}if(['character','parenthetical','dialogue','dual-dialogue','stage-direction'].includes(type))div.innerHTML='<br>';e.appendChild(div);placeCursor(div);if(type==='character'){div.addEventListener('input',showCharAutocomplete);}saveScript();}
+function showCharAutocomplete(ev){const text=ev.target.textContent.toUpperCase();const matches=scripts[currentScriptId].characters.filter(c=>c.startsWith(text)&&c!==text);if(matches.length>0&&text.length>0){const rect=ev.target.getBoundingClientRect();autocomplete.style.left=rect.left+'px';autocomplete.style.top=(rect.bottom+5)+'px';autocomplete.innerHTML='';matches.forEach(m=>{const d=document.createElement('div');d.textContent=m;d.onclick=()=>{ev.target.textContent=m;autocomplete.style.display='none';placeCursor(ev.target)};autocomplete.appendChild(d);});autocomplete.style.display='block';}else{autocomplete.style.display='none';}}
+e.addEventListener('keydown',function(ev){if(ev.key==='Enter'){ev.preventDefault();autocomplete.style.display='none';const sel=window.getSelection();const node=sel.anchorNode.parentElement;const text=node.textContent.trim();if(node.classList.contains('character')&&text){addCharacter(text);}if(currentMode==='screenplay'&&text.match(/^(int|ext)\.?\s/i)){node.className='scene-heading';node.textContent=text.toUpperCase().replace(/\s+/g,' ');if(!text.includes('-'))node.textContent+=' - DAY';}if(node.classList.contains('character')){node.textContent=node.textContent.toUpperCase();addCharacter(node.textContent);}if(currentMode==='theatre'&&node.classList.contains('character')){if(!node.textContent.endsWith(':'))node.textContent+=':';}if(currentMode==='radio'&&node.classList.contains('character')){if(!node.textContent.endsWith(':'))node.textContent+=':';}let nextType='action';if(currentMode==='screenplay'){if(node.classList.contains('character')||node.classList.contains('parenthetical'))nextType='dialogue';if(node.classList.contains('scene-heading')||node.classList.contains('shot'))nextType='action';if(node.classList.contains('dialogue'))nextType='action';}if(currentMode==='theatre'){if(node.classList.contains('character'))nextType='dialogue';}if(currentMode==='radio'){if(node.classList.contains('character'))nextType='dialogue';}const div=document.createElement('div');div.className=nextType;div.innerHTML='<br>';node.after(div);placeCursor(div);saveScript();}});
 document.addEventListener('click',()=>autocomplete.style.display='none');
-
-function placeCursor(el){const r=document.createRange();const s=window.getSelection();r.selectNodeContents(el);r.collapse(false);s.removeAllRanges();s.addRange(r);e.focus()}
-
-// SIBALI AI - INDUSTRY STANDARDS + CHARACTER AWARE
+function placeCursor(el){const r=document.createRange();const s=window.getSelection();r.selectNodeContents(el);r.collapse(false);s.removeAllRanges();s.addRange(r);e.focus();}
 function showAI(){document.getElementById('aiModal').style.display='block'}
 function closeModal(id){document.getElementById(id).style.display='none'}
 function showImport(){document.getElementById('importModal').style.display='block'}
-
-async function sendAI(){
-  const input=document.getElementById('aiInput');
-  const msg=input.value.trim();if(!msg)return;
-  addAIMsg(msg,'user');input.value='';
-  const script=e.innerText;
-  const q=msg.toLowerCase();
-  const scriptName=scripts[currentScriptId].name;
-  const chars=scripts[currentScriptId].characters;
-  let response="";
-  
-  if(q.includes('weather')||q.includes('news')||q.includes('code')||q.includes('python')){
-    response=`Tata, I’m Sibali. My career is ONLY ${currentMode} industry standards for "${scriptName}". Cast: ${chars.join(', ')||'None yet'}. Ask Vuyisani for that question. Now, what format rule are we checking?`;
-  }
-  else if(q.includes('character')&&chars.length>0){
-    const char=q.toUpperCase().match(new RegExp(chars.join('|'),'i'));
-    if(char){
-      response=`Character Bible: ${char[0]} in "${scriptName}".\n\n${currentMode} rule: ${currentMode==='screenplay'?'Must be centered, UPPERCASE. Tap CHARACTER button.':currentMode==='theatre'?'Must have colon: '+char[0]+':':'Must be underlined: '+char[0]+':'}\n\nWhat does ${char[0]} want in this scene? Give them an obstacle.`;
-    }else{
-      response=`Your cast for "${scriptName}": ${chars.join(', ')}. Ask me: "What does ${chars[0]} want?" or "Is ${chars[0]}'s dialogue SA enough?"`;
-    }
-  }
-  else if(q.includes('format')||q.includes('standard')||q.includes('correct')){
-    if(currentMode==='screenplay'){
-      response=`AMPAS Screenplay Standards for "${scriptName}":\n\n1. CHARACTER: 3.5in from left, centered, UPPERCASE. Your cast: ${chars.join(', ')||'None'}\n2. DIALOGUE: 1.5in indent, 3.5in wide\n3. TRANSITION: Right aligned\nIndustry check: ${script.includes('FADE OUT')?'FADE OUT found':'Missing FADE OUT'}. NFVF rejects scripts without it.`;
-    }
-    if(currentMode==='theatre'){
-      response=`Samuel French Theatre Standards for "${scriptName}":\n\n1. CHARACTER: UPPERCASE, underlined, colon: VUYISANI:\n2. DIALOGUE: Flush left\n3. STAGE DIRECTION: [Italic in brackets]\n\nYour cast: ${chars.join(', ')||'None'}. BBC Writers Room requires colons after CHARACTER names.`;
-    }
-    if(currentMode==='radio'){
-      response=`BBC/SAFM Radio Standards for "${scriptName}":\n\n1. CHARACTER: UPPERCASE, underlined, colon: VUYISANI:\n2. SFX: Centered, UPPERCASE: SFX: KNOCK ON DOOR\n3. DIALOGUE: Flush left\n\nSAFM requires SFX every 30sec. Your cast: ${chars.join(', ')||'None'}. Add SFX: PHONE RINGS.`;
-    }
-  }
-  else if(q.includes('nfvf')||q.includes('sabc')||q.includes('bbc')){
-    response=`Industry Submission for "${scriptName}" in ${currentMode} mode:\n\nNFVF Screenplay: Needs title page with your name, email, phone. 90-120 pages. Transformation theme.\nSABC Theatre: 45min, 4-6 characters max. Moral lesson required.\nSAFM Radio: 15min episodes, SFX cues, cliffhanger ending.\n\nYour script: ${chars.length} characters. ${chars.length>6?'Too many for SABC':chars.length<2?'Add more characters':'Good'}. Target which broadcaster?`;
-  }
-  else{
-    response=`Reading "${scriptName}" in ${currentMode} mode. Cast: ${chars.join(', ')||'No characters saved yet'}.\n\nAuto-format tip: Type VUYISANI + Enter and I auto-save + center it.\n\nIndustry check: ${currentMode==='screenplay'?'Add FADE OUT: at end':currentMode==='theatre'?'Add [Blackout] for scene end':'Add MUSIC: THEME UP'}. Ask: "Check my ${currentMode} format"`;
-  }
-  setTimeout(()=>addAIMsg(response,'ai'),600);
-}
-
-function addAIMsg(text,type){
-  const div=document.createElement('div');
-  div.className=type==='user'?'user-msg':'ai-msg';
-  div.innerHTML=`<b>${type==='user'?'You':'Sibali'}:</b> ${text.replace(/\n/g,'<br>')}`;
-  document.getElementById('aiChat').appendChild(div);
-  document.getElementById('aiChat').scrollTop=99999;
-}
-
-function doImport(){
-  const f=document.getElementById('fileInput');const t=document.getElementById('importText');
-  if(f.files.length>0){const r=new FileReader();r.onload=ev=>{parseScript(ev.target.result);closeModal('importModal')};r.readAsText(f.files[0]);}
-  else if(t.value){parseScript(t.value);closeModal('importModal');}
-}
-function parseScript(txt){
-  e.innerHTML='';
-  txt.split('\n').forEach(line=>{
-    line=line.trim();if(!line)return;
-    const div=document.createElement('div');
-    if(currentMode==='screenplay'){
-      if(line.match(/^(INT|EXT)\./i))div.className='scene-heading';
-      else if(line.match(/^(FADE|CUT TO)/i))div.className='transition';
-      else if(line===line.toUpperCase()&&line.length<30&&!line.startsWith('('))div.className='character';
-      else if(line.startsWith('(')&&line.endsWith(')'))div.className='parenthetical';
-      else div.className='action';
-    }
-    if(currentMode==='theatre'){
-      if(line.match(/^ACT/i))div.className='act';
-      else if(line.match(/^SCENE/i))div.className='scene';
-      else if(line.includes(':')&&line.split(':')[0]===line.split(':')[0].toUpperCase())div.className='character';
-      else if(line.startsWith('[')&&line.endsWith(']'))div.className='stage
+async function sendAI(){const input=document.getElementById('aiInput');const msg=input.value.trim();if(!msg)return;addAIMsg(msg,'user');input.value='';const q=msg.toLowerCase();const chars=scripts[currentScriptId].characters;let response="";if(q.includes('format')){response=`${currentMode} standard active. Cast: ${chars.join(', ')||'None'}`;}else{response=`Reading script. Type a CHARACTER + Enter to auto-save.`;}setTimeout(()=>addAIMsg(response,'ai'),400);}
+function addAIMsg(text,type){const div=document.createElement('div');div.className=type==='user'?'user-msg':'ai-msg';div.innerHTML=`<b>${type==='user'?'You':'Sibali'}:</b> ${text.replace(/\n/g,'<br>')}`;document.getElementById('aiChat').appendChild(div);document.getElementById('aiChat').scrollTop=99999;}
+function doImport(){const f=document.getElementById('fileInput');const t=document.getElementById('importText');if(f.files.length>0){const r=new FileReader();r.onload=ev=>{parseScript(ev.target.result);closeModal('importModal')};r.readAsText(f.files[0]);}else if(t.value){parseScript(t.value);closeModal('importModal');}}
+function parseScript(txt){e.innerHTML='';txt.split('\n').forEach(line=>{line=line.trim();if(!line)return;const div=document.createElement('div');if(line.match(/^(INT|EXT)\./i))div.className='scene-heading';else if(line.match(/^(FADE|CUT TO)/i))div.className='transition';else if(line===line.toUpperCase()&&line.length<30)div.className='character';else div.className='action';div.textContent=line;if(div.classList.contains('character'))addCharacter(line);e.appendChild(div);});saveScript();}
+function exportPDF(){const doc=new jsPDF({unit:'pt',format:'letter'});const tp=scripts[currentScriptId].titlePage;doc.setFont('Courier','normal');doc.setFontSize(12);doc.text(tp.title,306,300,{align:'center'});doc.text('Written by',306,340,{align:'center'});doc.text(tp.writer,306,360,{align:'center'});doc.text(tp.email,306,380,{align:'center'});doc.text(tp.phone,306,400,{align:'center'});doc.text(tp.draft,306,450,{align:'center'});doc.text(tp.date,306,470,{align:'center'});doc.addPage();let y=72;e.querySelectorAll('div').forEach(div=>{if(y>720){doc.addPage();y=72;}const text=div.textContent;if(!text.trim()){y+=14;return;}let x=108;let align='left';if(div.classList.contains('character')){x=306;align='center';}if(div.classList.contains('dialogue')){x=216;}if(div.classList.contains('transition')){x=468;align='right';}doc.text(text,x,y,{align:align});y+=16;});doc.save(scripts[currentScriptId].name+'.pdf');}
+function exportTXT(){const a=document.createElement('a');a.href='data:text/plain,'+encodeURIComponent(e.innerText);a.download=scripts[currentScriptId].name+'.txt';a.click()}
+e.addEventListener('input',saveScript);setInterval(saveScript,3000);
+</script>
+</body>
+  </html>
