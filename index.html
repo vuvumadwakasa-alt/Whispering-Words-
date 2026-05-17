@@ -2,304 +2,117 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<title>The Whispering Words - Industry Standard</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Whispering Words - Simple</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-html,body{height:100%;overflow:hidden}
-body{font-family:'Courier New',monospace;background:#e8e8e8;display:flex;flex-direction:column}
+body{font-family:'Courier New',monospace;background:#fff}
+.header{background:#1a1a1a;color:#fff;padding:10px;text-align:center;position:sticky;top:0;z-index:100}
+.header small{color:#8B4513;display:block;font-size:10px}
+.toolbar{background:#2d2d2d;padding:5px;position:sticky;top:48px;z-index:99;display:flex;gap:3px;overflow-x:auto}
+.toolbar button,.toolbar select{background:#000;color:#fff;border:none;padding:8px 10px;font-size:11px;white-space:nowrap;border-radius:3px}
+.formatbar{background:#444;padding:5px;position:sticky;top:88px;z-index:98;display:flex;gap:3px;overflow-x:auto;border-bottom:2px solid #000}
+.formatbar button{background:#666;color:#fff;border:none;padding:10px 8px;font-size:10px;font-weight:bold;white-space:nowrap;border-radius:3px}
+.formatbar button.active{background:#8B4513}
+#editor{padding:20px;min-height:80vh;outline:none;font-size:12pt;line-height:1.5}
+#editor div{min-height:18pt}
 
-.header-bar{position:sticky;top:0;z-index:1000;background:#1a1a1a;color:#fff;padding:8px;text-align:center;font-weight:bold;font-size:14px;flex-shrink:0}
-#currentScript{font-size:10px;color:#8B4513;font-weight:normal}
-#save{position:absolute;top:6px;right:8px;background:#2e7d32;color:#fff;border:none;padding:4px 10px;border-radius:3px;font-size:11px}
+/* SCREENPLAY - REAL MARGINS */
+.screenplay.scene{font-weight:bold;text-transform:uppercase;margin-top:18pt}
+.screenplay.action{margin-bottom:12pt}
+.screenplay.character{text-align:center;text-transform:uppercase;margin-top:18pt}
+.screenplay.dialogue{margin:0 20% 12pt 25%}
+.screenplay.parenthetical{margin-left:30%;width:40%}
+.screenplay.transition{text-align:right;text-transform:uppercase;font-weight:bold;margin-top:12pt}
 
-.util-toolbar{position:sticky;top:36px;z-index:999;background:#2d2d2d;padding:6px;border-bottom:1px solid #000;flex-shrink:0}
-.util-row{display:flex;gap:3px;overflow-x:auto}
-.util-row button,.util-row select{background:#1a1a1a;color:#fff;border:1px solid #000;border-radius:3px;padding:6px 8px;font-size:10px;white-space:nowrap}
+.theatre.character{font-weight:bold;text-transform:uppercase;text-decoration:underline;margin-top:12pt}
+.theatre.dialogue{margin-bottom:12pt}
+.theatre.stage{font-style:italic;margin-bottom:12pt}
+.theatre.stage:before{content:'['}
+.theatre.stage:after{content:']'}
 
-#editor{flex:1;padding:24px;background:#fff;overflow-y:auto;outline:none;font-size:12pt;line-height:1.15;padding-bottom:80px}
-#editor div{min-height:14pt}
+.radio.character{font-weight:bold;text-transform:uppercase;text-decoration:underline;margin-top:12pt}
+.radio.dialogue{margin-bottom:12pt}
+.radio.sfx,.radio.music{text-align:center;text-transform:uppercase;font-weight:bold;margin:12pt 0}
 
-.format-toolbar{position:fixed;bottom:0;left:0;right:0;z-index:1000;background:#2d2d2d;padding:6px;padding-bottom:calc(6px + env(safe-area-inset-bottom));border-top:1px solid #000;transform:translateY(0);transition:transform 0.2s}
-.format-row{display:flex;gap:3px;overflow-x:auto;padding-bottom:2px}
-.format-row button{background:#4a4a4a;color:#fff;border:1px solid #1a1a1a;border-radius:3px;padding:8px 6px;font-size:10px;font-weight:bold;white-space:nowrap}
-.format-row button.active{background:#8B4513;border-color:#5a2d0c}
-
-/* SCREENPLAY - AMPAS/WGA */
-.screenplay.scene-heading{text-transform:uppercase;font-weight:bold;margin:12pt 0}
-.screenplay.action{margin:0 0 12pt 0}
-.screenplay.character{text-align:center!important;text-transform:uppercase;margin:12pt 0 0 0!important;width:3.5in!important;margin-left:auto!important;margin-right:auto!important;display:block!important}
-.screenplay.dialogue{margin:0 1in 12pt 1.5in!important;max-width:3.5in}
-.screenplay.parenthetical{margin:0 0 0 1.8in!important;width:2.5in!important}
-.screenplay.transition{text-align:right!important;text-transform:uppercase;font-weight:bold;margin:12pt 0}
-.screenplay.shot{text-transform:uppercase;font-weight:bold;margin:12pt 0}
-.screenplay.act{text-align:center;font-weight:bold;text-decoration:underline;margin:24pt 0 12pt 0}
-.screenplay.dual-dialogue{margin:0 0 12pt 3.5in!important;max-width:1.5in}
-
-/* THEATRE - SAMUEL FRENCH */
-.theatre.act{text-align:center;font-weight:bold;margin:24pt 0 12pt 0}
-.theatre.scene{text-align:center;font-weight:bold;margin:12pt 0}
-.theatre.character{font-weight:bold;text-transform:uppercase;margin:12pt 0 0 0;text-decoration:underline}
-.theatre.dialogue{margin:0 0 12pt 0}
-.theatre.stage-direction{margin:0 0 12pt 0;font-style:italic}
-.theatre.stage-direction::before{content:'['}
-.theatre.stage-direction::after{content:']'}
-
-/* RADIO - BBC/SAFM */
-.radio.scene{text-align:center;font-weight:bold;text-decoration:underline;margin:12pt 0}
-.radio.character{font-weight:bold;text-transform:uppercase;margin:12pt 0 0 0;text-decoration:underline}
-.radio.dialogue{margin:0 0 12pt 0}
-.radio.sfx{text-align:center!important;text-transform:uppercase;font-weight:bold;margin:12pt 0}
-.radio.music{text-align:center!important;text-transform:uppercase;font-weight:bold;margin:12pt 0}
-.radio.fx{text-align:center!important;text-transform:uppercase;font-weight:bold;margin:12pt 0}
-
-.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);z-index:2000}
-.modal-box{background:#fff;margin:5% auto;width:90%;height:85%;border-radius:4px;display:flex;flex-direction:column}
-.modal-head{background:#1a1a1a;color:#fff;padding:10px;font-weight:bold;display:flex;justify-content:space-between}
-.modal-body{flex:1;padding:10px;overflow-y:auto;font-size:13px}
-.ai-msg{background:#f5f5f5;padding:8px;margin:8px 0;border-radius:4px}
-.user-msg{background:#e3f2fd;padding:8px;margin:8px 0;border-radius:4px;text-align:right}
-.script-item{background:#f0f0f0;padding:10px;margin:6px 0;border-radius:4px;display:flex;justify-content:space-between;align-items:center}
-.script-item.active{background:#8B4513;color:#fff}
-.script-actions button{margin-left:4px;padding:4px 8px;font-size:10px;border:none;border-radius:2px}
-.char-item{background:#e8e8e8;padding:8px;margin:4px 0;border-radius:3px;display:flex;justify-content:space-between}
-.autocomplete{position:absolute;background:#fff;border:1px solid #000;max-height:120px;overflow-y:auto;z-index:2001;display:none}
-.autocomplete div{padding:6px;cursor:pointer;font-size:11px}
-.autocomplete div:hover{background:#8B4513;color:#fff}
-.title-input{width:100%;padding:8px;margin:4px 0;border:1px solid #ccc;border-radius:3px;font-family:Courier}
-footer{text-align:center;padding:3px;font-size:8px;color:#666;background:#ddd;flex-shrink:0}
+.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:1000}
+.modal-box{background:#fff;margin:10% auto;width:90%;max-width:400px;padding:15px;border-radius:5px}
+input,textarea{width:100%;padding:8px;margin:5px 0;font-family:Courier;border:1px solid #ccc}
+button.save{background:#2e7d32;color:#fff;border:none;padding:8px 15px}
 </style>
 </head>
 <body>
-<div class="header-bar">
+<div class="header">
   The Whispering Words
-  <div id="currentScript">Whispering Words</div>
-  <button id="save" onclick="saveScript()">Save</button>
+  <small id="scriptName">Whispering Words</small>
 </div>
 
-<div class="util-toolbar">
-  <div class="util-row">
-    <select id="modeSelect" onchange="setMode(this.value)">
-      <option value="screenplay">Screenplay - AMPAS</option>
-      <option value="theatre">Theatre - Samuel French</option>
-      <option value="radio">Radio - BBC/SAFM</option>
-    </select>
-    <button onclick="showLibrary()">Library</button>
-    <button onclick="showCharacters()">Characters</button>
-    <button onclick="showTitlePage()">Title Page</button>
-    <button onclick="showImport()">Import</button>
-    <button onclick="exportTXT()">TXT</button>
-    <button onclick="exportPDF()">PDF</button>
-    <button onclick="showAI()">Sibali AI</button>
-  </div>
+<div class="toolbar">
+  <select id="mode" onchange="setMode(this.value)">
+    <option value="screenplay">Screenplay</option>
+    <option value="theatre">Theatre</option>
+    <option value="radio">Radio</option>
+  </select>
+  <button onclick="newScript()">New</button>
+  <button onclick="showList()">Library</button>
+  <button onclick="showTitle()">Title</button>
+  <button onclick="savePDF()">PDF</button>
+  <button class="save" onclick="save()">Save</button>
+</div>
+
+<div class="formatbar" id="formatbar">
+  <!-- buttons load here -->
 </div>
 
 <div id="editor" contenteditable="true" class="screenplay"></div>
-<div id="autocomplete" class="autocomplete"></div>
 
-<div class="format-toolbar" id="formatBar">
-  <div class="format-row" id="formatButtons"></div>
-</div>
-
-<footer>2026 Built by Vuyisani Madwakasa for SA Creatives</footer>
-<!-- LIBRARY MODAL -->
-<div id="libraryModal" class="modal">
-  <div class="modal-box">
-    <div class="modal-head">
-      Your Script Library
-      <span>
-        <button onclick="createNewScript()" style="background:#2e7d32;color:#fff;border:none;padding:4px 8px;border-radius:2px;margin-right:8px">+ New Script</button>
-        <span onclick="closeModal('libraryModal')" style="cursor:pointer">✕</span>
-      </span>
-    </div>
-    <div class="modal-body" id="libraryList"></div>
-  </div>
-</div>
-
-<!-- CHARACTERS MODAL -->
-<div id="charactersModal" class="modal">
-  <div class="modal-box">
-    <div class="modal-head">
-      Character Bible - <span id="charScriptName"></span>
-      <span onclick="closeModal('charactersModal')" style="cursor:pointer">✕</span>
-    </div>
-    <div class="modal-body" id="charactersList"></div>
-  </div>
-</div>
-
-<!-- TITLE PAGE MODAL -->
-<div id="titleModal" class="modal">
-  <div class="modal-box">
-    <div class="modal-head">Title Page - Industry Standard <span onclick="closeModal('titleModal')" style="cursor:pointer">✕</span></div>
-    <div class="modal-body">
-      <label>Script Title:</label>
-      <input type="text" id="titleInput" class="title-input" placeholder="THE WHISPERING WORDS">
-      <label>Written by:</label>
-      <input type="text" id="writerInput" class="title-input" placeholder="Vuyisani Madwakasa">
-      <label>Email:</label>
-      <input type="email" id="emailInput" class="title-input" placeholder="vuyisani@email.com">
-      <label>Phone:</label>
-      <input type="text" id="phoneInput" class="title-input" placeholder="+27 82 123 4567">
-      <label>Draft:</label>
-      <input type="text" id="draftInput" class="title-input" placeholder="First Draft">
-      <label>Date:</label>
-      <input type="text" id="dateInput" class="title-input" placeholder="17 May 2026">
-      <br><br>
-      <button onclick="saveTitlePage()" style="background:#8B4513;color:#fff;padding:10px 20px;border:none;border-radius:3px">Save Title Page</button>
-    </div>
-  </div>
-</div>
-
-<!-- SIBALI AI -->
-<div id="aiModal" class="modal">
-  <div class="modal-box">
-    <div class="modal-head">Sibali — Industry Standards Only <span onclick="closeModal('aiModal')" style="cursor:pointer">✕</span></div>
-    <div class="modal-body" id="aiChat">
-      <div class="ai-msg"><b>Sibali:</b> Ewe Vuyisani. I enforce AMPAS/BBC/Samuel French rules. Cast: <span id="aiCharList">None yet</span></div>
-    </div>
-    <div style="padding:10px;border-top:1px solid #ddd;display:flex">
-      <input type="text" id="aiInput" placeholder="Ask about industry format..." style="flex:1;padding:8px" onkeypress="if(event.key==='Enter')sendAI()">
-      <button onclick="sendAI()" style="margin-left:8px;padding:8px 16px;background:#8B4513;color:#fff;border:none;border-radius:3px">Ask</button>
-    </div>
-  </div>
-</div>
-
-<!-- IMPORT MODAL -->
-<div id="importModal" class="modal">
-  <div class="modal-box">
-    <div class="modal-head">Import Script <span onclick="closeModal('importModal')" style="cursor:pointer">✕</span></div>
-    <div class="modal-body">
-      <input type="file" id="fileInput" accept=".txt,.fdx,.fountain" style="margin:10px 0">
-      <textarea id="importText" placeholder="Or paste entire script here..." style="width:100%;height:300px;font-family:Courier"></textarea><br><br>
-      <button onclick="doImport()" style="background:#8B4513;color:#fff;padding:10px 20px;border:none;border-radius:3px">Import</button>
-    </div>
-  </div>
-</div>
+<!-- SIMPLE MODALS -->
+<div id="libModal" class="modal"><div class="modal-box"><h3>Your Scripts</h3><div id="libList"></div><br><button onclick="closeModal('libModal')">Close</button></div></div>
+<div id="titleModal" class="modal"><div class="modal-box">
+  <h3>Title Page</h3>
+  <input id="tTitle" placeholder="TITLE">
+  <input id="tWriter" placeholder="Written by Vuyisani Madwakasa">
+  <input id="tEmail" placeholder="Email">
+  <input id="tPhone" placeholder="Phone">
+  <br><button class="save" onclick="saveTitle()">Save</button> <button onclick="closeModal('titleModal')">Close</button>
+</div></div>
 
 <script>
-const e=document.getElementById('editor');
-const formatBar=document.getElementById('formatBar');
-const autocomplete=document.getElementById('autocomplete');
-const { jsPDF } = window.jspdf;
-let currentMode='screenplay';
-let currentScriptId='default';
-let scripts={};
+let mode='screenplay';
+let current='default';
+let scripts=JSON.parse(localStorage.getItem('ww')||'{}');
+if(!scripts.default){scripts.default={name:'Whispering Words',content:'',mode:'screenplay',title:{title:'THE WHISPERING WORDS',writer:'Vuyisani Madwakasa',email:'',phone:''}}}
 
-const formatSets={
-  screenplay:['act','scene-heading','action','character','dialogue','parenthetical','dual-dialogue','transition','shot'],
-  theatre:['act','scene','character','dialogue','stage-direction'],
-  radio:['scene','character','dialogue','sfx','music','fx']
+const formats={
+  screenplay:['scene','action','character','dialogue','parenthetical','transition'],
+  theatre:['character','dialogue','stage'],
+  radio:['character','dialogue','sfx','music']
 };
 
-function updateFormatButtons(){
-  const row=document.getElementById('formatButtons');
-  row.innerHTML='';
-  formatSets[currentMode].forEach(type=>{
-    const btn=document.createElement('button');
-    btn.textContent=type.replace('-',' ').toUpperCase();
-    btn.onclick=()=>setElement(type);
-    row.appendChild(btn);
-  });
-}
+function setMode(m){mode=m;document.getElementById('editor').className=m;loadFormatBar();save();}
+function loadFormatBar(){const bar=document.getElementById('formatbar');bar.innerHTML='';formats[mode].forEach(f=>{const b=document.createElement('button');b.textContent=f.toUpperCase();b.onclick=()=>addBlock(f);bar.appendChild(b);});}
+function addBlock(type){const d=document.createElement('div');d.className=type;if(type==='scene'&&mode==='screenplay')d.textContent='INT. ';if(type==='transition')d.textContent='FADE OUT:';if(type==='sfx')d.textContent='SFX: ';if(type==='music')d.textContent='MUSIC: ';d.innerHTML=d.textContent||'<br>';document.getElementById('editor').appendChild(d);placeCursor(d);document.querySelectorAll('.formatbar button').forEach(b=>b.classList.remove('active'));event.target.classList.add('active');}
 
-function loadScripts(){
-  scripts=JSON.parse(localStorage.getItem('scripts')||'{}');
-  if(Object.keys(scripts).length===0){
-    scripts['default']={
-      name:'Whispering Words',
-      content:'<div class="action"><br></div>',
-      mode:'screenplay',
-      updated:Date.now(),
-      characters:[],
-      settings:{fontSize:12},
-      titlePage:{title:'THE WHISPERING WORDS',writer:'Vuyisani Madwakasa',email:'',phone:'',draft:'First Draft',date:new Date().toLocaleDateString('en-ZA')}
-    };
-    saveScripts();
-  }
-  currentScriptId=localStorage.getItem('currentScriptId')||'default';
-  loadScript(currentScriptId);
-}
-function saveScripts(){localStorage.setItem('scripts',JSON.stringify(scripts))}
-function loadScript(id){
-  if(!scripts[id])id='default';
-  if(!scripts[id].characters)scripts[id].characters=[];
-  if(!scripts[id].settings)scripts[id].settings={fontSize:12};
-  if(!scripts[id].titlePage)scripts[id].titlePage={title:scripts[id].name.toUpperCase(),writer:'Vuyisani Madwakasa',email:'',phone:'',draft:'First Draft',date:new Date().toLocaleDateString('en-ZA')};
-  currentScriptId=id;
-  localStorage.setItem('currentScriptId',id);
-  e.innerHTML=scripts[id].content;
-  setMode(scripts[id].mode);
-  e.style.fontSize=scripts[id].settings.fontSize+'pt';
-  document.getElementById('currentScript').textContent=scripts[id].name;
-  document.getElementById('aiCharList').textContent=scripts[id].characters.join(', ')||'None yet';
-  updateFormatButtons();
-}
-function saveScript(){
-  scripts[currentScriptId].content=e.innerHTML;
-  scripts[currentScriptId].mode=currentMode;
-  scripts[currentScriptId].updated=Date.now();
-  saveScripts();
-}
-function createNewScript(){
-  const name=prompt('Name your new script:','New Screenplay');
-  if(!name)return;
-  const id='script_'+Date.now();
-  scripts[id]={
-    name:name,
-    content:'<div class="action"><br></div>',
-    mode:'screenplay',
-    updated:Date.now(),
-    characters:[],
-    settings:{fontSize:12},
-    titlePage:{title:name.toUpperCase(),writer:'Vuyisani Madwakasa',email:'',phone:'',draft:'First Draft',date:new Date().toLocaleDateString('en-ZA')}
-  };
-  saveScripts();loadScript(id);closeModal('libraryModal');
-}
-function renameScript(id){const newName=prompt('Rename script:',scripts[id].name);if(newName){scripts[id].name=newName;scripts[id].titlePage.title=newName.toUpperCase();saveScripts();showLibrary();loadScript(currentScriptId)}}
-function deleteScript(id){
-  if(Object.keys(scripts).length===1){alert('Cannot delete your only script');return}
-  if(confirm('Delete "'+scripts[id].name+'"?')){delete scripts[id];saveScripts();if(currentScriptId===id)loadScript(Object.keys(scripts)[0]);showLibrary();}
-}
-function showLibrary(){
-  const list=document.getElementById('libraryList');list.innerHTML='';
-  Object.keys(scripts).sort((a,b)=>scripts[b].updated-scripts[a].updated).forEach(id=>{
-    const div=document.createElement('div');div.className='script-item'+(id===currentScriptId?' active':'');
-    div.innerHTML=`<div onclick="loadScript('${id}');closeModal('libraryModal')" style="flex:1;cursor:pointer"><b>${scripts[id].name}</b><br><span style="font-size:10px">${new Date(scripts[id].updated).toLocaleDateString()} | ${scripts[id].mode}</span></div><div class="script-actions"><button onclick="renameScript('${id}')" style="background:#555;color:#fff">Rename</button><button onclick="deleteScript('${id}')" style="background:#c62828;color:#fff">Delete</button></div>`;
-    list.appendChild(div);
-  });
-  document.getElementById('libraryModal').style.display='block';
-}
-function showCharacters(){
-  document.getElementById('charScriptName').textContent=scripts[currentScriptId].name;
-  const list=document.getElementById('charactersList');list.innerHTML='';
-  if(scripts[currentScriptId].characters.length===0){list.innerHTML='<div style="text-align:center;color:#666;margin-top:20px">No characters yet. Type a CHARACTER + Enter</div>';}
-  else{scripts[currentScriptId].characters.forEach(char=>{const div=document.createElement('div');div.className='char-item';div.innerHTML=`<b>${char}</b><button onclick="deleteCharacter('${char}')" style="background:#c62828;color:#fff;border:none;padding:2px 6px;border-radius:2px;font-size:10px">Delete</button>`;list.appendChild(div);});}
-  document.getElementById('charactersModal').style.display='block';
-}
-function deleteCharacter(name){scripts[currentScriptId].characters=scripts[currentScriptId].characters.filter(c=>c!==name);saveScripts();showCharacters();document.getElementById('aiCharList').textContent=scripts[currentScriptId].characters.join(', ')||'None yet';}
-function addCharacter(name){name=name.toUpperCase().trim().replace(':','');if(name&&!scripts[currentScriptId].characters.includes(name)){scripts[currentScriptId].characters.push(name);saveScripts();document.getElementById('aiCharList').textContent=scripts[currentScriptId].characters.join(', ');}}
-function showTitlePage(){const tp=scripts[currentScriptId].titlePage;document.getElementById('titleInput').value=tp.title;document.getElementById('writerInput').value=tp.writer;document.getElementById('emailInput').value=tp.email;document.getElementById('phoneInput').value=tp.phone;document.getElementById('draftInput').value=tp.draft;document.getElementById('dateInput').value=tp.date;document.getElementById('titleModal').style.display='block';}
-function saveTitlePage(){scripts[currentScriptId].titlePage={title:document.getElementById('titleInput').value,writer:document.getElementById('writerInput').value,email:document.getElementById('emailInput').value,phone:document.getElementById('phoneInput').value,draft:document.getElementById('draftInput').value,date:document.getElementById('dateInput').value};saveScripts();closeModal('titleModal');alert('Title Page saved.');}
+function placeCursor(el){const r=document.createRange();const s=window.getSelection();r.selectNodeContents(el);r.collapse(false);s.removeAllRanges();s.addRange(r);el.focus();}
 
-loadScripts();
-if(window.visualViewport){window.visualViewport.addEventListener('resize',()=>{const offset=window.innerHeight-window.visualViewport.height;formatBar.style.transform=`translateY(-${offset}px)`;e.style.paddingBottom=(80+offset)+'px';});}
-function setMode(mode){currentMode=mode;e.className=mode;document.getElementById('modeSelect').value=mode;updateFormatButtons();saveScript();}
-function setElement(type){document.querySelectorAll('.format-row button').forEach(b=>b.classList.remove('active'));event.target.classList.add('active');const div=document.createElement('div');div.className=type;if(currentMode==='screenplay'){if(type==='scene-heading')div.innerHTML='INT. ';if(type==='transition')div.innerHTML='FADE OUT:';if(type==='act')div.innerHTML='ACT ONE';if(type==='shot')div.innerHTML='ANGLE ON ';}if(currentMode==='theatre'){if(type==='act')div.innerHTML='ACT I';if(type==='scene')div.innerHTML='SCENE 1';if(type==='character')div.innerHTML='CHARACTER:';if(type==='stage-direction')div.innerHTML=' ';}if(currentMode==='radio'){if(type==='scene')div.innerHTML='SCENE 1.';if(type==='character')div.innerHTML='CHARACTER:';if(type==='sfx')div.innerHTML='SFX:';if(type==='music')div.innerHTML='MUSIC:';if(type==='fx')div.innerHTML='FX:';}if(['character','parenthetical','dialogue','dual-dialogue','stage-direction'].includes(type))div.innerHTML='<br>';e.appendChild(div);placeCursor(div);if(type==='character'){div.addEventListener('input',showCharAutocomplete);}saveScript();}
-function showCharAutocomplete(ev){const text=ev.target.textContent.toUpperCase();const matches=scripts[currentScriptId].characters.filter(c=>c.startsWith(text)&&c!==text);if(matches.length>0&&text.length>0){const rect=ev.target.getBoundingClientRect();autocomplete.style.left=rect.left+'px';autocomplete.style.top=(rect.bottom+5)+'px';autocomplete.innerHTML='';matches.forEach(m=>{const d=document.createElement('div');d.textContent=m;d.onclick=()=>{ev.target.textContent=m;autocomplete.style.display='none';placeCursor(ev.target)};autocomplete.appendChild(d);});autocomplete.style.display='block';}else{autocomplete.style.display='none';}}
-e.addEventListener('keydown',function(ev){if(ev.key==='Enter'){ev.preventDefault();autocomplete.style.display='none';const sel=window.getSelection();const node=sel.anchorNode.parentElement;const text=node.textContent.trim();if(node.classList.contains('character')&&text){addCharacter(text);}if(currentMode==='screenplay'&&text.match(/^(int|ext)\.?\s/i)){node.className='scene-heading';node.textContent=text.toUpperCase().replace(/\s+/g,' ');if(!text.includes('-'))node.textContent+=' - DAY';}if(node.classList.contains('character')){node.textContent=node.textContent.toUpperCase();addCharacter(node.textContent);}if(currentMode==='theatre'&&node.classList.contains('character')){if(!node.textContent.endsWith(':'))node.textContent+=':';}if(currentMode==='radio'&&node.classList.contains('character')){if(!node.textContent.endsWith(':'))node.textContent+=':';}let nextType='action';if(currentMode==='screenplay'){if(node.classList.contains('character')||node.classList.contains('parenthetical'))nextType='dialogue';if(node.classList.contains('scene-heading')||node.classList.contains('shot'))nextType='action';if(node.classList.contains('dialogue'))nextType='action';}if(currentMode==='theatre'){if(node.classList.contains('character'))nextType='dialogue';}if(currentMode==='radio'){if(node.classList.contains('character'))nextType='dialogue';}const div=document.createElement('div');div.className=nextType;div.innerHTML='<br>';node.after(div);placeCursor(div);saveScript();}});
-document.addEventListener('click',()=>autocomplete.style.display='none');
-function placeCursor(el){const r=document.createRange();const s=window.getSelection();r.selectNodeContents(el);r.collapse(false);s.removeAllRanges();s.addRange(r);e.focus();}
-function showAI(){document.getElementById('aiModal').style.display='block'}
-function closeModal(id){document.getElementById(id).style.display='none'}
-function showImport(){document.getElementById('importModal').style.display='block'}
-async function sendAI(){const input=document.getElementById('aiInput');const msg=input.value.trim();if(!msg)return;addAIMsg(msg,'user');input.value='';const q=msg.toLowerCase();const chars=scripts[currentScriptId].characters;let response="";if(q.includes('format')){response=`${currentMode} standard active. Cast: ${chars.join(', ')||'None'}`;}else{response=`Reading script. Type a CHARACTER + Enter to auto-save.`;}setTimeout(()=>addAIMsg(response,'ai'),400);}
-function addAIMsg(text,type){const div=document.createElement('div');div.className=type==='user'?'user-msg':'ai-msg';div.innerHTML=`<b>${type==='user'?'You':'Sibali'}:</b> ${text.replace(/\n/g,'<br>')}`;document.getElementById('aiChat').appendChild(div);document.getElementById('aiChat').scrollTop=99999;}
-function doImport(){const f=document.getElementById('fileInput');const t=document.getElementById('importText');if(f.files.length>0){const r=new FileReader();r.onload=ev=>{parseScript(ev.target.result);closeModal('importModal')};r.readAsText(f.files[0]);}else if(t.value){parseScript(t.value);closeModal('importModal');}}
-function parseScript(txt){e.innerHTML='';txt.split('\n').forEach(line=>{line=line.trim();if(!line)return;const div=document.createElement('div');if(line.match(/^(INT|EXT)\./i))div.className='scene-heading';else if(line.match(/^(FADE|CUT TO)/i))div.className='transition';else if(line===line.toUpperCase()&&line.length<30)div.className='character';else div.className='action';div.textContent=line;if(div.classList.contains('character'))addCharacter(line);e.appendChild(div);});saveScript();}
-function exportPDF(){const doc=new jsPDF({unit:'pt',format:'letter'});const tp=scripts[currentScriptId].titlePage;doc.setFont('Courier','normal');doc.setFontSize(12);doc.text(tp.title,306,300,{align:'center'});doc.text('Written by',306,340,{align:'center'});doc.text(tp.writer,306,360,{align:'center'});doc.text(tp.email,306,380,{align:'center'});doc.text(tp.phone,306,400,{align:'center'});doc.text(tp.draft,306,450,{align:'center'});doc.text(tp.date,306,470,{align:'center'});doc.addPage();let y=72;e.querySelectorAll('div').forEach(div=>{if(y>720){doc.addPage();y=72;}const text=div.textContent;if(!text.trim()){y+=14;return;}let x=108;let align='left';if(div.classList.contains('character')){x=306;align='center';}if(div.classList.contains('dialogue')){x=216;}if(div.classList.contains('transition')){x=468;align='right';}doc.text(text,x,y,{align:align});y+=16;});doc.save(scripts[currentScriptId].name+'.pdf');}
-function exportTXT(){const a=document.createElement('a');a.href='data:text/plain,'+encodeURIComponent(e.innerText);a.download=scripts[currentScriptId].name+'.txt';a.click()}
-e.addEventListener('input',saveScript);setInterval(saveScript,3000);
+function save(){scripts[current].content=document.getElementById('editor').innerHTML;scripts[current].mode=mode;localStorage.setItem('ww',JSON.stringify(scripts));}
+function load(id){current=id;const s=scripts[id];document.getElementById('editor').innerHTML=s.content;mode=s.mode;document.getElementById('mode').value=mode;setMode(mode);document.getElementById('scriptName').textContent=s.name;closeModal('libModal');}
+function newScript(){const n=prompt('Script name?');if(n){const id='s'+Date.now();scripts[id]={name:n,content:'',mode:'screenplay',title:{title:n.toUpperCase(),writer:'Vuyisani Madwakasa',email:'',phone:''}};save();load(id);}}
+function showList(){const l=document.getElementById('libList');l.innerHTML='';Object.keys(scripts).forEach(id=>{l.innerHTML+=`<div style="padding:8px;border-bottom:1px solid #ccc;cursor:pointer" onclick="load('${id}')">${scripts[id].name}</div>`});document.getElementById('libModal').style.display='block';}
+function showTitle(){const t=scripts[current].title;document.getElementById('tTitle').value=t.title;document.getElementById('tWriter').value=t.writer;document.getElementById('tEmail').value=t.email;document.getElementById('tPhone').value=t.phone;document.getElementById('titleModal').style.display='block';}
+function saveTitle(){scripts[current].title={title:document.getElementById('tTitle').value,writer:document.getElementById('tWriter').value,email:document.getElementById('tEmail').value,phone:document.getElementById('tPhone').value};save();closeModal('titleModal');}
+function closeModal(id){document.getElementById(id).style.display='none';}
+
+function savePDF(){const {jsPDF}=window.jspdf;const doc=new jsPDF();const t=scripts[current].title;doc.setFont('Courier');doc.setFontSize(12);doc.text(t.title,105,100,{align:'center'});doc.text('by',105,115,{align:'center'});doc.text(t.writer,105,125,{align:'center'});doc.text(t.email+' | '+t.phone,105,135,{align:'center'});doc.addPage();let y=20;document.querySelectorAll('#editor div').forEach(div=>{if(y>270){doc.addPage();y=20;}let txt=div.textContent;let x=20;if(div.className==='character')x=105;if(div.className==='dialogue')x=55;if(div.className==='parenthetical')x=75;if(div.className==='transition')x=170;if(div.className==='sfx'||div.className==='music')x=105;doc.text(txt,x,y);y+=7;});doc.save(scripts[current].name+'.pdf');}
+
+// AUTO FORMAT ON ENTER
+document.getElementById('editor').addEventListener('keydown',e=>{
+  if(e.key==='Enter'){e.preventDefault();const sel=window.getSelection();const node=sel.anchorNode.parentElement;const txt=node.textContent.trim();if(mode==='screenplay'&&txt.match(/^int|^ext/i)){node.className='scene';node.textContent=txt.toUpperCase()+(txt.includes('-')?'':' - DAY');}if(node.className==='character'){node.textContent=node.textContent.toUpperCase();}const d=document.createElement('div');d.className=(node.className==='character'?'dialogue':'action');if(mode!=='screenplay'&&node.className==='character')d.className='dialogue';d.innerHTML='<br>';node.after(d);placeCursor(d);save();}
+});
+
+// INIT
+load('default');loadFormatBar();setInterval(save,3000);
 </script>
 </body>
-  </html>
+</html>
