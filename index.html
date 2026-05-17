@@ -3,82 +3,56 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<title>The Whispering Words - For SA Creatives</title>
+<title>The Whispering Words - Industry Standard</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{height:100%;overflow:hidden}
 body{font-family:'Courier New',monospace;background:#e8e8e8;display:flex;flex-direction:column}
 
-/* TOP BAR - NEVER MOVES. STICKS AT TOP */
-.header-bar{
-  position:sticky;
-  top:0;
-  z-index:1000;
-  background:#1a1a1a;
-  color:#fff;
-  padding:8px;
-  text-align:center;
-  font-weight:bold;
-  font-size:14px;
-  flex-shrink:0;
-}
+.header-bar{position:sticky;top:0;z-index:1000;background:#1a1a1a;color:#fff;padding:8px;text-align:center;font-weight:bold;font-size:14px;flex-shrink:0}
+#currentScript{font-size:10px;color:#8B4513;font-weight:normal}
 #save{position:absolute;top:6px;right:8px;background:#2e7d32;color:#fff;border:none;padding:4px 10px;border-radius:3px;font-size:11px}
 
-/* UTIL TOOLBAR - STICKS BELOW HEADER. NEVER HIDES */
-.util-toolbar{
-  position:sticky;
-  top:36px;
-  z-index:999;
-  background:#2d2d2d;
-  padding:6px;
-  border-bottom:1px solid #000;
-  flex-shrink:0;
-}
+.util-toolbar{position:sticky;top:36px;z-index:999;background:#2d2d2d;padding:6px;border-bottom:1px solid #000;flex-shrink:0}
 .util-row{display:flex;gap:3px;overflow-x:auto}
 .util-row button,.util-row select{background:#1a1a1a;color:#fff;border:1px solid #000;border-radius:3px;padding:6px 8px;font-size:10px;white-space:nowrap}
 
-/* EDITOR - ADJUSTS FOR KEYBOARD */
-#editor{
-  flex:1;
-  padding:24px;
-  background:#fff;
-  overflow-y:auto;
-  outline:none;
-  font-size:12pt;
-  line-height:1.15;
-  padding-bottom:80px;
-}
+#editor{flex:1;padding:24px;background:#fff;overflow-y:auto;outline:none;font-size:12pt;line-height:1.15;padding-bottom:80px}
 #editor div{min-height:14pt}
 
-/* FORMAT TOOLBAR - RIDES ABOVE KEYBOARD LIKE CELTX */
-.format-toolbar{
-  position:fixed;
-  bottom:0;
-  left:0;
-  right:0;
-  z-index:1000;
-  background:#2d2d2d;
-  padding:6px;
-  padding-bottom:calc(6px + env(safe-area-inset-bottom));
-  border-top:1px solid #000;
-  transform:translateY(0);
-  transition:transform 0.2s;
-}
+.format-toolbar{position:fixed;bottom:0;left:0;right:0;z-index:1000;background:#2d2d2d;padding:6px;padding-bottom:calc(6px + env(safe-area-inset-bottom));border-top:1px solid #000;transform:translateY(0);transition:transform 0.2s}
 .format-row{display:flex;gap:3px;overflow-x:auto;padding-bottom:2px}
 .format-row button{background:#4a4a4a;color:#fff;border:1px solid #1a1a1a;border-radius:3px;padding:8px 6px;font-size:10px;font-weight:bold;white-space:nowrap}
 .format-row button.active{background:#8B4513;border-color:#5a2d0c}
 
-/* TRUE CELTX MARGINS */
+/* SCREENPLAY - AMPAS/WGA */
 .screenplay.scene-heading{text-transform:uppercase;font-weight:bold;margin:12pt 0}
 .screenplay.action{margin:0 0 12pt 0}
 .screenplay.character{text-align:center!important;text-transform:uppercase;margin:12pt 0 0 0!important;width:3.5in!important;margin-left:auto!important;margin-right:auto!important;display:block!important}
 .screenplay.dialogue{margin:0 1in 12pt 1.5in!important;max-width:3.5in}
-.screenplay.parenthetical{text-align:left!important;margin:0 0 0 2.2in!important;width:2in!important}
+.screenplay.parenthetical{margin:0 0 0 1.8in!important;width:2.5in!important}
 .screenplay.transition{text-align:right!important;text-transform:uppercase;font-weight:bold;margin:12pt 0}
 .screenplay.shot{text-transform:uppercase;font-weight:bold;margin:12pt 0}
 .screenplay.act{text-align:center;font-weight:bold;text-decoration:underline;margin:24pt 0 12pt 0}
 .screenplay.dual-dialogue{margin:0 0 12pt 3.5in!important;max-width:1.5in}
+
+/* THEATRE - SAMUEL FRENCH */
+.theatre.act{text-align:center;font-weight:bold;margin:24pt 0 12pt 0}
+.theatre.scene{text-align:center;font-weight:bold;margin:12pt 0}
+.theatre.character{font-weight:bold;text-transform:uppercase;margin:12pt 0 0 0;text-decoration:underline}
+.theatre.dialogue{margin:0 0 12pt 0}
+.theatre.stage-direction{margin:0 0 12pt 0;font-style:italic}
+.theatre.stage-direction::before{content:'['}
+.theatre.stage-direction::after{content:']'}
+
+/* RADIO - BBC/SAFM */
+.radio.scene{text-align:center;font-weight:bold;text-decoration:underline;margin:12pt 0}
+.radio.character{font-weight:bold;text-transform:uppercase;margin:12pt 0 0 0;text-decoration:underline}
+.radio.dialogue{margin:0 0 12pt 0}
+.radio.sfx{text-align:center!important;text-transform:uppercase;font-weight:bold;margin:12pt 0}
+.radio.music{text-align:center!important;text-transform:uppercase;font-weight:bold;margin:12pt 0}
+.radio.fx{text-align:center!important;text-transform:uppercase;font-weight:bold;margin:12pt 0}
 
 .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);z-index:2000}
 .modal-box{background:#fff;margin:5% auto;width:90%;height:85%;border-radius:4px;display:flex;flex-direction:column}
@@ -86,23 +60,33 @@ body{font-family:'Courier New',monospace;background:#e8e8e8;display:flex;flex-di
 .modal-body{flex:1;padding:10px;overflow-y:auto;font-size:13px}
 .ai-msg{background:#f5f5f5;padding:8px;margin:8px 0;border-radius:4px}
 .user-msg{background:#e3f2fd;padding:8px;margin:8px 0;border-radius:4px;text-align:right}
+.script-item{background:#f0f0f0;padding:10px;margin:6px 0;border-radius:4px;display:flex;justify-content:space-between;align-items:center}
+.script-item.active{background:#8B4513;color:#fff}
+.script-actions button{margin-left:4px;padding:4px 8px;font-size:10px;border:none;border-radius:2px}
+.char-item{background:#e8e8e8;padding:8px;margin:4px 0;border-radius:3px;display:flex;justify-content:space-between}
+.autocomplete{position:absolute;background:#fff;border:1px solid #000;max-height:120px;overflow-y:auto;z-index:2001;display:none}
+.autocomplete div{padding:6px;cursor:pointer;font-size:11px}
+.autocomplete div:hover{background:#8B4513;color:#fff}
 footer{text-align:center;padding:3px;font-size:8px;color:#666;background:#ddd;flex-shrink:0}
 </style>
 </head>
 <body>
-<!-- TOP BAR - FROZEN -->
-<div class="header-bar">The Whispering Words <button id="save" onclick="saveScript()">Save</button></div>
+<div class="header-bar">
+  The Whispering Words
+  <div id="currentScript">Whispering Words</div>
+  <button id="save" onclick="saveScript()">Save</button>
+</div>
 
-<!-- UTIL BAR - FROZEN AT TOP -->
 <div class="util-toolbar">
   <div class="util-row">
     <select id="modeSelect" onchange="setMode(this.value)">
-      <option value="screenplay">Screenplay</option>
-      <option value="theatre">Theatre</option>
-      <option value="radio">Radio</option>
+      <option value="screenplay">Screenplay - AMPAS</option>
+      <option value="theatre">Theatre - Samuel French</option>
+      <option value="radio">Radio - BBC/SAFM</option>
     </select>
-    <button onclick="showImport()">Import</button>
     <button onclick="showLibrary()">Library</button>
+    <button onclick="showCharacters()">Characters</button>
+    <button onclick="showImport()">Import</button>
     <button onclick="exportTXT()">TXT</button>
     <button onclick="exportPDF()">PDF</button>
     <button onclick="showAI()">Sibali AI</button>
@@ -110,33 +94,48 @@ footer{text-align:center;padding:3px;font-size:8px;color:#666;background:#ddd;fl
 </div>
 
 <div id="editor" contenteditable="true" class="screenplay"></div>
+<div id="autocomplete" class="autocomplete"></div>
 
-<!-- FORMAT BAR - RIDES ABOVE KEYBOARD -->
 <div class="format-toolbar" id="formatBar">
-  <div class="format-row">
-    <button onclick="setElement('act')">ACT</button>
-    <button onclick="setElement('scene-heading')">SCENE HEADING</button>
-    <button onclick="setElement('action')">ACTION</button>
-    <button onclick="setElement('character')">CHARACTER</button>
-    <button onclick="setElement('dialogue')">DIALOGUE</button>
-    <button onclick="setElement('parenthetical')">PARENTHETICAL</button>
-    <button onclick="setElement('dual-dialogue')">DUAL DIALOGUE</button>
-    <button onclick="setElement('transition')">TRANSITION</button>
-    <button onclick="setElement('shot')">SHOT</button>
-  </div>
+  <div class="format-row" id="formatButtons"></div>
 </div>
 
 <footer>2026 Built by Vuyisani Madwakasa for SA Creatives</footer>
 
-<!-- SIBALI AI - WRITING RESEARCH ONLY -->
+<!-- LIBRARY MODAL -->
+<div id="libraryModal" class="modal">
+  <div class="modal-box">
+    <div class="modal-head">
+      Your Script Library 
+      <span>
+        <button onclick="createNewScript()" style="background:#2e7d32;color:#fff;border:none;padding:4px 8px;border-radius:2px;margin-right:8px">+ New Script</button>
+        <span onclick="closeModal('libraryModal')" style="cursor:pointer">✕</span>
+      </span>
+    </div>
+    <div class="modal-body" id="libraryList"></div>
+  </div>
+</div>
+
+<!-- CHARACTERS MODAL - NEW -->
+<div id="charactersModal" class="modal">
+  <div class="modal-box">
+    <div class="modal-head">
+      Character Bible - <span id="charScriptName"></span>
+      <span onclick="closeModal('charactersModal')" style="cursor:pointer">✕</span>
+    </div>
+    <div class="modal-body" id="charactersList"></div>
+  </div>
+</div>
+
+<!-- SIBALI AI -->
 <div id="aiModal" class="modal">
   <div class="modal-box">
-    <div class="modal-head">Sibali — Writing Research Only <span onclick="closeModal('aiModal')" style="cursor:pointer">✕</span></div>
+    <div class="modal-head">Sibali — Industry Standards Only <span onclick="closeModal('aiModal')" style="cursor:pointer">✕</span></div>
     <div class="modal-body" id="aiChat">
-      <div class="ai-msg"><b>Sibali:</b> Ewe Vuyisani. I'm Sibali. My only career is writing. I do script research, Celtx format rules, and SA industry research. I don't do general chat. Ask me: "What are NFVF story rules?" or "Rewrite this in township slang"</div>
+      <div class="ai-msg"><b>Sibali:</b> Ewe Vuyisani. I see your cast: <span id="aiCharList">None yet</span>. I enforce AMPAS/BBC/Samuel French rules. Ask me about your characters.</div>
     </div>
     <div style="padding:10px;border-top:1px solid #ddd;display:flex">
-      <input type="text" id="aiInput" placeholder="Ask Sibali about writing..." style="flex:1;padding:8px" onkeypress="if(event.key==='Enter')sendAI()">
+      <input type="text" id="aiInput" placeholder="Ask about industry format..." style="flex:1;padding:8px" onkeypress="if(event.key==='Enter')sendAI()">
       <button onclick="sendAI()" style="margin-left:8px;padding:8px 16px;background:#8B4513;color:#fff;border:none;border-radius:3px">Ask</button>
     </div>
   </div>
@@ -157,14 +156,130 @@ footer{text-align:center;padding:3px;font-size:8px;color:#666;background:#ddd;fl
 <script>
 const e=document.getElementById('editor');
 const formatBar=document.getElementById('formatBar');
+const autocomplete=document.getElementById('autocomplete');
 const { jsPDF } = window.jspdf;
 let currentMode='screenplay';
+let currentScriptId='default';
+let scripts={};
 
-// INIT
-e.innerHTML=localStorage.getItem('script')||'<div class="action"><br></div>';
-setMode(localStorage.getItem('mode')||'screenplay');
+// FORMAT BUTTONS BY MODE
+const formatSets={
+  screenplay:['act','scene-heading','action','character','dialogue','parenthetical','dual-dialogue','transition','shot'],
+  theatre:['act','scene','character','dialogue','stage-direction'],
+  radio:['scene','character','dialogue','sfx','music','fx']
+};
 
-// KEYBOARD DETECTION - MOVES FORMAT BAR LIKE CELTX
+function updateFormatButtons(){
+  const row=document.getElementById('formatButtons');
+  row.innerHTML='';
+  formatSets[currentMode].forEach(type=>{
+    const btn=document.createElement('button');
+    btn.textContent=type.replace('-',' ').toUpperCase();
+    btn.onclick=()=>setElement(type);
+    row.appendChild(btn);
+  });
+}
+
+// LIBRARY + CHARACTER SYSTEM
+function loadScripts(){
+  scripts=JSON.parse(localStorage.getItem('scripts')||'{}');
+  if(Object.keys(scripts).length===0){
+    scripts['default']={name:'Whispering Words',content:'<div class="action"><br></div>',mode:'screenplay',updated:Date.now(),characters:[],settings:{fontSize:12}};
+    saveScripts();
+  }
+  currentScriptId=localStorage.getItem('currentScriptId')||'default';
+  loadScript(currentScriptId);
+}
+function saveScripts(){localStorage.setItem('scripts',JSON.stringify(scripts))}
+function loadScript(id){
+  if(!scripts[id])id='default';
+  if(!scripts[id].characters)scripts[id].characters=[];
+  if(!scripts[id].settings)scripts[id].settings={fontSize:12};
+  currentScriptId=id;
+  localStorage.setItem('currentScriptId',id);
+  e.innerHTML=scripts[id].content;
+  setMode(scripts[id].mode);
+  e.style.fontSize=scripts[id].settings.fontSize+'pt';
+  document.getElementById('currentScript').textContent=scripts[id].name;
+  document.getElementById('aiCharList').textContent=scripts[id].characters.join(', ')||'None yet';
+  updateFormatButtons();
+}
+function saveScript(){
+  scripts[currentScriptId].content=e.innerHTML;
+  scripts[currentScriptId].mode=currentMode;
+  scripts[currentScriptId].updated=Date.now();
+  saveScripts();
+}
+function createNewScript(){
+  const name=prompt('Name your new script:','New Screenplay');
+  if(!name)return;
+  const id='script_'+Date.now();
+  scripts[id]={name:name,content:'<div class="action"><br></div>',mode:'screenplay',updated:Date.now(),characters:[],settings:{fontSize:12}};
+  saveScripts();loadScript(id);closeModal('libraryModal');
+}
+function renameScript(id){const newName=prompt('Rename script:',scripts[id].name);if(newName){scripts[id].name=newName;saveScripts();showLibrary();loadScript(currentScriptId)}}
+function deleteScript(id){
+  if(Object.keys(scripts).length===1){alert('Cannot delete your only script');return}
+  if(confirm('Delete "'+scripts[id].name+'"? This cannot be undone.')){
+    delete scripts[id];saveScripts();
+    if(currentScriptId===id)loadScript(Object.keys(scripts)[0]);
+    showLibrary();
+  }
+}
+function showLibrary(){
+  const list=document.getElementById('libraryList');
+  list.innerHTML='';
+  Object.keys(scripts).sort((a,b)=>scripts[b].updated-scripts[a].updated).forEach(id=>{
+    const div=document.createElement('div');
+    div.className='script-item'+(id===currentScriptId?' active':'');
+    div.innerHTML=`
+      <div onclick="loadScript('${id}');closeModal('libraryModal')" style="flex:1;cursor:pointer">
+        <b>${scripts[id].name}</b><br>
+        <span style="font-size:10px">Updated: ${new Date(scripts[id].updated).toLocaleDateString()} | ${scripts[id].mode} | ${scripts[id].characters.length} chars</span>
+      </div>
+      <div class="script-actions">
+        <button onclick="renameScript('${id}')" style="background:#555;color:#fff">Rename</button>
+        <button onclick="deleteScript('${id}')" style="background:#c62828;color:#fff">Delete</button>
+      </div>
+    `;
+    list.appendChild(div);
+  });
+  document.getElementById('libraryModal').style.display='block';
+}
+
+// CHARACTER BIBLE
+function showCharacters(){
+  document.getElementById('charScriptName').textContent=scripts[currentScriptId].name;
+  const list=document.getElementById('charactersList');
+  list.innerHTML='';
+  if(scripts[currentScriptId].characters.length===0){
+    list.innerHTML='<div style="text-align:center;color:#666;margin-top:20px">No characters yet. Type a CHARACTER name and it auto-saves here.</div>';
+  }else{
+    scripts[currentScriptId].characters.forEach(char=>{
+      const div=document.createElement('div');
+      div.className='char-item';
+      div.innerHTML=`<b>${char}</b><button onclick="deleteCharacter('${char}')" style="background:#c62828;color:#fff;border:none;padding:2px 6px;border-radius:2px;font-size:10px">Delete</button>`;
+      list.appendChild(div);
+    });
+  }
+  document.getElementById('charactersModal').style.display='block';
+}
+function deleteCharacter(name){
+  scripts[currentScriptId].characters=scripts[currentScriptId].characters.filter(c=>c!==name);
+  saveScripts();showCharacters();document.getElementById('aiCharList').textContent=scripts[currentScriptId].characters.join(', ')||'None yet';
+}
+function addCharacter(name){
+  name=name.toUpperCase().trim();
+  if(name&&!scripts[currentScriptId].characters.includes(name)){
+    scripts[currentScriptId].characters.push(name);
+    saveScripts();
+    document.getElementById('aiCharList').textContent=scripts[currentScriptId].characters.join(', ');
+  }
+}
+
+loadScripts();
+
+// KEYBOARD DETECTION
 if(window.visualViewport){
   window.visualViewport.addEventListener('resize',()=>{
     const offset=window.innerHeight - window.visualViewport.height;
@@ -173,87 +288,154 @@ if(window.visualViewport){
   });
 }
 
-function saveScript(){localStorage.setItem('script',e.innerHTML);localStorage.setItem('mode',currentMode)}
-function setMode(mode){currentMode=mode;e.className=mode;document.getElementById('modeSelect').value=mode;saveScript()}
+function setMode(mode){
+  currentMode=mode;
+  e.className=mode;
+  document.getElementById('modeSelect').value=mode;
+  updateFormatButtons();
+  saveScript();
+}
 
 function setElement(type){
   document.querySelectorAll('.format-row button').forEach(b=>b.classList.remove('active'));
   event.target.classList.add('active');
   const div=document.createElement('div');
   div.className=type;
-  if(type==='scene-heading')div.innerHTML='INT. ';
-  if(type==='transition')div.innerHTML='FADE OUT:';
-  if(type==='act')div.innerHTML='ACT ONE';
-  if(['character','parenthetical','dialogue','dual-dialogue'].includes(type))div.innerHTML='<br>';
+  
+  if(currentMode==='screenplay'){
+    if(type==='scene-heading')div.innerHTML='INT. ';
+    if(type==='transition')div.innerHTML='FADE OUT:';
+    if(type==='act')div.innerHTML='ACT ONE';
+    if(type==='shot')div.innerHTML='ANGLE ON ';
+  }
+  if(currentMode==='theatre'){
+    if(type==='act')div.innerHTML='ACT I';
+    if(type==='scene')div.innerHTML='SCENE 1';
+    if(type==='character')div.innerHTML='CHARACTER:';
+    if(type==='stage-direction')div.innerHTML=' ';
+  }
+  if(currentMode==='radio'){
+    if(type==='scene')div.innerHTML='SCENE 1.';
+    if(type==='character')div.innerHTML='CHARACTER:';
+    if(type==='sfx')div.innerHTML='SFX:';
+    if(type==='music')div.innerHTML='MUSIC:';
+    if(type==='fx')div.innerHTML='FX:';
+  }
+  
+  if(['character','parenthetical','dialogue','dual-dialogue','stage-direction'].includes(type))div.innerHTML='<br>';
   e.appendChild(div);
   placeCursor(div);
+  
+  // AUTO-SUGGEST CHARACTERS
+  if(type==='character'){
+    div.addEventListener('input',showCharAutocomplete);
+  }
   saveScript();
+}
+
+function showCharAutocomplete(ev){
+  const text=ev.target.textContent.toUpperCase();
+  const matches=scripts[currentScriptId].characters.filter(c=>c.startsWith(text)&&c!==text);
+  if(matches.length>0&&text.length>0){
+    const rect=ev.target.getBoundingClientRect();
+    autocomplete.style.left=rect.left+'px';
+    autocomplete.style.top=(rect.bottom+5)+'px';
+    autocomplete.innerHTML='';
+    matches.forEach(m=>{
+      const div=document.createElement('div');
+      div.textContent=m;
+      div.onclick=()=>{ev.target.textContent=m;autocomplete.style.display='none';placeCursor(ev.target)};
+      autocomplete.appendChild(div);
+    });
+    autocomplete.style.display='block';
+  }else{
+    autocomplete.style.display='none';
+  }
 }
 
 e.addEventListener('keydown',function(ev){
   if(ev.key==='Enter'){
     ev.preventDefault();
+    autocomplete.style.display='none';
     const sel=window.getSelection();
     const node=sel.anchorNode.parentElement;
     const text=node.textContent.trim();
     
-    if(text.match(/^(int|ext)\.?\s/i)){
+    // SAVE CHARACTER TO BIBLE
+    if(node.classList.contains('character')&&text){
+      addCharacter(text.replace(':',''));
+    }
+    
+    if(currentMode==='screenplay'&&text.match(/^(int|ext)\.?\s/i)){
       node.className='scene-heading';
       node.textContent=text.toUpperCase().replace(/\s+/g,' ');
       if(!text.includes('-'))node.textContent+=' - DAY';
     }
-    if(node.classList.contains('character')){
-      node.textContent=node.textContent.toUpperCase();
-    }
+    if(node.classList.contains('character'))node.textContent=node.textContent.toUpperCase();
     
     let nextType='action';
-    if(node.classList.contains('character')||node.classList.contains('parenthetical'))nextType='dialogue';
-    if(node.classList.contains('scene-heading')||node.classList.contains('shot'))nextType='action';
-    if(node.classList.contains('dialogue'))nextType='action';
+    if(currentMode==='screenplay'){
+      if(node.classList.contains('character')||node.classList.contains('parenthetical'))nextType='dialogue';
+      if(node.classList.contains('scene-heading')||node.classList.contains('shot'))nextType='action';
+      if(node.classList.contains('dialogue'))nextType='action';
+    }
+    if(currentMode==='theatre'){
+      if(node.classList.contains('character'))nextType='dialogue';
+      if(node.classList.contains('dialogue')||node.classList.contains('stage-direction'))nextType='dialogue';
+    }
+    if(currentMode==='radio'){
+      if(node.classList.contains('character'))nextType='dialogue';
+      if(node.classList.contains('dialogue')||node.classList.contains('sfx')||node.classList.contains('music'))nextType='dialogue';
+    }
     
-    const div=document.createElement('div');
-    div.className=nextType;
-    div.innerHTML='<br>';
-    node.after(div);
-    placeCursor(div);
-    saveScript();
+    const div=document.createElement('div');div.className=nextType;div.innerHTML='<br>';node.after(div);placeCursor(div);saveScript();
   }
 });
 
+document.addEventListener('click',()=>autocomplete.style.display='none');
+
 function placeCursor(el){const r=document.createRange();const s=window.getSelection();r.selectNodeContents(el);r.collapse(false);s.removeAllRanges();s.addRange(r);e.focus()}
 
-// SIBALI AI - WRITING RESEARCH ONLY. REFUSES EVERYTHING ELSE.
+// SIBALI AI - KNOWS YOUR CHARACTERS
 function showAI(){document.getElementById('aiModal').style.display='block'}
 function closeModal(id){document.getElementById(id).style.display='none'}
 function showImport(){document.getElementById('importModal').style.display='block'}
-function showLibrary(){alert('Library coming in v6. Your script auto-saves every 3 seconds.')}
 
 async function sendAI(){
   const input=document.getElementById('aiInput');
   const msg=input.value.trim();if(!msg)return;
   addAIMsg(msg,'user');input.value='';
-  
   const script=e.innerText;
   const q=msg.toLowerCase();
+  const scriptName=scripts[currentScriptId].name;
+  const chars=scripts[currentScriptId].characters;
   let response="";
   
-  // SIBALI SCOPE LOCK - WRITING RESEARCH ONLY
-  if(q.includes('weather')||q.includes('news')||q.includes('code')||q.includes('python')||q.includes('translate')||q.includes('math')){
-    response="Tata, I’m Sibali. My career is ONLY writing research — Celtx format, SA dialogue, NFVF/SABC rules, industry trends. For that question, ask Vuyisani. Now, what story problem are we solving?";
+  if(q.includes('weather')||q.includes('news')||q.includes('code')||q.includes('python')){
+    response=`Tata, I’m Sibali. My career is ONLY ${currentMode} industry standards for "${scriptName}". Cast: ${chars.join(', ')||'None yet'}. Ask Vuyisani for that question. Now, what format rule are we checking?`;
   }
-  else if(q.includes('rewrite')||q.includes('fix')||q.includes('township')||q.includes('alex')||q.includes('soweto')){
-    response=`Sharp. Here’s your scene with SA township texture + proper Celtx margins:\n\nINT. VUYISANI'S SHACK - NIGHT\nRain drums on the roof. Vuyisani paces. Phone to ear.\n\nVUYISANI\n(on phone, desperate)\nBaba... eish, ntwana. I'm at Bara rank. I broke some oke's iPhone. The nyaope boys say they gonna get me.\n\nFATHER (V.O.)\n(filtered)\nVuyisani! How many times? I don't have money for your kasi problems!\n\nSudden POUNDING at the door. Vuyisani freezes.\n\nFADE OUT.\n\nResearch: 1. "Ntwana" = Alex slang 2. "Bara rank" = real location 3. "Nyaope boys" = real SA stakes. Copy it.`;
+  else if(q.includes('character')&&chars.length>0){
+    const char=q.toUpperCase().match(new RegExp(chars.join('|'),'i'));
+    if(char){
+      response=`Character Bible: ${char[0]} appears in "${scriptName}". ${currentMode} rule: ${currentMode==='screenplay'?'Must be centered, UPPERCASE':currentMode==='theatre'?'Needs colon: CHARACTER:':'Needs underline: CHARACTER:'}. What does ${char[0]} want in this scene?`;
+    }else{
+      response=`Your cast for "${scriptName}": ${chars.join(', ')}. Ask me: "What does VUYISANI want?" or "Is VUYISANI's dialogue SA enough?"`;
+    }
   }
-  else if(q.includes('nfvf')||q.includes('sabc')||q.includes('showmax')||q.includes('industry')){
-    response=`SA Industry Research:\n\nNFVF requires: 3-act structure, logline, South African identity, transformation theme. Budget under R5m.\nSABC Drama wants: 26min episodes, family conflict, moral resolution, township/rural setting.\nShowmax wants: Cold open with death/stakes, cliffhanger every 10min, urban + aspirational.\n\nYour script needs: Higher stakes in page 1. Add "KNOCK at door" before FADE OUT. Want me to rewrite for NFVF?`;
-  }
-  else if(q.includes('format')||q.includes('margin')||q.includes('center')||q.includes('celtx')){
-    response=`Celtx Format Rules:\n\nSCENE HEADING: INT/EXT. LOCATION - TIME. Always UPPERCASE.\nCHARACTER: Centered, UPPERCASE. Tap CHARACTER button first.\nDIALOGUE: Indented 1.5in from left. Tap DIALOGUE after CHARACTER.\nPARENTHETICAL: (wry) Under CHARACTER, before DIALOGUE.\nTRANSITION: FADE OUT: Right aligned.\n\nTest: Type VUYISANI as ACTION vs CHARACTER. Only CHARACTER centers it.`;
+  else if(q.includes('format')||q.includes('standard')){
+    if(currentMode==='screenplay'){
+      response=`AMPAS Screenplay Standards for "${scriptName}":\n\n1. CHARACTER: Centered, UPPERCASE. Your cast: ${chars.join(', ')||'None'}\n2. DIALOGUE: 1.5in indent\n3. TRANSITION: Right aligned\n\nIndustry check: ${script.includes('FADE OUT')?'FADE OUT found':'Missing FADE OUT'}. Tap TRANSITION button.`;
+    }
+    if(currentMode==='theatre'){
+      response=`Samuel French Theatre Standards for "${scriptName}":\n\n1. CHARACTER: UPPERCASE, underlined, colon: VUYISANI:\n2. DIALOGUE: Flush left\n3. STAGE DIRECTION: [Italic in brackets]\n\nYour cast: ${chars.join(', ')||'None'}. BBC rejects scripts without colons.`;
+    }
+    if(currentMode==='radio'){
+      response=`BBC/SAFM Radio Standards for "${scriptName}":\n\n1. CHARACTER: UPPERCASE, underlined, colon: VUYISANI:\n2. SFX: Centered, UPPERCASE: SFX: KNOCK\n3. DIALOGUE: Flush left\n\nSAFM requires SFX every 30sec. Your cast: ${chars.join(', ')||'None'}.`;
+    }
   }
   else{
-    response=`I read your script, mfethu. Core issue: No visual stakes. Writing research says add: "Rain", "Knock", "Phone" = tension.\n\nTry: After "I need money", add:\n\nThe bulb flickers. KNOCK at the door. Vuyisani covers the phone mic.\n\nAsk me: "Give me 3 ways to end this scene for Netflix SA" or "What does NFVF want in Act 1?"`;
+    response=`Reading "${scriptName}" in ${currentMode} mode. Cast: ${chars.join(', ')||'No characters saved yet'}. Type a CHARACTER name and I'll auto-save it.\n\nIndustry tip: ${currentMode==='screenplay'?'Add FADE OUT: at end':currentMode==='theatre'?'Add [Blackout] for scene end':'Add SFX: THEME MUSIC UP'}. Ask: "What does ${chars[0]||'VUYISANI'} want?"`;
   }
-  
   setTimeout(()=>addAIMsg(response,'ai'),600);
 }
 
@@ -267,25 +449,38 @@ function addAIMsg(text,type){
 
 function doImport(){
   const f=document.getElementById('fileInput');const t=document.getElementById('importText');
-  if(f.files.length>0){
-    const r=new FileReader();
-    r.onload=ev=>{parseScript(ev.target.result);closeModal('importModal')};
-    r.readAsText(f.files[0]);
-  }else if(t.value){
-    parseScript(t.value);closeModal('importModal');
-  }
+  if(f.files.length>0){const r=new FileReader();r.onload=ev=>{parseScript(ev.target.result);closeModal('importModal')};r.readAsText(f.files[0]);}
+  else if(t.value){parseScript(t.value);closeModal('importModal');}
 }
 function parseScript(txt){
   e.innerHTML='';
   txt.split('\n').forEach(line=>{
     line=line.trim();if(!line)return;
     const div=document.createElement('div');
-    if(line.match(/^(INT|EXT)\./i))div.className='scene-heading';
-    else if(line.match(/^(FADE|CUT TO)/i))div.className='transition';
-    else if(line===line.toUpperCase()&&line.length<30&&!line.startsWith('('))div.className='character';
-    else if(line.startsWith('(')&&line.endsWith(')'))div.className='parenthetical';
-    else div.className='action';
+    if(currentMode==='screenplay'){
+      if(line.match(/^(INT|EXT)\./i))div.className='scene-heading';
+      else if(line.match(/^(FADE|CUT TO)/i))div.className='transition';
+      else if(line===line.toUpperCase()&&line.length<30&&!line.startsWith('('))div.className='character';
+      else if(line.startsWith('(')&&line.endsWith(')'))div.className='parenthetical';
+      else div.className='action';
+    }
+    if(currentMode==='theatre'){
+      if(line.match(/^ACT/i))div.className='act';
+      else if(line.match(/^SCENE/i))div.className='scene';
+      else if(line.includes(':')&&line.split(':')[0]===line.split(':')[0].toUpperCase())div.className='character';
+      else if(line.startsWith('[')&&line.endsWith(']'))div.className='stage-direction';
+      else div.className='dialogue';
+    }
+    if(currentMode==='radio'){
+      if(line.match(/^SCENE/i))div.className='scene';
+      else if(line.includes(':')&&line.split(':')[0]===line.split(':')[0].toUpperCase())div.className='character';
+      else if(line.startsWith('SFX:'))div.className='sfx';
+      else if(line.startsWith('MUSIC:'))div.className='music';
+      else if(line.startsWith('FX:'))div.className='fx';
+      else div.className='dialogue';
+    }
     div.textContent=line;
+    if(div.classList.contains('character'))addCharacter(line.replace(':',''));
     e.appendChild(div);
   });
   saveScript();
@@ -293,27 +488,38 @@ function parseScript(txt){
 
 function exportPDF(){
   const doc = new jsPDF({unit:'pt',format:'letter'});
-  doc.setFont('Courier');doc.setFontSize(12);
-  let y=72;const lineHeight=14;const pageHeight=792;
+  doc.setFont('Courier');doc.setFontSize(12);let y=72;const lineHeight=14;const pageHeight=792;
   e.querySelectorAll('div').forEach(div=>{
     if(y > pageHeight - 72){doc.addPage();y=72;}
     const text=div.textContent;if(!text.trim()){y+=lineHeight;return;}
-    let x=108;let align='left';
-    if(div.classList.contains('character')){x=306;align='center';}
-    if(div.classList.contains('dialogue')){x=252;}
-    if(div.classList.contains('parenthetical')){x=324;}
-    if(div.classList.contains('transition')){x=540;align='right';}
-    if(div.classList.contains('dual-dialogue')){x=450;}
+    let x=108;let align='left';let fontStyle='normal';
+    
+    if(currentMode==='screenplay'){
+      if(div.classList.contains('character')){x=306;align='center';}
+      if(div.classList.contains('dialogue')){x=252;}
+      if(div.classList.contains('parenthetical')){x=324;}
+      if(div.classList.contains('transition')){x=540;align='right';}
+    }
+    if(currentMode==='theatre'){
+      if(div.classList.contains('act')||div.classList.contains('scene')){x=306;align='center';}
+      if(div.classList.contains('stage-direction')){fontStyle='italic';}
+    }
+    if(currentMode==='radio'){
+      if(div.classList.contains('scene')){x=306;align='center';}
+      if(div.classList.contains('sfx')||div.classList.contains('music')||div.classList.contains('fx')){x=306;align='center';}
+    }
+    
+    doc.setFont('Courier',fontStyle);
     doc.text(text,x,y,{align:align,maxWidth:468});
     y+=lineHeight*1.15;
-    if(div.classList.contains('scene-heading')||div.classList.contains('character'))y+=lineHeight;
+    if(div.classList.contains('scene-heading')||div.classList.contains('character')||div.classList.contains('scene'))y+=lineHeight;
   });
-  doc.save('WhisperingWords.pdf');
+  doc.save(scripts[currentScriptId].name+'_'+currentMode+'.pdf');
 }
 
-function exportTXT(){const a=document.createElement('a');a.href='data:text/plain,'+encodeURIComponent(e.innerText);a.download='WhisperingWords.txt';a.click()}
+function exportTXT(){const a=document.createElement('a');a.href='data:text/plain,'+encodeURIComponent(e.innerText);a.download=scripts[currentScriptId].name+'_'+currentMode+'.txt';a.click()}
 e.addEventListener('input',saveScript);
 setInterval(saveScript,3000);
 </script>
 </body>
-</html>
+  </html>
