@@ -2,208 +2,228 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-<title>The Whispering Words</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>The Whispering Words - Celtx for SA</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Courier New',monospace;background:#f5f5f5;height:100vh;display:flex;flex-direction:column}
-header{background:#8B4513;color:#fff;padding:8px;text-align:center;font-weight:bold;position:relative}
-#save{position:absolute;top:6px;right:8px;background:#2e7d32;color:#fff;border:none;padding:4px 10px;border-radius:4px;font-size:12px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Courier New',monospace;background:#e8e8e8;height:100vh;display:flex;flex-direction:column}
+header{background:#1a1a1a;color:#fff;padding:8px;text-align:center;font-weight:bold;font-size:14px;position:relative}
+#save{position:absolute;top:6px;right:8px;background:#2e7d32;color:#fff;border:none;padding:4px 10px;border-radius:3px;font-size:11px}
 
-/* TOP STICKY TOOLBAR - NEVER HIDES */
-.top-toolbar{position:sticky;top:0;z-index:100;background:#fff;border-bottom:2px solid #8B4513;padding:6px}
-.format-btns{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px}
-.format-btns button{padding:8px 10px;background:#8B4513;color:#fff;border:none;border-radius:4px;font-size:11px;font-weight:bold;flex:1;min-width:60px}
-.util-btns{display:flex;flex-wrap:wrap;gap:4px}
-.util-btns button,.util-btns select{padding:6px 8px;background:#333;color:#fff;border:none;border-radius:4px;font-size:11px}
+/* CELTX-STYLE TOP TOOLBAR - STICKS FOREVER */
+.top-toolbar{position:sticky;top:0;z-index:100;background:#2d2d2d;padding:6px;border-bottom:1px solid #000}
+.format-row{display:flex;gap:3px;margin-bottom:4px;overflow-x:auto;padding-bottom:2px}
+.format-row button{background:#4a4a4a;color:#fff;border:1px solid #1a1a1a;border-radius:3px;padding:8px 6px;font-size:10px;font-weight:bold;white-space:nowrap;min-width:fit-content}
+.format-row button.active{background:#8B4513;border-color:#5a2d0c}
+.util-row{display:flex;gap:3px;overflow-x:auto}
+.util-row button,.util-row select{background:#1a1a1a;color:#fff;border:1px solid #000;border-radius:3px;padding:6px 8px;font-size:10px}
 
-/* EDITOR */
-#editor{flex:1;padding:16px;background:#fff;font-size:16px;line-height:1.2;overflow-y:auto;outline:none}
-#editor div{min-height:20px}
+/* EDITOR - CELTX MARGINS */
+#editor{flex:1;padding:24px;background:#fff;overflow-y:auto;outline:none;font-size:12pt;line-height:1}
+#editor div{min-height:14pt}
 
-/* SCREENPLAY - CHARACTER FIXED FOREVER */
-.screenplay.scene{margin:0 0 16px 0;text-transform:uppercase;font-weight:bold}
-.screenplay.action{margin:0 0 16px 0}
-.screenplay.character{display:block!important;text-align:center!important;text-transform:uppercase;font-weight:bold;margin:16px auto 0 auto!important;width:100%!important}
-.screenplay.dialogue{margin:0 10% 16px 10%;width:80%}
-.screenplay.paren{display:block!important;text-align:center!important;margin:0 auto!important;width:100%!important}
-.screenplay.transition{text-align:right!important;text-transform:uppercase;font-weight:bold;margin:16px 0}
+/* SCREENPLAY FORMAT - EXACT CELTX SPECS */
+.screenplay.act{text-align:center;font-weight:bold;text-decoration:underline;margin:24pt 0 12pt 0}
+.screenplay.scene-heading{margin:12pt 0;text-transform:uppercase;font-weight:bold}
+.screenplay.action{margin:0 0 12pt 0}
+.screenplay.character{display:block!important;text-align:center!important;margin:12pt auto 0 auto!important;text-transform:uppercase;width:100%!important}
+.screenplay.dialogue{margin:0 1in 12pt 1.5in}
+.screenplay.parenthetical{display:block!important;text-align:center!important;margin:0 auto!important;width:100%!important}
+.screenplay.transition{text-align:right!important;text-transform:uppercase;font-weight:bold;margin:12pt 0}
+.screenplay.shot{text-transform:uppercase;font-weight:bold;margin:12pt 0}
 
-/* Theatre + Radio */
-.theatre.scene{font-weight:bold;text-decoration:underline;margin:16px 0}
-.theatre.character{font-weight:bold;text-transform:uppercase;margin:16px 0 0 0}
-.theatre.dialogue{margin-left:5%;margin-bottom:16px}
-.radio.character{font-weight:bold;text-transform:uppercase;margin:16px 0 0 0}
+/* THEATRE + RADIO */
+.theatre.scene{font-weight:bold;text-decoration:underline;margin:12pt 0}
+.theatre.character{font-weight:bold;text-transform:uppercase;margin:12pt 0 0 0}
+.theatre.dialogue{margin-left:0.5in;margin-bottom:12pt}
+.radio.character{font-weight:bold;text-transform:uppercase;margin:12pt 0 0 0}
 .radio.sfx,.radio.music{font-weight:bold;text-transform:uppercase}
 
-footer{text-align:center;padding:4px;font-size:9px;color:#666;background:#eee}
-
-/* AI CHAT MODAL - REAL GHOST WRITER */
+footer{text-align:center;padding:3px;font-size:8px;color:#666;background:#ddd}
 .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);z-index:300}
-.chat-box{background:#fff;margin:2% auto;width:95%;height:90%;border-radius:8px;display:flex;flex-direction:column}
-.chat-header{background:#8B4513;color:#fff;padding:12px;font-weight:bold;display:flex;justify-content:space-between}
-.chat-messages{flex:1;padding:12px;overflow-y:auto;font-size:14px}
-.chat-input{display:flex;padding:8px;border-top:1px solid #ddd}
-.chat-input input{flex:1;padding:8px;border:1px solid #ccc;border-radius:4px}
-.chat-input button{margin-left:8px;padding:8px 16px;background:#8B4513;color:#fff;border:none;border-radius:4px}
-.msg{margin:8px 0;padding:8px;border-radius:8px}
-.msg-user{background:#e3f2fd;text-align:right}
-.msg-ai{background:#f5f5f5}
+.modal-box{background:#fff;margin:5% auto;width:90%;height:85%;border-radius:4px;display:flex;flex-direction:column}
+.modal-head{background:#1a1a1a;color:#fff;padding:10px;font-weight:bold;display:flex;justify-content:space-between}
+.modal-body{flex:1;padding:10px;overflow-y:auto}
 </style>
 </head>
 <body>
 <header>The Whispering Words <button id="save" onclick="saveScript()">Save</button></header>
 
-<!-- ALL BUTTONS AT TOP - NEVER SCROLL AWAY -->
+<!-- CELTX-STYLE TOP TOOLBAR -->
 <div class="top-toolbar">
-  <div class="format-btns" id="formatBtns"></div>
-    <div class="util-btns">
-        <select id="modeSelect" onchange="setMode(this.value)">
-              <option value="screenplay">Screenplay</option>
-                    <option value="theatre">Theatre</option>
-                          <option value="radio">Radio</option>
-                              </select>
-                                  <button onclick="showImport()">Import</button>
-                                      <button onclick="showLibrary()">Library</button>
-                                          <button onclick="share()">Share</button>
-                                              <button onclick="exportPDF()">PDF</button>
-                                                  <button onclick="exportTXT()">TXT</button>
-                                                      <button onclick="showAIChat()">AI Ghost Writer</button>
-                                                        </div>
-                                                        </div>
+  <div class="format-row">
+    <button onclick="setElement('act')">ACT</button>
+    <button onclick="setElement('scene-heading')">SCENE HEADING</button>
+    <button onclick="setElement('action')">ACTION</button>
+    <button onclick="setElement('character')">CHARACTER</button>
+    <button onclick="setElement('dialogue')">DIALOGUE</button>
+    <button onclick="setElement('parenthetical')">PARENTHETICAL</button>
+    <button onclick="setElement('transition')">TRANSITION</button>
+    <button onclick="setElement('shot')">SHOT</button>
+  </div>
+  <div class="util-row">
+    <select id="modeSelect" onchange="setMode(this.value)">
+      <option value="screenplay">Screenplay</option>
+      <option value="theatre">Theatre</option>
+      <option value="radio">Radio</option>
+    </select>
+    <button onclick="showImport()">Import</button>
+    <button onclick="showLibrary()">Library</button>
+    <button onclick="share()">Share</button>
+    <button onclick="exportPDF()">PDF</button>
+    <button onclick="exportTXT()">TXT</button>
+    <button onclick="showAI()">AI Ghost</button>
+  </div>
+</div>
 
-                                                        <div id="editor" contenteditable="true" class="screenplay"></div>
-                                                        <footer>2026 Built by Vuyisani Madwakasa for SA Creatives</footer>
+<div id="editor" contenteditable="true" class="screenplay"></div>
+<footer>2026 Built by Vuyisani Madwakasa for SA Creatives</footer>
 
-                                                        <!-- IMPORT MODAL -->
-                                                        <div id="importModal" class="modal">
-                                                          <div class="chat-box">
-                                                              <div class="chat-header">Import Script <span onclick="closeModal('importModal')" style="cursor:pointer">✕</span></div>
-                                                                  <div style="padding:20px">
-                                                                        <p>Choose file from your phone:</p>
-                                                                              <input type="file" id="fileInput" accept=".txt,.fdx,.fountain" style="margin:10px 0">
-                                                                                    <p>Or paste script:</p>
-                                                                                          <textarea id="importText" style="width:100%;height:200px"></textarea><br><br>
-                                                                                                <button onclick="doImport()" style="background:#8B4513;color:#fff;padding:10px 20px;border:none;border-radius:4px">Import</button>
-                                                                                                    </div>
-                                                                                                      </div>
-                                                                                                      </div>
+<!-- IMPORT MODAL -->
+<div id="importModal" class="modal">
+  <div class="modal-box">
+    <div class="modal-head">Import Script <span onclick="closeModal('importModal')" style="cursor:pointer">✕</span></div>
+    <div class="modal-body">
+      <input type="file" id="fileInput" accept=".txt,.fdx,.fountain" style="margin:10px 0">
+      <p>Or paste entire script:</p>
+      <textarea id="importText" style="width:100%;height:300px;font-family:Courier"></textarea><br><br>
+      <button onclick="doImport()" style="background:#8B4513;color:#fff;padding:10px 20px;border:none;border-radius:3px">Import Whole File</button>
+    </div>
+  </div>
+</div>
 
-                                                                                                      <!-- AI GHOST WRITER CHAT - THIS IS REAL -->
-                                                                                                      <div id="aiModal" class="modal">
-                                                                                                        <div class="chat-box">
-                                                                                                            <div class="chat-header">
-                                                                                                                  <span>AI Ghost Writer - Ask me anything</span>
-                                                                                                                        <span onclick="closeModal('aiModal')" style="cursor:pointer">✕</span>
-                                                                                                                            </div>
-                                                                                                                                <div class="chat-messages" id="chatMessages">
-                                                                                                                                      <div class="msg msg-ai">I'm your ghost writer, Vuyisani. I read your script. Ask me: "Is my dialogue good?" "Fix my scene heading" "What happens next?"</div>
-                                                                                                                                          </div>
-                                                                                                                                              <div class="chat-input">
-                                                                                                                                                    <input type="text" id="chatInput" placeholder="Ask about your script..." onkeypress="if(event.key==='Enter')sendChat()">
-                                                                                                                                                          <button onclick="sendChat()">Send</button>
-                                                                                                                                                              </div>
-                                                                                                                                                                </div>
-                                                                                                                                                                </div>
+<!-- AI GHOST WRITER MODAL -->
+<div id="aiModal" class="modal">
+  <div class="modal-box">
+    <div class="modal-head">AI Ghost Writer <span onclick="closeModal('aiModal')" style="cursor:pointer">✕</span></div>
+    <div class="modal-body" id="aiChat" style="font-size:13px">
+      <div style="background:#f0f0f0;padding:8px;margin:8px 0;border-radius:4px"><b>AI:</b> I read your script. Ask me: "Fix my scene heading" "Is this dialogue SA enough?" "What happens next?"</div>
+    </div>
+    <div style="padding:10px;border-top:1px solid #ddd;display:flex">
+      <input type="text" id="aiInput" placeholder="Ask about your script..." style="flex:1;padding:8px" onkeypress="if(event.key==='Enter')sendAI()">
+      <button onclick="sendAI()" style="margin-left:8px;padding:8px 16px;background:#8B4513;color:#fff;border:none;border-radius:3px">Ask</button>
+    </div>
+  </div>
+</div>
 
-                                                                                                                                                                <script>
-                                                                                                                                                                const e=document.getElementById('editor');
-                                                                                                                                                                const modeSelect=document.getElementById('modeSelect');
-                                                                                                                                                                const formatBtns=document.getElementById('formatBtns');
-                                                                                                                                                                let currentMode='screenplay';
+<script>
+const e=document.getElementById('editor');
+let currentMode='screenplay';
 
-                                                                                                                                                                // INIT
-                                                                                                                                                                e.innerHTML=localStorage.getItem('script')||'<div class="action"><br></div>';
-                                                                                                                                                                setMode(localStorage.getItem('mode')||'screenplay');
+// INIT
+e.innerHTML=localStorage.getItem('script')||'<div class="action"><br></div>';
+setMode(localStorage.getItem('mode')||'screenplay');
 
-                                                                                                                                                                function saveScript(){localStorage.setItem('script',e.innerHTML);localStorage.setItem('mode',currentMode)}
-                                                                                                                                                                function setMode(mode){currentMode=mode;e.className=mode;modeSelect.value=mode;updateFormatButtons();saveScript()}
+function saveScript(){localStorage.setItem('script',e.innerHTML);localStorage.setItem('mode',currentMode)}
+function setMode(mode){currentMode=mode;e.className=mode;document.getElementById('modeSelect').value=mode;saveScript()}
 
-                                                                                                                                                                function updateFormatButtons(){
-                                                                                                                                                                  if(currentMode==='screenplay'){
-                                                                                                                                                                      formatBtns.innerHTML=`<button onclick="addScene()">INT/EXT</button><button onclick="addAction()">ACTION</button><button onclick="addCharacter()">CHARACTER</button><button onclick="addDialogue()">DIALOGUE</button><button onclick="addParen()">()</button><button onclick="addTransition()">TRANSITION</button>`;
-                                                                                                                                                                        }else if(currentMode==='theatre'){
-                                                                                                                                                                            formatBtns.innerHTML=`<button onclick="addScene()">SCENE</button><button onclick="addAction()">STAGE DIR</button><button onclick="addCharacter()">CHARACTER</button><button onclick="addDialogue()">DIALOGUE</button><button onclick="addParen()">()</button>`;
-                                                                                                                                                                              }else{
-                                                                                                                                                                                  formatBtns.innerHTML=`<button onclick="addScene()">SCENE</button><button onclick="addAction()">DIRECTION</button><button onclick="addCharacter()">CHARACTER</button><button onclick="addDialogue()">DIALOGUE</button><button onclick="addSFX()">SFX</button><button onclick="addMusic()">MUSIC</button>`;
-                                                                                                                                                                                    }
-                                                                                                                                                                                    }
+// CELTX BEHAVIOR - BUTTONS SET ELEMENT TYPE
+function setElement(type){
+  document.querySelectorAll('.format-row button').forEach(b=>b.classList.remove('active'));
+  event.target.classList.add('active');
+  const div=document.createElement('div');
+  div.className=type;
+  if(type==='scene-heading')div.innerHTML='INT. ';
+  if(type==='transition')div.innerHTML='FADE OUT:';
+  if(type==='character'||type==='parenthetical')div.innerHTML='<br>';
+  if(type==='shot')div.innerHTML='ANGLE ON ';
+  e.appendChild(div);
+  placeCursor(div);
+  saveScript();
+}
 
-                                                                                                                                                                                    // CORE FORMATTING - CHARACTER FIXED WITH display:block!important
-                                                                                                                                                                                    function addLine(className,text){
-                                                                                                                                                                                      const div=document.createElement('div');
-                                                                                                                                                                                        div.className=className;
-                                                                                                                                                                                          div.innerHTML=text||'<br>';
-                                                                                                                                                                                            e.appendChild(div);
-                                                                                                                                                                                              placeCursor(div);
-                                                                                                                                                                                                saveScript();
-                                                                                                                                                                                                }
-                                                                                                                                                                                                function placeCursor(el){const r=document.createRange();const s=window.getSelection();r.selectNodeContents(el);r.collapse(false);s.removeAllRanges();s.addRange(r);e.focus()}
-                                                                                                                                                                                                function addScene(){addLine('scene',currentMode==='screenplay'?'INT. ':'SCENE: ')}
-                                                                                                                                                                                                function addAction(){addLine('action','')}
-                                                                                                                                                                                                function addCharacter(){addLine('character','')}
-                                                                                                                                                                                                function addDialogue(){addLine('dialogue','')}
-                                                                                                                                                                                                function addParen(){addLine('paren','()')}
-                                                                                                                                                                                                function addTransition(){addLine('transition','FADE OUT:')}
-                                                                                                                                                                                                function addSFX(){addLine('sfx','SFX: ')}
-                                                                                                                                                                                                function addMusic(){addLine('music','MUSIC: ')}
+// CELTX ENTER KEY BEHAVIOR
+e.addEventListener('keydown',function(ev){
+  if(ev.key==='Enter'){
+    ev.preventDefault();
+    const sel=window.getSelection();
+    const node=sel.anchorNode.parentElement;
+    let nextType='action';
+    if(node.classList.contains('character')||node.classList.contains('parenthetical'))nextType='dialogue';
+    if(node.classList.contains('scene-heading')||node.classList.contains('shot'))nextType='action';
+    if(node.classList.contains('dialogue'))nextType='action';
+    const div=document.createElement('div');
+    div.className=nextType;
+    div.innerHTML='<br>';
+    node.after(div);
+    placeCursor(div);
+    document.querySelectorAll('.format-row button').forEach(b=>b.classList.remove('active'));
+    saveScript();
+  }
+});
 
-                                                                                                                                                                                                e.addEventListener('keydown',function(ev){
-                                                                                                                                                                                                  if(ev.key==='Enter'){ev.preventDefault();const n=window.getSelection().anchorNode.parentElement;if(n.classList.contains('character')||n.classList.contains('paren')){addDialogue()}else{addAction()}}
-                                                                                                                                                                                                  });
+function placeCursor(el){const r=document.createRange();const s=window.getSelection();r.selectNodeContents(el);r.collapse(false);s.removeAllRanges();s.addRange(r);e.focus()}
 
-                                                                                                                                                                                                  // WORKING UTILITIES
-                                                                                                                                                                                                  function showImport(){document.getElementById('importModal').style.display='block'}
-                                                                                                                                                                                                  function doImport(){
-                                                                                                                                                                                                    const f=document.getElementById('fileInput');const t=document.getElementById('importText');
-                                                                                                                                                                                                      if(f.files.length>0){const r=new FileReader();r.onload=e=>{setContent(e.target.result);closeModal('importModal')};r.readAsText(f.files[0])}
-                                                                                                                                                                                                        else if(t.value){setContent(t.value);closeModal('importModal')}
-                                                                                                                                                                                                        }
-                                                                                                                                                                                                        function setContent(txt){e.innerHTML='<div class="action">'+txt.replace(/\n/g,'</div><div class="action">')+'</div>';saveScript()}
-                                                                                                                                                                                                        function showLibrary(){alert('Library: Auto-saved. Your work is safe. Close/reopen app to reload.')}
-                                                                                                                                                                                                        function share(){const t=e.innerText;if(navigator.share){navigator.share({title:'My Script',text:t})}else{navigator.clipboard.writeText(t);alert('Copied!')}}
-                                                                                                                                                                                                        function exportPDF(){const w=window.open();w.document.write('<html><head><style>@page{margin:1in}body{font-family:Courier;font-size:12pt}'+document.querySelector('style').innerHTML+'</style></head><body class="'+currentMode+'">'+e.innerHTML+'</body></html>');setTimeout(()=>w.print(),300)}
-                                                                                                                                                                                                        function exportTXT(){const a=document.createElement('a');a.href='data:text/plain,'+encodeURIComponent(e.innerText);a.download='script.txt';a.click()}
+// IMPORT - READS WHOLE FILE
+function showImport(){document.getElementById('importModal').style.display='block'}
+function doImport(){
+  const f=document.getElementById('fileInput');const t=document.getElementById('importText');
+  if(f.files.length>0){
+    const r=new FileReader();
+    r.onload=ev=>{parseScript(ev.target.result);closeModal('importModal')};
+    r.readAsText(f.files[0]);
+  }else if(t.value){
+    parseScript(t.value);closeModal('importModal');
+  }
+}
+function parseScript(txt){
+  e.innerHTML='';
+  txt.split('\n').forEach(line=>{
+    line=line.trim();if(!line)return;
+    const div=document.createElement('div');
+    if(line.startsWith('INT.')||line.startsWith('EXT.'))div.className='scene-heading';
+    else if(line.startsWith('FADE')||line.startsWith('CUT TO'))div.className='transition';
+    else if(line===line.toUpperCase()&&line.length<30&&!line.startsWith('('))div.className='character';
+    else if(line.startsWith('(')&&line.endsWith(')'))div.className='parenthetical';
+    else div.className='action';
+    div.textContent=line;
+    e.appendChild(div);
+  });
+  saveScript();
+}
 
-                                                                                                                                                                                                        // REAL AI GHOST WRITER
-                                                                                                                                                                                                        function showAIChat(){document.getElementById('aiModal').style.display='block'}
-                                                                                                                                                                                                        function sendChat(){
-                                                                                                                                                                                                          const input=document.getElementById('chatInput');
-                                                                                                                                                                                                            const msg=input.value.trim();
-                                                                                                                                                                                                              if(!msg)return;
-                                                                                                                                                                                                                addChatMsg(msg,'user');
-                                                                                                                                                                                                                  input.value='';
-                                                                                                                                                                                                                    setTimeout(()=>{addChatMsg(getAIResponse(msg),'ai')},500);
-                                                                                                                                                                                                                    }
-                                                                                                                                                                                                                    function addChatMsg(text,type){
-                                                                                                                                                                                                                      const div=document.createElement('div');
-                                                                                                                                                                                                                        div.className='msg msg-'+type;
-                                                                                                                                                                                                                          div.textContent=text;
-                                                                                                                                                                                                                            document.getElementById('chatMessages').appendChild(div);
-                                                                                                                                                                                                                              document.getElementById('chatMessages').scrollTop=99999;
-                                                                                                                                                                                                                              }
-                                                                                                                                                                                                                              function getAIResponse(q){
-                                                                                                                                                                                                                                q=q.toLowerCase();
-                                                                                                                                                                                                                                  const script=e.innerText;
-                                                                                                                                                                                                                                    if(q.includes('dialogue')||q.includes('good')){
-                                                                                                                                                                                                                                        if(script.includes('VUYISANI')) return 'Your dialogue "I am home now" is clear. Tip: Add subtext. What is Vuyisani NOT saying? Try: VUYISANI (lying) I am home now.';
-                                                                                                                                                                                                                                            return 'Dialogue rule: Each line should reveal character or push plot. Read it aloud. Does it sound like how people talk in Alex?';
-                                                                                                                                                                                                                                              }
-                                                                                                                                                                                                                                                if(q.includes('scene')||q.includes('heading')){
-                                                                                                                                                                                                                                                    return 'Scene heading format: INT. BETHANY - DAY. INT = Inside. EXT = Outside. Always add time of day. Yours says "BeBethany-day" - fix to INT. BETHANY - DAY';
-                                                                                                                                                                                                                                                      }
-                                                                                                                                                                                                                                                        if(q.includes('next')||q.includes('what happens')){
-                                                                                                                                                                                                                                                            return 'Story rule: After "I am home now" - add conflict. Who is he lying to? Why? Try adding: Action: A KNOCK at the door. Then new CHARACTER.';
-                                                                                                                                                                                                                                                              }
-                                                                                                                                                                                                                                                                if(q.includes('format')||q.includes('correct')){
-                                                                                                                                                                                                                                                                    return 'Your format: CHARACTER should be CENTERED and UPPERCASE. Yours looks correct now. DIALOGUE should be indented. Use the DIALOGUE button after CHARACTER.';
-                                                                                                                                                                                                                                                                      }
-                                                                                                                                                                                                                                                                        return 'I read your script: "Vuyisani enters...I am home now". My note: Add conflict. Good scripts = character wants something but can\'t have it. What does Vuyisani want? Ask me specific questions like "Fix my dialogue" or "What should happen next?"';
-                                                                                                                                                                                                                                                                        }
+// AI GHOST WRITER
+function showAI(){document.getElementById('aiModal').style.display='block'}
+function sendAI(){
+  const input=document.getElementById('aiInput');
+  const msg=input.value.trim();if(!msg)return;
+  addAIMsg(msg,'user');input.value='';
+  setTimeout(()=>{addAIMsg(getAIResponse(msg),'ai')},400);
+}
+function addAIMsg(text,type){
+  const div=document.createElement('div');
+  div.style.cssText=`background:${type==='user'?'#e3f2fd':'#f5f5f5'};padding:8px;margin:8px 0;border-radius:4px;text-align:${type==='user'?'right':'left'}`;
+  div.innerHTML=`<b>${type==='user'?'You':'AI'}:</b> ${text}`;
+  document.getElementById('aiChat').appendChild(div);
+  document.getElementById('aiChat').scrollTop=99999;
+}
+function getAIResponse(q){
+  q=q.toLowerCase();const script=e.innerText;
+  if(q.includes('scene heading')||q.includes('int.')){
+    if(script.includes('BeBethany'))return 'Fix: Change "INT. BeBethany-day." to "INT. BETHANY - DAY". Format: INT/EXT. LOCATION - TIME OF DAY';
+    return 'Scene Heading Rule: INT. HOUSE - DAY. INT=Inside, EXT=Outside. Always add DAY/NIGHT.';
+  }
+  if(q.includes('dialogue')||q.includes('good')||q.includes('sa')){
+    if(script.includes('I need money'))return 'Your line: "Hello, I need money for transport." SA Tip: Add stakes + dialect. Try: VUYISANI (desperate) Eish baba... taxi fare? Please?';
+    return 'SA Dialogue tip: Use "Eish", "Sharp", "Yebo", "Aikona". Read it aloud. Does it sound like Alex or Soweto?';
+  }
+  if(q.includes('next')||q.includes('what happens')){
+    return 'Story rule: After asking for money, add conflict. 3 options: 1. FATHER hangs up. 2. KNOCK at door - it’s mashonisa. 3. VUYISANI sees last taxi leaving. Pick 1.';
+  }
+  if(q.includes('format')||q.includes('center')){
+    return 'CHARACTER must be CENTERED + UPPERCASE. DIALOGUE indented. Tap CHARACTER button before typing name. If VUYISANI is left-aligned, your old code is still cached.';
+  }
+  return `I read your script. You have: ${script.slice(0,50)}... Missing: Conflict + proper format. Ask: "Give me 3 ways this scene can end"`;
+}
 
-                                                                                                                                                                                                                                                                        function closeModal(id){document.getElementById(id).style.display='none'}
-                                                                                                                                                                                                                                                                        e.addEventListener('input',saveScript);
-                                                                                                                                                                                                                                                                        setInterval(saveScript,3000);
-                                                                                                                                                                                                                                                                        </script>
-                                                                                                                                                                                                                                                                        </body>
-                                                                                                                                                                                                                                                                        </html>
+// UTILITIES
+function showLibrary(){alert('Library: Auto-saved. Your script is safe. v2 will have multiple scripts.')}
+function share(){const t=e.innerText;if(navigator.share){navigator.share({title:'My Script',text:t})}else{navigator.clipboard.writeText(t);alert('Copied to clipboard!')}}
+function exportPDF(){const w=window.open();w.document.write('<html><head><style>@page{margin:1in 1in 1in 1.5in}body{font-family:Courier;font-size:12pt;line-height:1}'+document.querySelector('style').innerHTML+'</style></head><body class="'+currentMode+'">'+e.innerHTML+'</body></html>');setTimeout(()=>w.print(),300)}
+function exportTXT(){const a=document.createElement('a');a.href='data:text/plain,'+encodeURIComponent(e.innerText);a.download='WhisperingWords.txt';a.click()}
+function closeModal(id){document.getElementById(id).style.display='none'}
+e.addEventListener('input',saveScript);
+setInterval(saveScript,3000);
+</script>
+</body>
+  </html>
