@@ -1,118 +1,366 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Whispering Words - Simple</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Courier New',monospace;background:#fff}
-.header{background:#1a1a1a;color:#fff;padding:10px;text-align:center;position:sticky;top:0;z-index:100}
-.header small{color:#8B4513;display:block;font-size:10px}
-.toolbar{background:#2d2d2d;padding:5px;position:sticky;top:48px;z-index:99;display:flex;gap:3px;overflow-x:auto}
-.toolbar button,.toolbar select{background:#000;color:#fff;border:none;padding:8px 10px;font-size:11px;white-space:nowrap;border-radius:3px}
-.formatbar{background:#444;padding:5px;position:sticky;top:88px;z-index:98;display:flex;gap:3px;overflow-x:auto;border-bottom:2px solid #000}
-.formatbar button{background:#666;color:#fff;border:none;padding:10px 8px;font-size:10px;font-weight:bold;white-space:nowrap;border-radius:3px}
-.formatbar button.active{background:#8B4513}
-#editor{padding:20px;min-height:80vh;outline:none;font-size:12pt;line-height:1.5}
-#editor div{min-height:18pt}
+/* =========================
+   SCREENPLAY - HOLLYWOOD STANDARD
+   ========================= */
 
-/* SCREENPLAY - REAL MARGINS */
-.screenplay.scene{font-weight:bold;text-transform:uppercase;margin-top:18pt}
-.screenplay.action{margin-bottom:12pt}
-.screenplay.character{text-align:center;text-transform:uppercase;margin-top:18pt}
-.screenplay.dialogue{margin:0 20% 12pt 25%}
-.screenplay.parenthetical{margin-left:30%;width:40%}
-.screenplay.transition{text-align:right;text-transform:uppercase;font-weight:bold;margin-top:12pt}
+.screenplay{
+  width:8.5in;
+  min-height:11in;
+  margin:0 auto;
+  padding:1in 1in 1in 1.5in;
+  background:#fff;
+  color:#000;
+  font-family:'Courier Prime','Courier New',monospace;
+  font-size:12pt;
+  line-height:1.15;
+}
 
-.theatre.character{font-weight:bold;text-transform:uppercase;text-decoration:underline;margin-top:12pt}
-.theatre.dialogue{margin-bottom:12pt}
-.theatre.stage{font-style:italic;margin-bottom:12pt}
-.theatre.stage:before{content:'['}
-.theatre.stage:after{content:']'}
+.screenplay div{
+  position:relative;
+  min-height:14pt;
+}
 
-.radio.character{font-weight:bold;text-transform:uppercase;text-decoration:underline;margin-top:12pt}
-.radio.dialogue{margin-bottom:12pt}
-.radio.sfx,.radio.music{text-align:center;text-transform:uppercase;font-weight:bold;margin:12pt 0}
+.screenplay.scene-heading{
+  text-transform:uppercase;
+  font-weight:bold;
+  width:6in;
+  margin:12pt 0;
+}
 
-.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:1000}
-.modal-box{background:#fff;margin:10% auto;width:90%;max-width:400px;padding:15px;border-radius:5px}
-input,textarea{width:100%;padding:8px;margin:5px 0;font-family:Courier;border:1px solid #ccc}
-button.save{background:#2e7d32;color:#fff;border:none;padding:8px 15px}
-</style>
-</head>
-<body>
-<div class="header">
-  The Whispering Words
-  <small id="scriptName">Whispering Words</small>
+.screenplay.action{
+  width:6in;
+  margin:0 0 12pt 0;
+}
+
+.screenplay.character{
+  width:4in;
+  margin-left:2.2in;
+  text-transform:uppercase;
+  margin-top:12pt;
+  margin-bottom:0;
+}
+
+.screenplay.dialogue{
+  width:3.5in;
+  margin-left:1in;
+  margin-bottom:12pt;
+}
+
+.screenplay.parenthetical{
+  width:2.5in;
+  margin-left:1.5in;
+  font-style:italic;
+}
+
+.screenplay.transition{
+  width:6in;
+  text-align:right;
+  text-transform:uppercase;
+  font-weight:bold;
+  margin:12pt 0;
+}
+
+.screenplay.shot{
+  text-transform:uppercase;
+  font-weight:bold;
+  width:6in;
+  margin:12pt 0;
+}
+
+.screenplay.dual-dialogue{
+  width:2in;
+  margin-left:3.6in;
+}
+
+.screenplay.act{
+  text-align:center;
+  font-weight:bold;
+  text-decoration:underline;
+  margin:24pt 0 12pt 0;
+}
+function setElement(type){
+
+  document.querySelectorAll('.format-row button')
+  .forEach(b=>b.classList.remove('active'));
+
+  event.target.classList.add('active');
+
+  const div=document.createElement('div');
+  div.className=type;
+
+  if(currentMode==='screenplay'){
+
+    switch(type){
+
+      case 'scene-heading':
+        div.innerHTML='INT. LOCATION - DAY';
+      break;
+
+      case 'action':
+        div.innerHTML='<br>';
+      break;
+
+      case 'character':
+        div.innerHTML='CHARACTER NAME';
+      break;
+
+      case 'dialogue':
+        div.innerHTML='<br>';
+      break;
+
+      case 'parenthetical':
+        div.innerHTML='(beat)';
+      break;
+
+      case 'transition':
+        div.innerHTML='CUT TO:';
+      break;
+
+      case 'shot':
+        div.innerHTML='ANGLE ON';
+      break;
+
+      case 'act':
+        div.innerHTML='ACT ONE';
+      break;
+    }
+  }
+
+  e.appendChild(div);
+  placeCursor(div);
+  saveScript();
+}
+<!-- TITLE PAGE MODAL -->
+
+<div id="titleModal" class="modal">
+
+  <div class="modal-box">
+
+    <div class="modal-head">
+      Script Information
+
+      <span onclick="closeModal('titleModal')"
+      style="cursor:pointer">✕</span>
+    </div>
+
+    <div class="modal-body">
+
+      <label>Script Title</label><br>
+      <input id="scriptTitle"
+      style="width:100%;padding:8px"><br><br>
+
+      <label>Writer Name</label><br>
+      <input id="writerName"
+      style="width:100%;padding:8px"><br><br>
+
+      <label>Email</label><br>
+      <input id="writerEmail"
+      style="width:100%;padding:8px"><br><br>
+
+      <label>Phone</label><br>
+      <input id="writerPhone"
+      style="width:100%;padding:8px"><br><br>
+
+      <button onclick="saveTitlePage()"
+      style="
+      background:#8B4513;
+      color:#fff;
+      padding:10px 20px;
+      border:none;
+      border-radius:4px">
+
+      Save Details
+
+      </button>
+
+    </div>
+  </div>
 </div>
+let titlePage={
 
-<div class="toolbar">
-  <select id="mode" onchange="setMode(this.value)">
-    <option value="screenplay">Screenplay</option>
-    <option value="theatre">Theatre</option>
-    <option value="radio">Radio</option>
-  </select>
-  <button onclick="newScript()">New</button>
-  <button onclick="showList()">Library</button>
-  <button onclick="showTitle()">Title</button>
-  <button onclick="savePDF()">PDF</button>
-  <button class="save" onclick="save()">Save</button>
-</div>
+  title:'Untitled Screenplay',
+  writer:'',
+  email:'',
+  phone:''
 
-<div class="formatbar" id="formatbar">
-  <!-- buttons load here -->
-</div>
-
-<div id="editor" contenteditable="true" class="screenplay"></div>
-
-<!-- SIMPLE MODALS -->
-<div id="libModal" class="modal"><div class="modal-box"><h3>Your Scripts</h3><div id="libList"></div><br><button onclick="closeModal('libModal')">Close</button></div></div>
-<div id="titleModal" class="modal"><div class="modal-box">
-  <h3>Title Page</h3>
-  <input id="tTitle" placeholder="TITLE">
-  <input id="tWriter" placeholder="Written by Vuyisani Madwakasa">
-  <input id="tEmail" placeholder="Email">
-  <input id="tPhone" placeholder="Phone">
-  <br><button class="save" onclick="saveTitle()">Save</button> <button onclick="closeModal('titleModal')">Close</button>
-</div></div>
-
-<script>
-let mode='screenplay';
-let current='default';
-let scripts=JSON.parse(localStorage.getItem('ww')||'{}');
-if(!scripts.default){scripts.default={name:'Whispering Words',content:'',mode:'screenplay',title:{title:'THE WHISPERING WORDS',writer:'Vuyisani Madwakasa',email:'',phone:''}}}
-
-const formats={
-  screenplay:['scene','action','character','dialogue','parenthetical','transition'],
-  theatre:['character','dialogue','stage'],
-  radio:['character','dialogue','sfx','music']
 };
 
-function setMode(m){mode=m;document.getElementById('editor').className=m;loadFormatBar();save();}
-function loadFormatBar(){const bar=document.getElementById('formatbar');bar.innerHTML='';formats[mode].forEach(f=>{const b=document.createElement('button');b.textContent=f.toUpperCase();b.onclick=()=>addBlock(f);bar.appendChild(b);});}
-function addBlock(type){const d=document.createElement('div');d.className=type;if(type==='scene'&&mode==='screenplay')d.textContent='INT. ';if(type==='transition')d.textContent='FADE OUT:';if(type==='sfx')d.textContent='SFX: ';if(type==='music')d.textContent='MUSIC: ';d.innerHTML=d.textContent||'<br>';document.getElementById('editor').appendChild(d);placeCursor(d);document.querySelectorAll('.formatbar button').forEach(b=>b.classList.remove('active'));event.target.classList.add('active');}
+function showTitlePage(){
 
-function placeCursor(el){const r=document.createRange();const s=window.getSelection();r.selectNodeContents(el);r.collapse(false);s.removeAllRanges();s.addRange(r);el.focus();}
+  document.getElementById('titleModal')
+  .style.display='block';
 
-function save(){scripts[current].content=document.getElementById('editor').innerHTML;scripts[current].mode=mode;localStorage.setItem('ww',JSON.stringify(scripts));}
-function load(id){current=id;const s=scripts[id];document.getElementById('editor').innerHTML=s.content;mode=s.mode;document.getElementById('mode').value=mode;setMode(mode);document.getElementById('scriptName').textContent=s.name;closeModal('libModal');}
-function newScript(){const n=prompt('Script name?');if(n){const id='s'+Date.now();scripts[id]={name:n,content:'',mode:'screenplay',title:{title:n.toUpperCase(),writer:'Vuyisani Madwakasa',email:'',phone:''}};save();load(id);}}
-function showList(){const l=document.getElementById('libList');l.innerHTML='';Object.keys(scripts).forEach(id=>{l.innerHTML+=`<div style="padding:8px;border-bottom:1px solid #ccc;cursor:pointer" onclick="load('${id}')">${scripts[id].name}</div>`});document.getElementById('libModal').style.display='block';}
-function showTitle(){const t=scripts[current].title;document.getElementById('tTitle').value=t.title;document.getElementById('tWriter').value=t.writer;document.getElementById('tEmail').value=t.email;document.getElementById('tPhone').value=t.phone;document.getElementById('titleModal').style.display='block';}
-function saveTitle(){scripts[current].title={title:document.getElementById('tTitle').value,writer:document.getElementById('tWriter').value,email:document.getElementById('tEmail').value,phone:document.getElementById('tPhone').value};save();closeModal('titleModal');}
-function closeModal(id){document.getElementById(id).style.display='none';}
+  document.getElementById('scriptTitle')
+  .value=titlePage.title;
 
-function savePDF(){const {jsPDF}=window.jspdf;const doc=new jsPDF();const t=scripts[current].title;doc.setFont('Courier');doc.setFontSize(12);doc.text(t.title,105,100,{align:'center'});doc.text('by',105,115,{align:'center'});doc.text(t.writer,105,125,{align:'center'});doc.text(t.email+' | '+t.phone,105,135,{align:'center'});doc.addPage();let y=20;document.querySelectorAll('#editor div').forEach(div=>{if(y>270){doc.addPage();y=20;}let txt=div.textContent;let x=20;if(div.className==='character')x=105;if(div.className==='dialogue')x=55;if(div.className==='parenthetical')x=75;if(div.className==='transition')x=170;if(div.className==='sfx'||div.className==='music')x=105;doc.text(txt,x,y);y+=7;});doc.save(scripts[current].name+'.pdf');}
+  document.getElementById('writerName')
+  .value=titlePage.writer;
 
-// AUTO FORMAT ON ENTER
-document.getElementById('editor').addEventListener('keydown',e=>{
-  if(e.key==='Enter'){e.preventDefault();const sel=window.getSelection();const node=sel.anchorNode.parentElement;const txt=node.textContent.trim();if(mode==='screenplay'&&txt.match(/^int|^ext/i)){node.className='scene';node.textContent=txt.toUpperCase()+(txt.includes('-')?'':' - DAY');}if(node.className==='character'){node.textContent=node.textContent.toUpperCase();}const d=document.createElement('div');d.className=(node.className==='character'?'dialogue':'action');if(mode!=='screenplay'&&node.className==='character')d.className='dialogue';d.innerHTML='<br>';node.after(d);placeCursor(d);save();}
-});
+  document.getElementById('writerEmail')
+  .value=titlePage.email;
 
-// INIT
-load('default');loadFormatBar();setInterval(save,3000);
-</script>
-</body>
-</html>
+  document.getElementById('writerPhone')
+  .value=titlePage.phone;
+}
+
+function saveTitlePage(){
+
+  titlePage.title=
+  document.getElementById('scriptTitle').value;
+
+  titlePage.writer=
+  document.getElementById('writerName').value;
+
+  titlePage.email=
+  document.getElementById('writerEmail').value;
+
+  titlePage.phone=
+  document.getElementById('writerPhone').value;
+
+  localStorage.setItem(
+    'titlePage',
+    JSON.stringify(titlePage)
+  );
+
+  closeModal('titleModal');
+}
+
+const savedTitle=
+localStorage.getItem('titlePage');
+
+if(savedTitle){
+
+  titlePage=JSON.parse(savedTitle);
+
+}
+function exportPDF(){
+
+  const doc = new jsPDF({
+
+    unit:'pt',
+    format:'letter'
+
+  });
+
+  /* =========================
+     TITLE PAGE
+     ========================= */
+
+  doc.setFont('Courier','normal');
+
+  doc.setFontSize(28);
+
+  doc.text(
+    titlePage.title || 'UNTITLED SCREENPLAY',
+    306,
+    300,
+    {align:'center'}
+  );
+
+  doc.setFontSize(16);
+
+  doc.text(
+    'Written by',
+    306,
+    350,
+    {align:'center'}
+  );
+
+  doc.setFontSize(18);
+
+  doc.text(
+    titlePage.writer || 'Unknown Writer',
+    306,
+    390,
+    {align:'center'}
+  );
+
+  doc.setFontSize(12);
+
+  doc.text(titlePage.email || '',72,700);
+  doc.text(titlePage.phone || '',72,720);
+
+  /* =========================
+     SCRIPT PAGES
+     ========================= */
+
+  doc.addPage();
+
+  doc.setFontSize(12);
+
+  let y=72;
+
+  const lineHeight=14;
+  const pageHeight=792;
+
+  e.querySelectorAll('div').forEach(div=>{
+
+    if(y > pageHeight - 72){
+
+      doc.addPage();
+      y=72;
+
+    }
+
+    const text=div.textContent;
+
+    if(!text.trim()){
+
+      y+=lineHeight;
+      return;
+
+    }
+
+    let x=108;
+    let align='left';
+    let fontStyle='normal';
+
+    if(div.classList.contains('character')){
+
+      x=320;
+      align='center';
+
+    }
+
+    if(div.classList.contains('dialogue')){
+
+      x=180;
+
+    }
+
+    if(div.classList.contains('parenthetical')){
+
+      x=220;
+      fontStyle='italic';
+
+    }
+
+    if(div.classList.contains('transition')){
+
+      x=540;
+      align='right';
+
+    }
+
+    doc.setFont('Courier',fontStyle);
+
+    doc.text(text,x,y,{
+
+      align:align,
+      maxWidth:300
+
+    });
+
+    y+=lineHeight*1.2;
+
+    if(div.classList.contains('scene-heading')){
+
+      y+=6;
+
+    }
+
+  });
+
+  doc.save(
+    (titlePage.title || 'screenplay')+'.pdf'
+  );
+}
