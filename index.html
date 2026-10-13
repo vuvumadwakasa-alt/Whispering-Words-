@@ -1,366 +1,2526 @@
-/* =========================
-   SCREENPLAY - HOLLYWOOD STANDARD
-   ========================= */
-
-.screenplay{
-  width:8.5in;
-  min-height:11in;
-  margin:0 auto;
-  padding:1in 1in 1in 1.5in;
-  background:#fff;
-  color:#000;
-  font-family:'Courier Prime','Courier New',monospace;
-  font-size:12pt;
-  line-height:1.15;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="application-version" content="V30 Courier Prime Screenplay Paper">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Whispering Words Studio — V30 Screenplay Paper</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#08070d;
+  --panel:#12101b;
+  --panel2:#181522;
+  --panel3:#211d30;
+  --border:#2a2640;
+  --border2:#3a3652;
+  --purple:#9b5cff;
+  --purple2:#7c3aed;
+  --purple-soft:rgba(155,92,255,0.12);
+  --purple-soft2:rgba(155,92,255,0.22);
+  --text:#f5f3ff;
+  --text2:#a89fbf;
+  --text3:#6b6580;
+  --success:#22c55e;
+  --warn:#f59e0b;
 }
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--text);font-family:Inter,sans-serif;min-height:100vh;overflow-x:hidden;line-height:1.5}
+button{font-family:inherit;cursor:pointer;border:0;outline:none}
+input,textarea,select{font-family:inherit;outline:none}
+.mono{font-family:'JetBrains Mono',monospace}
+.app{display:flex;min-height:100vh}
+/* Sidebar */
+.sidebar{width:280px;background:var(--panel);border-right:1px solid var(--border);position:fixed;top:0;left:0;bottom:0;z-index:50;display:flex;flex-direction:column;transition:transform .3s ease}
+.logo{padding:22px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px}
+.logo-mark{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--purple),var(--purple2));display:grid;place-items:center;font-weight:700;font-size:18px}
+.logo h1{font-size:15px;font-weight:700;letter-spacing:-.02em;line-height:1.1}
+.logo p{font-size:11px;color:var(--text2);letter-spacing:.06em;text-transform:uppercase;margin-top:2px}
+.nav{flex:1;overflow-y:auto;padding:14px 10px;display:flex;flex-direction:column;gap:2px}
+.nav-label{font-size:10px;font-weight:600;letter-spacing:.12em;color:var(--text3);text-transform:uppercase;padding:14px 12px 6px}
+.nav-btn{width:100%;text-align:left;padding:10px 12px;border-radius:10px;background:transparent;color:var(--text2);font-size:13.5px;font-weight:500;display:flex;align-items:center;gap:10px;transition:.18s}
+.nav-btn:hover{background:var(--panel2);color:var(--text)}
+.nav-btn.active{background:var(--purple-soft);color:var(--text);border:1px solid var(--purple-soft2)}
+.nav-btn.active i{color:var(--purple)}
+.nav-btn i{width:20px;text-align:center;font-style:normal}
+.side-foot{padding:14px;border-top:1px solid var(--border)}
+.create-film{width:100%;padding:13px 16px;border-radius:12px;background:linear-gradient(135deg,var(--purple),var(--purple2));color:white;font-weight:600;font-size:13.5px;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 6px 20px rgba(124,58,237,.35)}
+.create-film:active{transform:scale(.98)}
+/* Main */
+.main{flex:1;margin-left:280px;min-height:100vh;max-width:100%}
+.topbar{display:none}
+.content{padding:28px 28px 90px;max-width:1200px;margin:0 auto;width:100%}
+.section{display:none;animation:fade .25s ease}
+.section.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.h2{font-size:26px;font-weight:700;letter-spacing:-.02em;margin-bottom:6px}
+.sub{color:var(--text2);font-size:14px;margin-bottom:22px;line-height:1.6}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:18px}
+.card2{background:var(--panel2);border:1px solid var(--border);border-radius:14px;padding:16px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.badge{font-size:10px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;padding:4px 8px;border-radius:20px;background:var(--panel3);border:1px solid var(--border);color:var(--text2)}
+.badge.purple{background:var(--purple-soft);border-color:var(--purple-soft2);color:#c4a3ff}
+.badge.green{background:rgba(34,197,94,.12);border-color:rgba(34,197,94,.25);color:#86efac}
+.btn{padding:10px 14px;border-radius:10px;font-weight:600;font-size:13px;transition:.15s;display:inline-flex;align-items:center;gap:8px;justify-content:center}
+.btn-primary{background:var(--purple);color:white}
+.btn-primary:hover{background:var(--purple2)}
+.btn-ghost{background:var(--panel2);border:1px solid var(--border);color:var(--text2)}
+.btn-ghost:hover{color:var(--text);border-color:var(--border2)}
+.btn-sm{padding:7px 10px;font-size:12px;border-radius:8px}
+.input{width:100%;background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:11px 13px;color:var(--text);font-size:13.5px}
+.input:focus{border-color:var(--purple);box-shadow:0 0 0 3px var(--purple-soft)}
+textarea.input{resize:vertical;min-height:90px}
+.divider{height:1px;background:var(--border);margin:16px 0}
+.kbd{font-family:'JetBrains Mono',monospace;font-size:11px;padding:3px 6px;border-radius:5px;background:var(--panel3);border:1px solid var(--border);color:var(--text2)}
+/* Dashboard hero */
+.hero{background:radial-gradient(120% 120% at 0% 0%,rgba(155,92,255,.18),transparent 60%),radial-gradient(120% 120% at 100% 0%,rgba(124,58,237,.18),transparent 60%),var(--panel);border:1px solid var(--border);border-radius:20px;padding:26px;position:relative;overflow:hidden}
+.hero h2{font-size:32px;font-weight:800;letter-spacing:-.03em;line-height:1.05}
+.hero h2 span{background:linear-gradient(135deg,#c4a3ff,#9b5cff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.stat-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}
+.stat{flex:1;min-width:120px;background:var(--panel2);border:1px solid var(--border);border-radius:12px;padding:14px}
+.stat b{font-size:22px;display:block}
+.stat span{font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:.08em;font-weight:600}
+/* Project cards */
+.project{padding:14px;border-radius:12px;background:var(--panel2);border:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:12px}
+.project h4{font-size:13.5px}
+.project p{font-size:12px;color:var(--text2);margin-top:2px}
+/* Screenplay — professional editor */
+.screenplay-toolbar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.screenplay-toolbar button{padding:8px 12px;border-radius:9px;background:var(--panel3);border:1px solid var(--border);color:var(--text2);font-weight:600;font-size:12px;letter-spacing:.04em}
+.screenplay-toolbar button:hover{color:var(--text);border-color:var(--purple-soft2);background:var(--purple-soft)}
+.screenplay-editor-wrap{position:relative}
+/* Screenplay editor layout from long names */
+#screenplayEditor{
+  overflow-wrap:break-word;word-break:break-word;white-space:pre-wrap;word-wrap:break-word;
+  /* Lock margins - prevent shift */
+  tab-size:4;
 
-.screenplay div{
-  position:relative;
-  min-height:14pt;
+
+  width:100%;min-height:520px;max-width:850px;margin:0 auto;
+  background:#fdfcf8;border:1px solid var(--border);border-radius:4px;
+  padding:60px 70px 160px 90px;color:#111;
+  font-family:'Courier Prime', 'Courier New', monospace;
+  font-size:12pt;line-height:1.5;white-space:pre-wrap;overflow-y:auto;overflow-x:hidden;
+  caret-color:var(--purple);letter-spacing:0;
+  box-shadow:0 10px 30px rgba(0,0,0,.35), 0 0 0 1px rgba(0,0,0,.05) inset;
 }
+@media(max-width:900px){
+  /* Screenplay editor layout from long names */
+#screenplayEditor{
+  overflow-wrap:break-word;word-break:break-word;white-space:pre-wrap;word-wrap:break-word;
+  /* Lock margins - prevent shift */
+  tab-size:4;
 
-.screenplay.scene-heading{
-  text-transform:uppercase;
-  font-weight:bold;
-  width:6in;
-  margin:12pt 0;
+padding:28px 18px 180px 22px;max-width:100%;font-size:11pt}
 }
+.screenplay-editor-wrap{background:radial-gradient(120% 120% at 50% 0%, rgba(155,92,255,.08), transparent 50%), #0a0910;padding:18px;border-radius:16px;border:1px solid var(--border)}
 
-.screenplay.action{
-  width:6in;
-  margin:0 0 12pt 0;
-}
-
-.screenplay.character{
-  width:4in;
-  margin-left:2.2in;
-  text-transform:uppercase;
-  margin-top:12pt;
-  margin-bottom:0;
-}
-
-.screenplay.dialogue{
-  width:3.5in;
-  margin-left:1in;
-  margin-bottom:12pt;
-}
-
-.screenplay.parenthetical{
-  width:2.5in;
-  margin-left:1.5in;
-  font-style:italic;
-}
-
-.screenplay.transition{
-  width:6in;
-  text-align:right;
-  text-transform:uppercase;
-  font-weight:bold;
-  margin:12pt 0;
-}
-
-.screenplay.shot{
-  text-transform:uppercase;
-  font-weight:bold;
-  width:6in;
-  margin:12pt 0;
-}
-
-.screenplay.dual-dialogue{
-  width:2in;
-  margin-left:3.6in;
-}
-
-.screenplay.act{
-  text-align:center;
-  font-weight:bold;
-  text-decoration:underline;
-  margin:24pt 0 12pt 0;
-}
-function setElement(type){
-
-  document.querySelectorAll('.format-row button')
-  .forEach(b=>b.classList.remove('active'));
-
-  event.target.classList.add('active');
-
-  const div=document.createElement('div');
-  div.className=type;
-
-  if(currentMode==='screenplay'){
-
-    switch(type){
-
-      case 'scene-heading':
-        div.innerHTML='INT. LOCATION - DAY';
-      break;
-
-      case 'action':
-        div.innerHTML='<br>';
-      break;
-
-      case 'character':
-        div.innerHTML='CHARACTER NAME';
-      break;
-
-      case 'dialogue':
-        div.innerHTML='<br>';
-      break;
-
-      case 'parenthetical':
-        div.innerHTML='(beat)';
-      break;
-
-      case 'transition':
-        div.innerHTML='CUT TO:';
-      break;
-
-      case 'shot':
-        div.innerHTML='ANGLE ON';
-      break;
-
-      case 'act':
-        div.innerHTML='ACT ONE';
-      break;
-    }
+#screenplayEditor:focus{border-color:var(--purple);outline:none;box-shadow:0 0 0 3px var(--purple-soft)}
+#screenplayEditor.screenplay-focused{min-height:calc(100vh - 230px)}
+.mobile-script-toolbar{display:none}
+@media(max-width:900px){
+  .screenplay-toolbar{display:none}
+  .mobile-script-toolbar{
+    position:fixed;left:0;right:0;bottom:0;z-index:9999;
+    display:none;flex-direction:column;gap:0;
+    background:#12101b;border-top:1px solid #3a3652;
+    box-shadow:0 -12px 32px rgba(0,0,0,.7);
+    transition:bottom .12s ease-out;will-change:bottom;
   }
+  .mobile-script-toolbar.visible{display:flex}
+  .mst-row{display:flex;align-items:center;gap:6px;padding:6px;overflow-x:auto;white-space:nowrap;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  .mst-row::-webkit-scrollbar{display:none}
+  .mobile-script-toolbar button{
+    flex:0 0 auto;min-height:38px;padding:8px 12px;border-radius:10px;
+    background:#211d30;border:1px solid #2a2640;color:#f5f3ff;
+    font-size:11px;font-weight:700;touch-action:manipulation
+  }
+  .mobile-script-toolbar button:active{background:#9b5cff;border-color:#9b5cff;transform:scale(.97)}
+  .mobile-script-toolbar button.primary-tool{background:rgba(155,92,255,.22);border-color:#9b5cff;color:#fff}
+  .mst-label{font-size:9px;font-weight:700;letter-spacing:.12em;color:#6b6580;text-transform:uppercase;padding:0 6px;flex:0 0 auto}
+  .custom-kb-row{background:#0a0910;border-top:1px solid #1a1825}
+  .custom-kb-key{flex:1;min-height:44px;border-radius:8px;background:#181522;border:1px solid #2a2640;color:#e9e6f5;font-size:14px;font-weight:600;display:grid;place-items:center}
+  .custom-kb-key.wide{flex:2}
+  /* Screenplay editor layout from long names */
+#screenplayEditor{
+  overflow-wrap:break-word;word-break:break-word;white-space:pre-wrap;word-wrap:break-word;
+  /* Lock margins - prevent shift */
+  tab-size:4;
 
-  e.appendChild(div);
-  placeCursor(div);
-  saveScript();
+padding-bottom:200px}
 }
-<!-- TITLE PAGE MODAL -->
 
-<div id="titleModal" class="modal">
+.screenplay-ruler{
+  max-width:850px;margin:0 auto 8px;display:flex;justify-content:space-between;
+  font-family:'Courier Prime', monospace;font-size:9px;color:var(--text3);letter-spacing:0;
+  padding:0 90px 0 90px;opacity:.6
+}
+.char-counter{position:fixed;right:12px;bottom:90px;z-index:60;background:var(--panel2);border:1px solid var(--border2);border-radius:8px;padding:6px 10px;font-size:10px;color:var(--text2);display:none}
+.char-counter.warn{background:rgba(245,158,11,.15);border-color:rgba(245,158,11,.3);color:#fbbf24;display:block}
+.char-counter.error{background:rgba(239,68,68,.15);border-color:rgba(239,68,68,.3);color:#fca5a5;display:block}
 
-  <div class="modal-box">
 
-    <div class="modal-head">
-      Script Information
+/* V15 FINAL WORKING - Integrated Keyboard, all buttons present, tappable, fixed */
+.mobile-script-toolbar{display:none}
+.integrated-kb{display:none}
 
-      <span onclick="closeModal('titleModal')"
-      style="cursor:pointer">✕</span>
+@media(max-width:900px){
+  .screenplay-toolbar{display:none}
+  .screenplay-page-tools{display:none}
+  .integrated-kb{
+    position:fixed;left:0;right:0;bottom:0;z-index:99999;
+    display:none;flex-direction:column;gap:0;
+    background:#0f0e17;border-top:2px solid #3a3652;
+    box-shadow:0 -10px 30px rgba(0,0,0,.9);
+    padding-bottom:env(safe-area-inset-bottom);
+  }
+  .integrated-kb.visible{display:flex}
+  .kb-format-row{
+    display:flex;gap:4px;padding:5px 6px;
+    overflow-x:auto;white-space:nowrap;
+    background:#12101b;border-bottom:1px solid #1e1b2f;
+  }
+  .kb-format-row::-webkit-scrollbar{display:none}
+  .kb-format-row button{
+    flex:0 0 auto;min-height:34px;padding:6px 12px;
+    border-radius:8px;background:#211d30;border:1px solid #2a2640;
+    color:#fff;font-size:10.5px;font-weight:700;
+  }
+  .kb-format-row button.primary{background:#2a1f4d;border-color:#9b5cff}
+  .kb-format-row button.accent{background:#9b5cff;border-color:#9b5cff}
+  .kb-qwerty{background:#08070d;padding:5px 2px;display:flex;flex-direction:column;gap:4px}
+  .kb-row{display:flex;gap:3px;justify-content:center}
+  .kb-key{
+    flex:1;max-width:50px;min-height:46px;
+    border-radius:8px;background:#2a2640;border:1px solid #3a3652;
+    color:#fff;font-size:16px;font-weight:600;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .kb-key.wide{max-width:76px;font-size:12px;background:#1e1b2f}
+  .kb-key.space{flex:3;max-width:200px;background:#3a3652}
+  .kb-key.enter{background:#9b5cff;max-width:68px}
+  #screenplayEditor{padding-bottom:380px !important}
+}
+@media(min-width:901px){
+  .integrated-kb{display:none !important}
+}
+
+/* Characters */
+.char-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+.char-card{padding:14px;border-radius:12px;background:var(--panel2);border:1px solid var(--border)}
+.char-card h4{font-size:14px}
+.char-card .meta{font-size:11px;color:var(--text2);margin:6px 0 10px;display:flex;flex-wrap:wrap;gap:6px}
+/* Modal */
+.modal-bg{position:fixed;inset:0;background:rgba(8,7,13,.72);backdrop-filter:blur(10px);z-index:80;display:none;place-items:center;padding:16px}
+.modal-bg.open{display:grid}
+.modal{width:100%;max-width:520px;background:var(--panel);border:1px solid var(--border2);border-radius:18px;padding:20px;animation:fade .22s ease}
+.modal h3{font-size:18px;margin-bottom:4px}
+.modal p{font-size:13px;color:var(--text2);margin-bottom:14px}
+.form-grid{display:grid;gap:10px}
+.row{display:flex;gap:10px}
+.row > *{flex:1}
+/* Mobile */
+@media(max-width:900px){
+  .sidebar{transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0)}
+  .main{margin-left:0}
+  .topbar{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--panel);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:40}
+  .content{padding:18px 14px 88px}
+  .grid2,.grid3,.grid4{grid-template-columns:1fr}
+  .hero h2{font-size:26px}
+  .bottom-nav{position:fixed;left:0;right:0;bottom:0;background:var(--panel);border-top:1px solid var(--border);display:flex;z-index:45;padding:6px 4px;padding-bottom:calc(6px + env(safe-area-inset-bottom))}
+  .bottom-nav button{flex:1;padding:8px 4px;border-radius:10px;background:transparent;color:var(--text3);font-size:10px;font-weight:600;display:flex;flex-direction:column;align-items:center;gap:3px}
+  .bottom-nav button.active{color:var(--purple)}
+  .bottom-nav button i{font-size:18px;font-style:normal}
+}
+@media(min-width:901px){.bottom-nav{display:none}}
+/* Toast */
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(80px);background:var(--panel2);border:1px solid var(--border2);color:var(--text);padding:11px 16px;border-radius:12px;font-size:13px;z-index:90;transition:.28s;box-shadow:0 10px 30px rgba(0,0,0,.5)}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.empty{padding:28px;text-align:center;color:var(--text2);font-size:13px;border:1px dashed var(--border);border-radius:12px;background:var(--panel2)}
+
+/* V18: use the Vivo/Android native keyboard; keep only screenplay formatting tools */
+@media(max-width:900px){
+  #integratedKeyboard .kb-qwerty{display:none !important}
+  #integratedKeyboard.integrated-kb{gap:0;max-height:150px;overflow-y:auto}
+  #integratedKeyboard .kb-format-row{padding:4px 5px}
+  #integratedKeyboard .kb-format-row button{min-height:32px;padding:5px 10px}
+  #screenplayEditor{padding-bottom:150px !important}
+}
+
+
+/* V20: keep the studio chrome stationary; scroll only the screenplay paper/workspace */
+#sec-screenplay.active{
+  position:fixed !important;
+  top:0; right:0; bottom:0; left:280px;
+  z-index:35;
+  display:flex !important;
+  flex-direction:column;
+  gap:8px;
+  overflow:hidden !important;
+  min-height:0 !important;
+  height:auto !important;
+  padding:18px 24px 16px !important;
+  margin:0 !important;
+  max-width:none !important;
+  width:auto !important;
+  background:var(--bg);
+  animation:none !important;
+}
+#sec-screenplay.active > div:first-child{flex:0 0 auto}
+#sec-screenplay .screenplay-v6-head,
+#sec-screenplay .screenplay-toolbar,
+#sec-screenplay .screenplay-page-tools,
+#sec-screenplay .screenplay-ruler{flex:0 0 auto}
+#sec-screenplay .screenplay-editor-wrap{
+  flex:1 1 auto !important;
+  min-height:0 !important;
+  height:auto !important;
+  max-height:none !important;
+  overflow:auto !important;
+  overscroll-behavior:contain;
+  -webkit-overflow-scrolling:touch;
+  padding:14px !important;
+  margin:0 !important;
+}
+#sec-screenplay #screenplayEditor{
+  text-transform:none !important;
+  display:block;
+  height:auto !important;
+  min-height:100% !important;
+  max-height:none !important;
+  overflow:visible !important;
+  margin:0 auto !important;
+  flex:none;
+}
+@media(max-width:900px){
+  #sec-screenplay.active{
+    top:56px; right:0; bottom:62px; left:0;
+    padding:8px 8px 10px !important;
+    gap:6px;
+  }
+  /* The global app title row takes too much writing space on a phone. */
+  #sec-screenplay.active > div:first-child{display:none !important}
+  #sec-screenplay .screenplay-v6-head{gap:6px;align-items:center}
+  #sec-screenplay .screenplay-v6-head .screenplay-head-actions{gap:4px;flex-wrap:wrap}
+  #sec-screenplay .screenplay-v6-head .screenplay-status{font-size:10px;margin-top:2px}
+  #sec-screenplay .screenplay-editor-wrap{padding:6px !important;border-radius:8px}
+  #sec-screenplay #screenplayEditor{
+    width:100% !important;max-width:none !important;
+    min-height:100% !important;
+    padding:28px 22px 90px !important;
+    font-size:12pt !important;line-height:1.45 !important;
+    border-radius:2px;
+  }
+  #sec-screenplay .screenplay-ruler{padding:0 18px;font-size:8px}
+  #sec-screenplay .screenplay-toolbar{display:flex;max-height:76px;overflow:auto;gap:4px;margin:0}
+  #sec-screenplay .screenplay-toolbar button{padding:6px 8px;font-size:10px;flex:0 0 auto}
+  #sec-screenplay .screenplay-page-tools{display:none !important}
+  #sec-screenplay .integrated-kb.visible{max-height:150px;overflow-y:auto}
+}
+@media(min-width:901px){
+  #sec-screenplay .screenplay-editor-wrap{padding:18px !important}
+  #sec-screenplay #screenplayEditor{min-height:100% !important;padding:60px 70px 90px 90px !important}
+}
+
+
+/* V21: restore a full, readable screenplay sheet inside the independent workspace */
+#sec-screenplay.active{
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:stretch !important;
+}
+#sec-screenplay .screenplay-editor-wrap{
+  display:block !important;
+  position:relative !important;
+  flex:1 1 auto !important;
+  min-height:320px !important;
+  height:auto !important;
+  max-height:none !important;
+  overflow:auto !important;
+  background:#d7d5dc !important;
+  padding:12px !important;
+  border-radius:10px !important;
+  box-sizing:border-box !important;
+}
+#sec-screenplay #screenplayEditor{
+  display:block !important;
+  box-sizing:border-box !important;
+  width:100% !important;
+  max-width:850px !important;
+  min-height:680px !important;
+  height:auto !important;
+  margin:0 auto !important;
+  padding:42px 34px 100px 46px !important;
+  background:#fff !important;
+  color:#111 !important;
+  font-family:'Courier Prime','Courier New',monospace !important;
+  font-size:12pt !important;
+  line-height:1.5 !important;
+  white-space:pre-wrap !important;
+  overflow-wrap:break-word !important;
+  overflow:visible !important;
+  box-shadow:0 2px 8px rgba(0,0,0,.2) !important;
+  border:1px solid #d2d2d2 !important;
+}
+@media(max-width:900px){
+  #sec-screenplay.active{
+    top:56px !important; right:0 !important; bottom:62px !important; left:0 !important;
+    padding:8px !important; gap:6px !important;
+  }
+  #sec-screenplay .screenplay-editor-wrap{
+    flex:1 1 0% !important;
+    min-height:260px !important;
+    padding:6px !important;
+    overflow:auto !important;
+  }
+  #sec-screenplay #screenplayEditor{
+    width:100% !important;
+    max-width:none !important;
+    min-height:680px !important;
+    padding:32px 22px 100px 30px !important;
+    font-size:12pt !important;
+    line-height:1.45 !important;
+  }
+}
+
+
+
+/* V26: consolidated final screenplay layout overrides. Keep the sheet stable;
+   let the document grow with its content and let the workspace scroll. */
+#sec-screenplay.active{box-sizing:border-box!important;overflow:hidden!important;min-height:0!important}
+#sec-screenplay .screenplay-editor-wrap{
+  box-sizing:border-box!important;display:block!important;flex:1 1 0!important;min-height:0!important;
+  height:auto!important;max-height:none!important;overflow:auto!important;overscroll-behavior:contain;
+  -webkit-overflow-scrolling:touch;scrollbar-gutter:stable;background:#d9d7df!important;padding:10px!important;
+}
+#sec-screenplay #screenplayEditor{
+  box-sizing:border-box!important;display:block!important;position:relative!important;flex:none!important;
+  width:816px!important;max-width:100%!important;min-width:0!important;min-height:1056px!important;
+  height:auto!important;aspect-ratio:auto!important;margin:0 auto!important;
+  padding:96px 96px 96px 144px!important;background:#fff!important;color:#111!important;
+  border:1px solid #d2d2d2!important;border-radius:1px!important;
+  font-family:'Courier New',Courier,monospace!important;font-size:12pt!important;line-height:1.15!important;
+  letter-spacing:0!important;white-space:pre-wrap!important;overflow-wrap:break-word!important;word-break:normal!important;
+  overflow:visible!important;box-shadow:0 2px 8px rgba(0,0,0,.18)!important;caret-color:#6f35d5!important;
+}
+#sec-screenplay #screenplayEditor:empty:before{content:'Start writing your screenplay here…';color:#888}
+@media(max-width:900px){
+  #sec-screenplay.active{top:0!important;bottom:0!important;left:0!important;right:0!important;padding:6px 8px 8px!important;gap:5px!important}
+  #sec-screenplay.active>.screenplay-v6-head{display:flex!important}
+  #sec-screenplay .screenplay-v6-head{flex:0 0 auto!important;padding:2px 0!important;gap:5px!important}
+  #sec-screenplay .screenplay-v6-head h2{font-size:17px!important}
+  #sec-screenplay .screenplay-v6-head .sub{font-size:10px!important}
+  #sec-screenplay .screenplay-head-actions{flex-wrap:nowrap!important;overflow-x:auto!important;width:100%!important}
+  #sec-screenplay .screenplay-editor-wrap{display:block!important;flex:1 1 auto!important;min-height:220px!important;height:auto!important;max-height:none!important;overflow:auto!important;padding:5px!important;margin:0!important;border-radius:7px!important}
+  #sec-screenplay #screenplayEditor{
+    display:block!important;position:relative!important;flex:none!important;
+    width:100%!important;max-width:100%!important;min-width:0!important;
+    min-height:max(680px, calc((100vw - 36px)*1.294))!important;height:auto!important;
+    padding:48px 7% 100px 15%!important;font-size:11pt!important;line-height:1.2!important;
+  }
+  #sec-screenplay .screenplay-ruler{display:none!important}
+  #sec-screenplay .screenplay-toolbar{display:flex!important;flex:0 0 auto!important;max-height:66px!important;overflow-x:auto!important;overflow-y:hidden!important;gap:4px!important;margin:0!important}
+  #sec-screenplay .screenplay-toolbar button{flex:0 0 auto!important;padding:6px 8px!important;font-size:10px!important}
+  #sec-screenplay .screenplay-page-tools{display:none!important}
+  #integratedKeyboard.integrated-kb.visible{max-height:132px!important;overflow-x:auto!important;overflow-y:auto!important}
+  #integratedKeyboard .kb-qwerty{display:none!important}
+}
+@media(min-width:901px){#sec-screenplay.active{left:280px!important;top:0!important;bottom:0!important;padding:18px 24px!important}#sec-screenplay .screenplay-editor-wrap{padding:22px!important}}
+@media print{
+  #sec-screenplay.active{position:absolute!important;display:block!important;overflow:visible!important;inset:0!important;background:#fff!important;padding:0!important}
+  #sec-screenplay .screenplay-editor-wrap{display:block!important;overflow:visible!important;padding:0!important;background:#fff!important;border:0!important}
+  #sec-screenplay #screenplayEditor{width:100%!important;max-width:none!important;min-height:0!important;padding:1in 1in 1in 1.5in!important;box-shadow:none!important;border:0!important;line-height:1!important}
+  #sec-screenplay .screenplay-v6-head,#sec-screenplay .screenplay-toolbar,#sec-screenplay .screenplay-page-tools,#sec-screenplay .screenplay-ruler,#integratedKeyboard{display:none!important}
+}
+
+
+
+
+/* V33 PAPER GEOMETRY FIX
+   The page itself is a US Letter sheet on desktop. On phones, fit the sheet to
+   the viewport and scale the margins proportionally; never apply desktop inch
+   margins to a phone-width sheet because that leaves almost no writing area. */
+#sec-screenplay #screenplayEditor.script-paper {
+  display: block !important;
+  box-sizing: border-box !important;
+  width: 8.5in !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  min-height: 11in !important;
+  height: auto !important;
+  margin: 0 auto !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: #fff !important;
+  color: #000 !important;
+  box-shadow: 0 2px 12px rgba(0,0,0,.16) !important;
+  font-family: 'Courier Prime', Courier, monospace !important;
+  font-size: 12pt !important;
+  line-height: 1.15 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+  font-variant-ligatures: none !important;
+  white-space: pre-wrap !important;
+  overflow-wrap: break-word !important;
+  word-break: normal !important;
+  overflow-x: hidden !important;
+  overflow-y: visible !important;
+  padding: 1in 1in 1in 1.5in !important;
+  caret-color: var(--purple) !important;
+}
+@media (max-width: 600px) {
+  #sec-screenplay .screenplay-editor-wrap {
+    padding: 8px 7px 18px !important;
+    overflow-x: hidden !important;
+  }
+  #sec-screenplay #screenplayEditor.script-paper {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-height: max(680px, calc((100vw - 14px) * 1.294)) !important;
+    margin: 0 auto !important;
+    /* Phone-safe proportional margins; preserve 12pt readable type. */
+    padding: 0.52in 0.30in 0.72in 0.62in !important;
+    font-size: 12pt !important;
+    line-height: 1.15 !important;
+  }
+  #sec-screenplay .block-character { margin-left: 24% !important; }
+  #sec-screenplay .block-dialogue { margin-left: 10% !important; margin-right: 12% !important; }
+  #sec-screenplay .block-parenthetical { margin-left: 16% !important; margin-right: 16% !important; }
+  #sec-screenplay .block-transition { text-align: right !important; margin-right: 2% !important; }
+}
+@media (min-width: 601px) and (max-width: 900px) {
+  #sec-screenplay #screenplayEditor.script-paper {
+    width: 100% !important;
+    max-width: 816px !important;
+    min-height: max(850px, calc((100vw - 28px) * 1.294)) !important;
+    padding: 0.8in 0.65in 0.9in 1.0in !important;
+  }
+}
+@media print {
+  #sec-screenplay #screenplayEditor.script-paper {
+    width: 8.5in !important;
+    max-width: none !important;
+    min-height: 11in !important;
+    margin: 0 !important;
+    padding: 1in 1in 1in 1.5in !important;
+    box-shadow: none !important;
+    font-size: 12pt !important;
+    line-height: 1.15 !important;
+  }
+}
+
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="logo">
+      <div class="logo-mark">W</div>
+      <div><h1>WHISPERING WORDS STUDIO</h1><p>Sibali • V26 Screenplay Workspace</p></div>
+    </div>
+    <nav class="nav" id="nav"></nav>
+    <div class="side-foot">
+      <button class="create-film" onclick="openNewFilmModal()">＋ Create New Film</button>
+      <p style="font-size:10px;color:var(--text3);text-align:center;margin-top:10px;letter-spacing:.06em">DEVICE-LOCAL • NO CLOUD SYNC</p>
+    </div>
+  </aside>
+
+  <div class="main">
+    <div class="topbar">
+      <div style="display:flex;align-items:center;gap:10px"><div class="logo-mark" style="width:32px;height:32px;font-size:15px">W</div><b style="font-size:13px">WHISPERING WORDS</b></div>
+      <button class="btn btn-ghost btn-sm" onclick="toggleSidebar()">☰ Menu</button>
     </div>
 
-    <div class="modal-body">
+    <div class="content">
+      <!-- DASHBOARD -->
+      <div class="section active" id="sec-dashboard">
+        <div class="hero">
+          <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap"><span class="badge purple">V26 • Screenplay Workspace</span><span class="badge">Johannesburg • Mobile-First</span></div>
+          <h2 style="margin-top:14px">Your story<br><span>begins here.</span></h2>
+          <p class="sub" style="margin:14px 0 0;max-width:560px">Whispering Words Studio is a professional filmmaking ecosystem. Idea → Story → Screenplay → Characters → World → Directing → Production → Post → Release → Audience. Your current workspace saves in this browser on this device. Sibali remains in prototype mode until a real AI service is connected.</p>
+          <div class="stat-row" id="statsRow"></div>
+          <div style="margin-top:18px;display:flex;gap:10px;flex-wrap:wrap">
+            <button class="btn btn-primary" onclick="openNewFilmModal()">＋ Create New Film</button>
+            <button class="btn btn-ghost" onclick="go('sec-screenplay')">Open Screenplay Studio →</button>
+          </div>
+        </div>
 
-      <label>Script Title</label><br>
-      <input id="scriptTitle"
-      style="width:100%;padding:8px"><br><br>
+        <div style="margin-top:22px" class="grid2">
+          <div class="card"><h3 style="font-size:14px;margin-bottom:12px">Creative Studio</h3><div class="grid2" id="studioCards"></div></div>
+          <div class="card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><h3 style="font-size:14px">Recent Projects</h3><button class="btn btn-ghost btn-sm" onclick="openNewFilmModal()">＋ New</button></div><div id="recentProjects" style="display:grid;gap:8px"></div></div>
+        </div>
 
-      <label>Writer Name</label><br>
-      <input id="writerName"
-      style="width:100%;padding:8px"><br><br>
+        <div class="card" style="margin-top:14px"><h3 style="font-size:14px;margin-bottom:8px">Pipeline</h3><div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:4px"><span class="kbd">IDEA</span>→<span class="kbd">STORY</span>→<span class="kbd" style="color:var(--purple);border-color:var(--purple-soft2)">SCREENPLAY</span>→<span class="kbd">CHARACTERS</span>→<span class="kbd">WORLD</span>→<span class="kbd">DIRECTING</span>→<span class="kbd">PRODUCTION</span>→<span class="kbd">POST</span>→<span class="kbd">RELEASE</span>→<span class="kbd">AUDIENCE</span></div><p style="font-size:12px;color:var(--text3);margin-top:10px">Future backend will connect AI APIs, cloud database, collaboration, streaming (Whispering Movie Box), payments, and notifications.</p></div>
+      </div>
 
-      <label>Email</label><br>
-      <input id="writerEmail"
-      style="width:100%;padding:8px"><br><br>
+      <!-- SCREENPLAY -->
+      <div class="section" id="sec-screenplay">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap"><div><div class="badge purple" style="margin-bottom:8px">Core Module</div><h2 class="h2">Screenplay Studio</h2><p class="sub">Professional editor. Writes in standard format. Auto-saves locally. No backend required.</p></div><div style="display:flex;gap:8px"><button class="btn btn-ghost btn-sm" onclick="exportScreenplay()">Export .txt</button><button class="btn btn-primary btn-sm" onclick="saveScreenplay()">💾 Save</button></div></div>
+        <div class="screenplay-v6-head">
+          <div class="screenplay-identification">
+            <div><div class="badge purple">SCREENPLAY STUDIO • PROJECT WORKSPACE</div><p class="screenplay-status">US Letter screenplay page • Courier 12 • Auto-saves locally</p></div>
+            <div class="script-project-controls">
+              <label class="script-control-label">Active project
+                <select id="activeProjectSelect" class="input" onchange="switchActiveProject(this.value)" aria-label="Choose one active project"></select>
+              </label>
+              <label class="script-control-label">Script title
+                <input id="scriptTitleInput" class="input" placeholder="Enter your screenplay title" oninput="updateScriptTitle(this.value)" aria-label="Screenplay title">
+              </label>
+              <button type="button" class="btn btn-ghost btn-sm" onclick="openNewFilmModal()">＋ New project</button>
+            </div>
+          </div>
+          <div class="screenplay-head-actions">
+            <input id="scriptImportInput" type="file" accept=".txt,text/plain,.fountain,.fdx" hidden onchange="importScreenplayFile(arguments[0])">
+            <button class="btn btn-ghost btn-sm" onclick="document.getElementById('scriptImportInput').click()">Import Script (.TXT / .Fountain / .FDX)</button>
+            <button class="btn btn-ghost btn-sm" onclick="printScreenplay()">Print / PDF</button>
+            <button class="btn btn-ghost btn-sm" onclick="exportScreenplay()">Export .TXT</button>
+            <button class="btn btn-primary btn-sm" onclick="saveScreenplay()">💾 Save</button>
+          </div>
+        </div>
+        <div class="screenplay-toolbar v6-tools" aria-label="Professional screenplay tools">
+          <button type="button" onpointerdown="screenplayButton(arguments[0],()=>scriptTool('fadein'))">FADE IN</button>
+          <button type="button" onpointerdown="screenplayButton(arguments[0],()=>scriptTool('scene','INT. '))">INT.</button>
+          <button type="button" onpointerdown="screenplayButton(arguments[0],()=>scriptTool('scene','EXT. '))">EXT.</button>
+          <button type="button" onpointerdown="screenplayButton(arguments[0],()=>scriptTool('character'))" class="primary-tool">CHARACTER</button>
+          <button type="button" onpointerdown="screenplayButton(arguments[0],()=>scriptTool('action'))">ACTION</button>
+          <button type="button" onpointerdown="scriptButtonSafe(arguments[0],'dialogue')">DIALOGUE</button>
+          <button type="button" onpointerdown="screenplayButton(arguments[0],()=>insertDualDialogue())">DUAL DIALOGUE</button>
+          <button type="button" onpointerdown="scriptButtonSafe(arguments[0],'parenthetical')">(PAREN)</button>
+          <button type="button" onpointerdown="scriptButtonSafe(arguments[0],'vo')">V.O.</button>
+          <button type="button" onpointerdown="scriptButtonSafe(arguments[0],'os')">O.S.</button>
+          <button type="button" onpointerdown="scriptButtonSafe(arguments[0],'contd')">CONT'D</button>
+          <button type="button" onpointerdown="scriptButtonSafe(arguments[0],'cut')">CUT TO:</button>
+          <button type="button" onpointerdown="scriptButtonSafe(arguments[0],'smash')">SMASH CUT</button>
+          <button type="button" onpointerdown="scriptTool('fadeout')">FADE OUT</button>
+        </div>
+        <div class="screenplay-page-tools">
+          <button type="button" onclick="scriptTool('act')">ACT / SEQUENCE</button>
+          <button type="button" onclick="scriptTool('titlecard')">TITLE CARD</button>
+          <button type="button" onclick="scriptTool('center')">CENTER TEXT</button>
+          <button type="button" onclick="scriptHistoryUndo()">↶ Undo</button>
+          <button type="button" onclick="scriptHistoryRedo()">↷ Redo</button>
+        </div>
+        <div class="screenplay-ruler"><span>0........1.........2.........3.........4.........5.........6</span><span id="rulerInfo">CHARACTER max 32</span></div>
+        <div class="screenplay-editor-wrap">
+          <div id="screenplayEditor" class="script-paper" contenteditable="true" spellcheck="false" role="textbox" aria-label="Professional screenplay editor"></div>
+        </div>
+        <div id="charCounter" class="char-counter"></div>
+        <div id="integratedKeyboard" class="integrated-kb">
+          <div class="kb-format-row">
+            <button type="button" class="accent" onclick="formatAction('fadein')">FADE IN:</button>
+            <button type="button" onclick="formatAction('int')">INT.</button>
+            <button type="button" onclick="formatAction('ext')">EXT.</button>
+            <button type="button" onclick="formatAction('intext')">I/E</button>
+            <button type="button" onclick="formatAction('day')">DAY</button>
+            <button type="button" onclick="formatAction('night')">NIGHT</button>
+            <button type="button" onclick="formatAction('act')">ACT</button>
+            <button type="button" onclick="formatAction('fadeout')">FADE OUT.</button>
+          </div>
+          <div class="kb-format-row">
+            <button type="button" class="primary" onclick="formatAction('character')">CHARACTER</button>
+            <button type="button" onclick="formatAction('dialogue')">DIALOGUE</button>
+            <button type="button" onclick="insertDualDialogue()">DUAL DIALOGUE</button>
+            <button type="button" onclick="formatAction('paren')">(PAREN)</button>
+            <button type="button" onclick="formatAction('action')">ACTION</button>
+            <button type="button" onclick="formatAction('shot')">SHOT</button>
+            <button type="button" onclick="formatAction('center')">CENTER</button>
+            <button type="button" onclick="formatAction('title')">TITLE</button>
+          </div>
+          <div class="kb-format-row">
+            <button type="button" onclick="formatAction('cut')">CUT TO:</button>
+            <button type="button" onclick="formatAction('smash')">SMASH CUT</button>
+            <button type="button" onclick="formatAction('dissolve')">DISSOLVE TO:</button>
+            <button type="button" onclick="formatAction('intercut')">INTERCUT</button>
+            <button type="button" onclick="formatAction('montage')">MONTAGE</button>
+            <button type="button" onclick="formatAction('flash')">FLASHBACK</button>
+            <button type="button" onclick="formatAction('vo')">(V.O.)</button>
+            <button type="button" onclick="formatAction('os')">(O.S.)</button>
+            <button type="button" onclick="formatAction('contd')">(CONT'D)</button>
+          </div>
+          <div class="kb-qwerty">
+            <div class="kb-row">
+              <button class="kb-key" onclick="pressKey('q')">q</button>
+              <button class="kb-key" onclick="pressKey('w')">w</button>
+              <button class="kb-key" onclick="pressKey('e')">e</button>
+              <button class="kb-key" onclick="pressKey('r')">r</button>
+              <button class="kb-key" onclick="pressKey('t')">t</button>
+              <button class="kb-key" onclick="pressKey('y')">y</button>
+              <button class="kb-key" onclick="pressKey('u')">u</button>
+              <button class="kb-key" onclick="pressKey('i')">i</button>
+              <button class="kb-key" onclick="pressKey('o')">o</button>
+              <button class="kb-key" onclick="pressKey('p')">p</button>
+            </div>
+            <div class="kb-row">
+              <button class="kb-key" onclick="pressKey('a')">a</button>
+              <button class="kb-key" onclick="pressKey('s')">s</button>
+              <button class="kb-key" onclick="pressKey('d')">d</button>
+              <button class="kb-key" onclick="pressKey('f')">f</button>
+              <button class="kb-key" onclick="pressKey('g')">g</button>
+              <button class="kb-key" onclick="pressKey('h')">h</button>
+              <button class="kb-key" onclick="pressKey('j')">j</button>
+              <button class="kb-key" onclick="pressKey('k')">k</button>
+              <button class="kb-key" onclick="pressKey('l')">l</button>
+            </div>
+            <div class="kb-row">
+              <button class="kb-key wide" onclick="toggleShift()" id="shiftKey">⇧</button>
+              <button class="kb-key" onclick="pressKey('z')">z</button>
+              <button class="kb-key" onclick="pressKey('x')">x</button>
+              <button class="kb-key" onclick="pressKey('c')">c</button>
+              <button class="kb-key" onclick="pressKey('v')">v</button>
+              <button class="kb-key" onclick="pressKey('b')">b</button>
+              <button class="kb-key" onclick="pressKey('n')">n</button>
+              <button class="kb-key" onclick="pressKey('m')">m</button>
+              <button class="kb-key wide" onclick="pressDelete()">⌫</button>
+            </div>
+            <div class="kb-row">
+              <button class="kb-key wide" onclick="pressKey(',')">,</button>
+              <button class="kb-key space" onclick="pressKey(' ')">SPACE</button>
+              <button class="kb-key wide" onclick="pressKey('.')">.</button>
+              <button class="kb-key enter" onclick="pressEnter()">↵</button>
+            </div>
+          </div>
+        </div>
 
-      <label>Phone</label><br>
-      <input id="writerPhone"
-      style="width:100%;padding:8px"><br><br>
+        
+        <div class="grid2" style="margin-top:14px">
+          <div class="card2"><h4 style="font-size:13px;margin-bottom:8px">Scene Assistant — Prototype</h4><p style="font-size:12px;color:var(--text2);margin-bottom:10px">Describe what should happen next. Prototype guidance only. <span class="badge" style="font-size:9px">No AI API yet</span></p><textarea id="scenePrompt" class="input" placeholder="e.g., The protagonist discovers a letter that changes everything..."></textarea><button class="btn btn-primary btn-sm" style="margin-top:8px;width:100%" onclick="sceneAssist()">Generate Suggestion</button><div id="sceneResult" style="margin-top:10px;font-size:13px;color:var(--text2);line-height:1.6"></div></div>
+          <div class="card2"><h4 style="font-size:13px;margin-bottom:8px">Stats & Safety</h4><div id="screenStats" style="font-size:12px;color:var(--text2);display:grid;gap:6px"></div><div class="divider"></div><p style="font-size:11px;color:var(--text3)">Auto-saves every 2 seconds to localStorage key <span class="mono">ww_screenplay</span>. Survives refresh & navigation.</p></div>
+        </div>
+      </div>
 
-      <button onclick="saveTitlePage()"
-      style="
-      background:#8B4513;
-      color:#fff;
-      padding:10px 20px;
-      border:none;
-      border-radius:4px">
+      <!-- STORY -->
+      <div class="section" id="sec-story">
+        <h2 class="h2">Story Intelligence</h2><p class="sub">Develop the story file for the currently selected project. Your saved details stay on this device in this browser.</p>
+        <div class="card" style="margin-bottom:16px">
+          <h3 style="margin-bottom:10px">Project Story File</h3>
+          <div class="form-grid">
+            <label>Script / Film Title<input id="dossierTitle" class="input" placeholder="Enter the title of your film or screenplay"></label>
+            <label>Logline<textarea id="dossierLogline" class="input" placeholder="Summarise the story in one or two compelling sentences" style="min-height:72px"></textarea></label>
+            <div class="row"><label style="flex:1">Genre<input id="dossierGenre" class="input" placeholder="Drama, thriller, comedy..."></label><label style="flex:1">Format<select id="dossierFormat" class="input"><option>Feature Film</option><option>Short Film</option><option>Series</option><option>Radio Drama</option><option>Theatre</option><option>Documentary</option></select></label></div>
+            <label>Storyline / Synopsis<textarea id="dossierStoryline" class="input" style="min-height:150px" placeholder="Write the full storyline here: beginning, key events, turning points and ending."></textarea></label>
+            <label>Theme / Message<textarea id="dossierTheme" class="input" style="min-height:80px" placeholder="What is the deeper meaning or message of this story?"></textarea></label>
+            <label>Story Beats & Other Resources<textarea id="dossierNotes" class="input" style="min-height:120px" placeholder="Inciting incident, midpoint, climax, ending, research, references, props, costume notes, music ideas, and other resources..."></textarea></label>
+            <button class="btn btn-primary" onclick="saveProjectDossier()">Save Project Story File</button>
+            <p style="font-size:11px;color:var(--text3)">Select the correct project before saving. This saves locally on this device; it is not cloud storage.</p>
+          </div>
+        </div>
+        <div class="grid2">
+          <div class="card"><label style="font-size:12px;font-weight:600;color:var(--text2)">PREMISE FOR STORY ANALYSIS</label><textarea id="premiseInput" class="input" style="min-height:120px;margin-top:6px" placeholder="Enter a premise to explore its story spine..."></textarea><button class="btn btn-primary" style="margin-top:10px;width:100%" onclick="analyzeStory()">Analyze Story</button><p style="font-size:11px;color:var(--text3);margin-top:8px">Prototype analysis only; a live AI service is not connected.</p></div>
+          <div class="card" id="storyOutput"><div class="empty">Enter a premise to see story-development prompts.</div></div>
+        </div>
+      </div>
 
-      Save Details
+      <!-- CHARACTER -->
+      <div class="section" id="sec-character">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px"><div><h2 class="h2">Character Studio</h2><p class="sub" style="margin-bottom:0">Characters belong to the currently selected project. Switch projects in Screenplay Studio. Stored locally.</p></div><button class="btn btn-primary" onclick="openCharModal()">＋ New Character</button></div>
+        <div id="charList" class="char-grid" style="margin-top:16px"></div>
+      </div>
 
-      </button>
+      <!-- WORLD -->
+      <div class="section" id="sec-world">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px"><div><h2 class="h2">World & Locations</h2><p class="sub" style="margin-bottom:0">Locations belong to the currently selected project. Switch projects in Screenplay Studio. Stored locally.</p></div><button class="btn btn-primary" onclick="openLocModal()">＋ New Location</button></div>
+        <div id="locList" class="char-grid" style="margin-top:16px"></div>
+      </div>
 
+      <!-- DIRECTOR -->
+      <div class="section" id="sec-director">
+        <h2 class="h2">Director's Desk</h2><p class="sub">Foundation for shot planning, visual language, performance. Real tools later.</p>
+        <div class="grid3">
+          <div class="card2"><span class="badge purple">Shot Planning</span><h4 style="margin:10px 0 6px;font-size:14px">Visual Blueprint</h4><div style="display:grid;gap:8px;margin-top:10px"><select class="input" id="shotType"><option>Close Up</option><option>Medium</option><option>Wide</option><option>Extreme Wide</option><option>Over Shoulder</option><option>POV</option></select><select class="input" id="camMove"><option>Static</option><option>Push In</option><option>Pull Out</option><option>Pan</option><option>Tilt</option><option>Handheld</option><option>Steadicam</option></select><textarea class="input" id="shotNotes" placeholder="Framing, lens ideas, visual storytelling..."></textarea><button class="btn btn-ghost btn-sm" onclick="saveShot()">Save Shot Note</button><div id="shotSaved" style="font-size:11px;color:var(--text3)"></div></div></div>
+          <div class="card2"><span class="badge">Visual Language</span><h4 style="margin:10px 0 6px;font-size:14px">Mood & Identity</h4><div style="display:grid;gap:8px;margin-top:10px"><input class="input" id="mood" placeholder="Mood e.g. Tense, intimate"><input class="input" id="palette" placeholder="Colour e.g. Teal + Amber, desaturated"><input class="input" id="lighting" placeholder="Lighting e.g. Low-key, natural window"><textarea class="input" id="visNotes" placeholder="Composition, cinematic identity..."></textarea></div><p style="font-size:11px;color:var(--text3);margin-top:8px">Future: Lookbook, references, AI boards.</p></div>
+          <div class="card2"><span class="badge">Performance</span><h4 style="margin:10px 0 6px;font-size:14px">Actor Direction</h4><div style="display:grid;gap:8px;margin-top:10px"><input class="input" placeholder="Character name"><textarea class="input" placeholder="Emotional beats, intention, blocking..."></textarea></div><p style="font-size:11px;color:var(--text3);margin-top:8px">Future: Rehearsal notes, casting links.</p></div>
+        </div>
+      </div>
+
+      <!-- PRODUCTION -->
+      <div class="section" id="sec-production">
+        <h2 class="h2">Production</h2><p class="sub">Connect script to practical filmmaking. V17 = project-safe foundation.</p>
+        <div class="grid2">
+          <div class="card2"><h4>Production Plan</h4><p style="font-size:12px;color:var(--text2);margin:6px 0 10px">Future: Shooting schedule, call sheets, props, wardrobe, equipment.</p><div style="display:grid;gap:8px"><input class="input" id="prodTitle" placeholder="Project title"><input class="input" type="date" id="prodDate"><textarea class="input" placeholder="Notes..."></textarea></div><span class="badge" style="margin-top:10px">Foundation — not full scheduling yet</span></div>
+          <div class="card2"><h4>Scene Breakdown</h4><div id="breakdown" style="font-size:12px;color:var(--text2);margin-top:8px"></div></div>
+          <div class="card2"><h4>Cast & Crew</h4><p style="font-size:12px;color:var(--text2)">Linked to Character Studio. Future: Real profiles, hiring.</p><div id="prodCast" style="margin-top:10px;display:grid;gap:6px"></div></div>
+          <div class="card2"><h4>Budget Foundation</h4><p style="font-size:12px;color:var(--text2)">Prototype table. Future: Real budgeting engine.</p><div class="grid2" style="margin-top:10px"><div class="stat"><span>Estimated</span><b id="budgetEst">R 0</b></div><div class="stat"><span>Locations</span><b id="budgetLoc">0</b></div></div></div>
+        </div>
+      </div>
+
+      <!-- POST -->
+      <div class="section" id="sec-post">
+        <h2 class="h2">Post-Production</h2><p class="sub">Editing, music & sound, VFX, delivery — foundation only.</p>
+        <div class="grid2">
+          <div class="card2"><h4>Editing</h4><textarea class="input" placeholder="Sequence planning, scene order..."></textarea><p style="font-size:11px;color:var(--text3);margin-top:6px">Future: Timeline, cuts, versions.</p></div>
+          <div class="card2"><h4>Music & Sound</h4><textarea class="input" placeholder="Music ideas, SFX, atmosphere, dialogue notes..."></textarea><p style="font-size:11px;color:var(--text3);margin-top:6px">Future: Spotting, stem notes, composer collab.</p></div>
+          <div class="card2"><h4>VFX</h4><textarea class="input" placeholder="VFX requirements, scene notes..."></textarea></div>
+          <div class="card2"><h4>Delivery</h4><div style="display:grid;gap:6px;margin-top:8px"><span class="badge">Export master</span><span class="badge">Distribution prep</span><span class="badge">Festival package</span></div><p style="font-size:11px;color:var(--text3);margin-top:8px">Real export/streaming needs backend storage.</p></div>
+        </div>
+      </div>
+
+      <!-- SIBALI -->
+      <div class="section" id="sec-sibali">
+        <div style="display:flex;gap:12px;align-items:center;margin-bottom:14px"><div class="logo-mark" style="width:44px;height:44px">S</div><div><h2 class="h2" style="margin-bottom:2px">Sibali — Your Creative AI Assistant</h2><p class="sub" style="margin:0">Creative assistant prototype • live AI and web research still need a backend.</p></div></div>
+        <div class="card" style="max-width:760px">
+          <div style="display:flex;gap:8px;margin-bottom:12px"><span class="badge green">Prototype Mode</span><span class="badge">No API connected — honest prototype</span></div>
+          <div id="sibaliChat" style="height:360px;overflow-y:auto;background:var(--panel2);border:1px solid var(--border);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:10px"></div>
+          <div style="display:flex;gap:8px;margin-top:10px"><input id="sibaliInput" class="input" placeholder="Ask about story, dialogue, directing, production..." onkeydown="if(arguments[0].key==='Enter') sendSibali()"><button class="btn btn-primary" onclick="sendSibali()">Send</button></div>
+          <div class="card2" style="margin-top:12px"><h4>Trusted filmmaking research links</h4><p class="sub">These links are starting points for checking official information; they do not mean Sibali has live browsing yet.</p><ul class="sub"><li><a href="https://www.nfvf.co.za/funding-overview-criteria/" target="_blank" rel="noopener">NFVF funding overview and criteria</a> — South African film funding categories.</li><li><a href="https://www.nfvf.co.za/" target="_blank" rel="noopener">National Film and Video Foundation</a> — verify current calls and deadlines on the official site.</li><li><a href="https://www.saflii.org/" target="_blank" rel="noopener">SAFLII</a> — legal materials; get professional advice for rights/contracts.</li><li><a href="https://www.imdb.com/" target="_blank" rel="noopener">IMDb</a> — film and credit reference; verify details independently.</li><li><a href="https://www.wipo.int/copyright/en/" target="_blank" rel="noopener">WIPO copyright resources</a> — general copyright education.</li></ul><p class="sub"><b>Important:</b> Sibali cannot yet reliably answer every industry question, inspect every story/movie online, or fetch live grants. Real AI plus safe web-search/retrieval tools and source citations must be connected server-side before launch.</p></div>
+        </div>
+      </div>
+
+      <!-- SCHOOL -->
+      <div class="section" id="sec-school">
+        <h2 class="h2">Whispering School</h2><p class="sub">Learning foundation for emerging filmmakers. Future: lessons, exercises, progress, certificates.</p>
+        <div class="grid4">
+          <div class="card2"><span class="badge purple">Screenwriting</span><h4 style="margin:8px 0">Story Structure</h4><p style="font-size:12px;color:var(--text2)">Three-act, protagonist, stakes, dramatic question. South African stories matter.</p><button class="btn btn-ghost btn-sm" style="margin-top:10px" onclick="toast('Lesson content is being developed')">Open Lesson</button></div>
+          <div class="card2"><span class="badge">Directing</span><h4 style="margin:8px 0">Visual Language</h4><p style="font-size:12px;color:var(--text2)">Mood, composition, colour, performance. Build cinematic identity.</p><button class="btn btn-ghost btn-sm" style="margin-top:10px" onclick="toast('Lesson content is being developed')">Open Lesson</button></div>
+          <div class="card2"><span class="badge">Production</span><h4 style="margin:8px 0">Indie Producing</h4><p style="font-size:12px;color:var(--text2)">Scheduling, budgeting, community crews, African sets.</p><button class="btn btn-ghost btn-sm" style="margin-top:10px" onclick="toast('Lesson content is being developed')">Open Lesson</button></div>
+          <div class="card2"><span class="badge">Film Business</span><h4 style="margin:8px 0">Distribution</h4><p style="font-size:12px;color:var(--text2)">Festivals, Movie Box, audience building.</p><button class="btn btn-ghost btn-sm" style="margin-top:10px" onclick="toast('Lesson content is being developed')">Open Lesson</button></div>
+        </div>
+      </div>
+
+      <!-- COMMUNITY -->
+      <div class="section" id="sec-community">
+        <h2 class="h2">Creative Community</h2><p class="sub">Future networking platform. V16 = interface foundation, not fake social network.</p>
+        <div class="grid2">
+          <div class="card2"><h4>Find Creatives</h4><div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px"><span class="badge">Writers</span><span class="badge">Directors</span><span class="badge">Actors</span><span class="badge">DOPs</span><span class="badge">Editors</span><span class="badge">Musicians</span><span class="badge">Photographers</span><span class="badge">Sound</span></div><input class="input" style="margin-top:12px" placeholder="Search by skill, location (prototype)"><p style="font-size:11px;color:var(--text3);margin-top:6px">Real profiles need auth + cloud DB.</p></div>
+          <div class="card2"><h4>Opportunities</h4><div style="display:grid;gap:8px;margin-top:8px"><div class="project"><div><h4>Short Film Lab — Johannesburg</h4><p>Mentorship for emerging writers</p></div><span class="badge green">Open</span></div><div class="project"><div><h4>Call: Cinematographers</h4><p>Independent feature, 2026</p></div><span class="badge">Soon</span></div></div></div>
+        </div>
+      </div>
+
+      <!-- USER GUIDE -->
+      <div class="section" id="sec-guide">
+        <h2 class="h2">How to Use Whispering Words Studio</h2><p class="sub">A quick guide for writers and filmmakers. Your current version stores drafts in this browser on this device.</p>
+        <div class="grid2">
+          <div class="card2"><h4>1. Start a film</h4><p class="sub">Choose Create New Film, give the project a title, then open Screenplay Studio. Keep a separate project for each film.</p></div>
+          <div class="card2"><h4>2. Write your screenplay</h4><p class="sub">Tap the white page and type with your phone keyboard. Use INT., EXT., CHARACTER, DIALOGUE and DUAL DIALOGUE tools to insert screenplay elements.</p></div>
+          <div class="card2"><h4>3. Import safely</h4><p class="sub">Import UTF-8 plain-text .TXT or .Fountain. If your script is in Word or PDF, open it in that app and export/copy it to plain-text .TXT first. Never import a .docx or PDF as if it were text.</p></div>
+          <div class="card2"><h4>4. Save and back up</h4><p class="sub">Use Save and Export .TXT regularly. Browser storage can be cleared and does not automatically sync to another phone or account.</p></div>
+          <div class="card2"><h4>5. Develop the film</h4><p class="sub">Use Story Intelligence to shape premise and structure, Character Studio for character notes, World & Locations for setting notes, and Director/Production/Post sections to plan your workflow.</p></div>
+          <div class="card2"><h4>6. Sibali</h4><p class="sub">The current Sibali chat is a prototype and is not connected to live AI or the internet. Verify industry rules, movie availability, books and grant deadlines with official sources.</p></div>
+        </div>
+      </div>
+      <!-- SAFETY -->
+      <div class="section" id="sec-safety">
+        <h2 class="h2">Safety & Trust for Creatives</h2><p class="sub">Safety guidance for meeting people through film and creative work. This page is guidance, not a substitute for a real reporting and moderation system.</p>
+        <div class="card2"><h4>Before meeting someone</h4><ul class="sub"><li>Keep first meetings in a busy public place or an established film/arts venue during daytime.</li><li>Tell a trusted person where you are going, who you are meeting and when you expect to return; arrange a check-in.</li><li>Verify their identity and work through independent references, previous credits or a video call.</li><li>Do not send money for a casting fee, travel promise, job placement or grant guarantee without independent verification.</li><li>Do not share your home address, ID/passport, banking details, passwords, private images or live location with strangers.</li><li>For auditions, ask for the role, production name, location, contact details and written terms. Leave if pressured or uncomfortable.</li></ul></div>
+        <div class="card2" style="margin-top:12px"><h4>For future community features</h4><p class="sub">Before public launch, implement report/block, moderation queues, verified contact channels, privacy controls, age-appropriate protections, abuse response procedures and a clear privacy policy. Emergency danger: move to safety and contact local emergency services or a trusted person.</p><p class="sub"><b>Important:</b> the current Community is a prototype, not a live stranger-matching service. No real reporting, verification or moderation backend is connected.</p></div>
+      </div>
+      <!-- ACCOUNT READINESS -->
+      <div class="section" id="sec-account">
+        <h2 class="h2">Account & Login — Production Requirements</h2><p class="sub">This standalone HTML file cannot provide secure multi-user login by itself. We will not pretend a local-only password form is real account security.</p>
+        <div class="card2"><h4>Required before public launch</h4><ul class="sub"><li>Real authentication provider and server-side session handling over HTTPS.</li><li>Verified email or phone, password reset, sign-out and session expiry.</li><li>Private per-user project storage with server-side access rules.</li><li>Account deletion, privacy notice, consent and data-retention policy.</li><li>Rate limiting, secure password handling, backup and recovery tests.</li></ul><p class="sub">Until connected, drafts are stored locally on this device only. Anyone with access to this browser profile may be able to access them. Do not store sensitive personal information here.</p><p class="sub">Security reference: <a href="https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html" target="_blank" rel="noopener">OWASP Authentication guidance</a>.</p></div>
+      </div>
+      <!-- MOVIE BOX -->
+      <div class="section" id="sec-moviebox">
+        <h2 class="h2">Whispering Movie Box</h2><p class="sub">Future distribution / streaming ecosystem. V17 = project-safe foundation only — no real streaming yet.</p>
+        <div class="card" style="background:radial-gradient(120% at 20% 0%,rgba(155,92,255,.15),transparent),var(--panel)"><div style="display:flex;gap:8px"><span class="badge purple">Future Streaming</span><span class="badge">African + International Indie</span></div><h3 style="margin:12px 0 6px">Independent cinema, from idea to audience.</h3><p style="font-size:13px;color:var(--text2)">When backend connects, creators will publish films, audiences discover, subscriptions/rentals handle via payments. For now, this is honest interface foundation.</p><div class="grid3" style="margin-top:14px"><div class="card2"><div style="height:90px;border-radius:10px;background:linear-gradient(135deg,#211d30,#12101b);display:grid;place-items:center;color:var(--text3)">Poster</div><h4 style="margin-top:8px;font-size:13px">Sample Film — Soweto Dawn</h4><p style="font-size:11px;color:var(--text2)">Drama • 2026 • Prototype card</p></div><div class="card2"><div style="height:90px;border-radius:10px;background:linear-gradient(135deg,#211d30,#12101b);display:grid;place-items:center;color:var(--text3)">Poster</div><h4 style="margin-top:8px;font-size:13px">The Letter</h4><p style="font-size:11px;color:var(--text2)">Experimental • Prototype</p></div><div class="card2"><div style="height:90px;border-radius:10px;background:linear-gradient(135deg,#211d30,#12101b);display:grid;place-items:center;color:var(--text3)">Poster</div><h4 style="margin-top:8px;font-size:13px">Whispers in the Edit</h4><p style="font-size:11px;color:var(--text2)">Doc • Prototype</p></div></div></div>
+      </div>
+
+      <!-- NOTIFICATIONS -->
+      <div class="section" id="sec-notifs">
+        <h2 class="h2">Notifications</h2><p class="sub">System messages. Future: real push.</p>
+        <div id="notifList" style="display:grid;gap:8px"></div>
+      </div>
+
+      
+      <!-- MONETIZATION / ADS CONTROL -->
+      <div class="section" id="sec-monetization">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+          <div><div class="badge purple">Revenue • Prototype</div><h2 class="h2">Monetization Control</h2><p class="sub" style="margin-bottom:0">Prototype settings only. Real advertising requires an approved ad account, the correct SDK or ad tags, valid placement IDs, policy compliance and live integration.</p></div>
+          <span class="badge green">Ad Integration Not Connected</span>
+        </div>
+        <div class="grid2" style="margin-top:16px">
+          <div class="card">
+            <h4 style="font-size:14px">Ad Categories</h4><p style="font-size:12px;color:var(--text2);margin:6px 0 12px">Uncheck what you never want to see. These preferences are saved locally only; they do not control live ads until an ad system is integrated.</p>
+            <div id="adCategoryList" style="display:grid;gap:8px">
+              <label style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:var(--panel2);border:1px solid var(--border);border-radius:10px"><span style="font-size:13px"><b>🎬 Film Gear & Tech</b><br><span style="color:var(--text2);font-size:11px">Canon, Adobe, Dell, cameras, laptops - HIGH pay</span></span><input type="checkbox" checked data-adcat="tech"></label>
+              <label style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:var(--panel2);border:1px solid var(--border);border-radius:10px"><span style="font-size:13px"><b>📚 Education & Film School</b><br><span style="color:var(--text2);font-size:11px">MasterClass, AFDA, courses</span></span><input type="checkbox" checked data-adcat="education"></label>
+              <label style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:var(--panel2);border:1px solid var(--border);border-radius:10px"><span style="font-size:13px"><b>🎥 Entertainment & Streaming</b><br><span style="color:var(--text2);font-size:11px">Netflix, Showmax, YouTube</span></span><input type="checkbox" checked data-adcat="entertainment"></label>
+              <label style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:var(--panel2);border:1px solid var(--border);border-radius:10px;opacity:.6"><span style="font-size:13px"><b>🚫 Gambling / Betting</b><br><span style="color:var(--text2);font-size:11px">1xBet, sports betting - BLOCKED recommended</span></span><input type="checkbox" data-adcat="gambling"></label>
+              <label style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:var(--panel2);border:1px solid var(--border);border-radius:10px;opacity:.6"><span style="font-size:13px"><b>🚫 Alcohol / Adult / Dating</b><br><span style="color:var(--text2);font-size:11px">BLOCKED for professional brand</span></span><input type="checkbox" data-adcat="adult"></label>
+            </div>
+            <button class="btn btn-primary" style="margin-top:12px;width:100%" onclick="saveAdSettings()">Save Ad Preferences</button>
+            <p id="adSaveStatus" style="font-size:11px;color:var(--text3);margin-top:8px">Saved locally • Applied to all ad slots.</p>
+          </div>
+          <div class="card">
+            <h4 style="font-size:14px">Ad Placements (Prototype)</h4>
+            <div style="display:grid;gap:10px;margin-top:12px">
+              <div class="card2" style="border-style:dashed"><b style="font-size:12px">Dashboard Banner</b><p style="font-size:11px;color:var(--text2);margin-top:4px">Top of Dashboard, under stats. Illustrative placement only. Earnings vary and are not guaranteed.</p><div style="height:90px;background:var(--panel3);border-radius:8px;display:grid;place-items:center;margin-top:8px;color:var(--text3);font-size:11px">Ad Preview: 728x90</div><span class="badge" style="margin-top:8px">Preview only</span></div>
+              <div class="card2" style="border-color:var(--purple-soft2)"><b style="font-size:12px">Rewarded: Scene Assistant</b><p style="font-size:11px;color:var(--text2);margin-top:4px">Watch ad to unlock suggestion. Illustrative concept only. Actual rates vary and are not guaranteed.</p><button class="btn btn-ghost btn-sm" style="margin-top:8px" onclick="toast('Rewarded ad will show here when AdMob ID added')">Test Rewarded Flow</button><span class="badge purple" style="margin-top:8px">Recommended</span></div>
+              <div class="card2" style="border-style:dashed;opacity:.7"><b style="font-size:12px">Movie Box Pre-Roll</b><p style="font-size:11px;color:var(--text2);margin-top:4px">Future: 15s before film plays. Like YouTube.</p><span class="badge">Future</span></div>
+            </div>
+            <div class="divider"></div>
+            <p style="font-size:11px;color:var(--text3)">Not connected: do not paste an ad ID into this prototype and expect revenue. Web ads and mobile-app ads use different integration methods. Revenue is not guaranteed.</p>
+          </div>
+        </div>
+        <div class="card" style="margin-top:14px"><h4 style="font-size:13px">Illustrative Revenue Example (Not a Forecast)</h4><div class="grid3" style="margin-top:12px"><div class="stat"><b id="calcUsers">1,000</b><span>Monthly Users</span></div><div class="stat"><b id="calcImpr">90k</b><span>Ad Views</span></div><div class="stat"><b style="color:var(--success)">Illustrative only</b><span>Not a revenue forecast</span></div></div></div>
+      </div>
+
+      <!-- STATS -->
+      <div class="section" id="sec-stats">
+        <h2 class="h2">Project Statistics</h2><p class="sub">Live from localStorage. Not hard-coded.</p>
+        <div class="grid4" id="statsFull"></div>
+        <div class="card" style="margin-top:14px"><h4 style="font-size:13px">Storage Health</h4><div id="storageInfo" style="font-size:12px;color:var(--text2);margin-top:8px"></div></div>
+      </div>
     </div>
   </div>
 </div>
-let titlePage={
 
-  title:'Untitled Screenplay',
-  writer:'',
-  email:'',
-  phone:''
+<!-- Bottom mobile nav -->
+<div class="bottom-nav" id="bottomNav"></div>
 
+<!-- Modals -->
+<div class="modal-bg" id="filmModal"><div class="modal"><h3>Create New Film</h3><p>Stored locally. Works offline. You can change later.</p><div class="form-grid"><input id="filmName" class="input" placeholder="Project / working title e.g. Soweto Dawn"><select id="filmType" class="input"><option>Feature Film</option><option>Short Film</option><option>Series</option><option>Documentary</option><option>Theatre</option><option>Experimental</option></select><textarea id="filmLogline" class="input" placeholder="Logline / one-sentence premise"></textarea><div class="row"><button class="btn btn-ghost" onclick="closeModal('filmModal')">Cancel</button><button class="btn btn-primary" onclick="createFilm()">Create Film</button></div></div></div></div>
+
+<div class="modal-bg" id="charModal"><div class="modal"><h3>New Character</h3><div class="form-grid"><input id="c_name" class="input" placeholder="Name"><div class="row"><input id="c_role" class="input" placeholder="Role / Occupation"><input id="c_goal" class="input" placeholder="Goal"></div><div class="row"><input id="c_fear" class="input" placeholder="Fear"><input id="c_secret" class="input" placeholder="Secret"></div><input id="c_conflict" class="input" placeholder="Conflict"><textarea id="c_notes" class="input" placeholder="Notes, backstory, personality..."></textarea><div class="row"><button class="btn btn-ghost" onclick="closeModal('charModal')">Cancel</button><button class="btn btn-primary" onclick="saveCharacter()">Save Character</button></div></div></div></div>
+
+<div class="modal-bg" id="locModal"><div class="modal"><h3>New Location</h3><div class="form-grid"><input id="l_name" class="input" placeholder="Location name e.g. INT. JOHANNESBURG FLAT - NIGHT"><div class="row"><input id="l_type" class="input" placeholder="Type e.g. Interior / Exterior / City"><input id="l_atmo" class="input" placeholder="Atmosphere e.g. Tense, warm"></div><textarea id="l_desc" class="input" placeholder="Description"></textarea><input id="l_purpose" class="input" placeholder="Story purpose"><div class="row"><button class="btn btn-ghost" onclick="closeModal('locModal')">Cancel</button><button class="btn btn-primary" onclick="saveLocation()">Save Location</button></div></div></div></div>
+
+<div class="toast" id="toast"></div>
+
+
+<div class="modal-bg" id="lessonModal"><div class="modal"><button class="modal-x" onclick="closeModal('lessonModal')">✕</button><div class="badge purple" id="lessonTag">LESSON</div><h3 id="lessonTitle" style="margin-top:10px"></h3><div id="lessonBody" style="color:var(--text2);font-size:13px;line-height:1.7;margin-top:12px"></div><button class="btn btn-primary" style="margin-top:16px" onclick="closeModal('lessonModal')">Done</button></div></div>
+
+<script>
+
+function esc(s){return String(s||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function saveShot(){
+  const data={
+    type: document.getElementById('shotType')?.value||'',
+    move: document.getElementById('camMove')?.value||'',
+    notes: document.getElementById('shotNotes')?.value||'',
+    mood: document.getElementById('mood')?.value||'',
+    palette: document.getElementById('palette')?.value||'',
+    lighting: document.getElementById('lighting')?.value||'',
+    vis: document.getElementById('visNotes')?.value||'',
+    id: Date.now()
+  };
+  let shots = [];
+  try{shots = JSON.parse(localStorage.getItem('ww_shots_v4')||'[]')}catch{}
+  shots.unshift(data);
+  localStorage.setItem('ww_shots_v4', JSON.stringify(shots));
+  const el=document.getElementById('shotSaved');
+  if(el) el.innerText = 'Shot saved • ' + new Date().toLocaleTimeString() + ' • ' + shots.length + ' total';
+  if(typeof toast==='function') toast('Shot note saved');
+}
+function scriptButtonSafe(ev,type){ if(ev){ev.preventDefault(); ev.stopPropagation();} saveEditorSelection(); v6ScriptTool(type); }
+
+
+const SECTIONS=[
+  {id:'sec-dashboard',label:'Dashboard',icon:'◧',group:'Studio'},
+  {id:'sec-screenplay',label:'Screenplay Studio',icon:'✎',group:'Studio'},
+  {id:'sec-story',label:'Story Intelligence',icon:'◐',group:'Studio'},
+  {id:'sec-character',label:'Character Studio',icon:'◎',group:'Studio'},
+  {id:'sec-world',label:'World & Locations',icon:'⬙',group:'Studio'},
+  {id:'sec-director',label:"Director's Desk",icon:'🎬',group:'Create'},
+  {id:'sec-production',label:'Production',icon:'⚙',group:'Create'},
+  {id:'sec-post',label:'Post-Production',icon:'✂',group:'Create'},
+  {id:'sec-sibali',label:'Sibali AI',icon:'✦',group:'Intelligence'},
+  {id:'sec-school',label:'Whispering School',icon:'📖',group:'Learn'},
+  {id:'sec-community',label:'Creative Community',icon:'◍',group:'Connect'},
+  {id:'sec-moviebox',label:'Whispering Movie Box',icon:'▶',group:'Connect'},
+  {id:'sec-notifs',label:'Notifications',icon:'🔔',group:'System'},
+  {id:'sec-monetization',label:'Monetization',icon:'₿',group:'System'},
+  {id:'sec-stats',label:'Project Statistics',icon:'▣',group:'System'},
+  {id:'sec-guide',label:'How to Use',icon:'ⓘ',group:'Help'},
+  {id:'sec-safety',label:'Safety & Trust',icon:'🛡',group:'Help'},
+  {id:'sec-account',label:'Account & Login Plan',icon:'🔐',group:'System'},
+];
+
+const LS={
+  projects:'ww_projects_v4',
+  screenplay:'ww_screenplay_v4',
+  characters:'ww_characters_v4',
+  locations:'ww_locations_v4',
+  notifs:'ww_notifs_v4',
+  shots:'ww_shots_v4',
+  current:'ww_current_v4'
 };
 
-function showTitlePage(){
+function load(k,def){try{return JSON.parse(localStorage.getItem(k)) ?? def}catch{return def}}
+function save(k,v){localStorage.setItem(k,JSON.stringify(v))}
+function projectScreenplayKey(projectId){ return 'ww_screenplay_project_' + (projectId || 'default'); }
+const DEFAULT_SCREENPLAY = "FADE IN:\n\nINT. UNKNOWN LOCATION - NIGHT\n\nThe story begins...\n\nA quiet room. A single light flickers.\n\nCHARACTER\n    (whispering)\n    Every film starts with a whisper.\n\n";
 
-  document.getElementById('titleModal')
-  .style.display='block';
+let projects=load(LS.projects,[]);
+// V17 migration: keep legacy screenplay drafts attached to a project when possible.
+// Never delete the legacy key; preserve it as a fallback.
+try {
+  let activeProjectId=localStorage.getItem(LS.current);
+  if(!activeProjectId && projects.length){
+    activeProjectId=projects[0].id;
+    localStorage.setItem(LS.current,activeProjectId);
+  }
+  const legacyDraft=localStorage.getItem(LS.screenplay);
+  if(activeProjectId && legacyDraft!==null && localStorage.getItem(projectScreenplayKey(activeProjectId))===null){
+    localStorage.setItem(projectScreenplayKey(activeProjectId),legacyDraft);
+  }
+} catch(e) { console.warn('Project draft migration skipped',e); }
+let characters=load(LS.characters,[]);
+let locations=load(LS.locations,[]);
+// V25 migration: attach older unassigned character/location records to the active project
+// so they are not lost and do not leak into every project.
+try {
+  const migrationProjectId=localStorage.getItem(LS.current) || (projects[0] && projects[0].id) || '';
+  let migratedCharacters=false, migratedLocations=false;
+  if(migrationProjectId){
+    characters=characters.map(c=>{if(!c.projectId){migratedCharacters=true;return {...c,projectId:migrationProjectId}}return c});
+    locations=locations.map(l=>{if(!l.projectId){migratedLocations=true;return {...l,projectId:migrationProjectId}}return l});
+    if(migratedCharacters) save(LS.characters,characters);
+    if(migratedLocations) save(LS.locations,locations);
+  }
+} catch(e) { console.warn('V25 project resource migration skipped',e); }
+function currentProjectId(){ return (activeProject() || {}).id || localStorage.getItem(LS.current) || ''; }
+function projectCharacters(){ const id=currentProjectId(); return characters.filter(c=>id ? c.projectId===id : !c.projectId); }
+function projectLocations(){ const id=currentProjectId(); return locations.filter(l=>id ? l.projectId===id : !l.projectId); }
 
-  document.getElementById('scriptTitle')
-  .value=titlePage.title;
+let notifs=load(LS.notifs,[{id:Date.now(),title:'Welcome to Whispering Words Studio',body:'V17 foundation loaded. Data saves in this browser on this device.',time:new Date().toLocaleString(),type:'welcome'}]);
+let screenplay=localStorage.getItem(projectScreenplayKey(localStorage.getItem(LS.current))) || localStorage.getItem(LS.screenplay) || DEFAULT_SCREENPLAY;
+let shots=load(LS.shots,[]);
 
-  document.getElementById('writerName')
-  .value=titlePage.writer;
-
-  document.getElementById('writerEmail')
-  .value=titlePage.email;
-
-  document.getElementById('writerPhone')
-  .value=titlePage.phone;
+function init(){
+  buildNav();
+  buildBottomNav();
+  buildStudioCards();
+  renderAll();
+  loadProjectDossier();
+  refreshProjectControls();
+  document.getElementById('screenplayEditor').innerText=screenplay;
+  setupScreenplayMobile();
+  startAutosave();
+  addNotif('Project loaded','V17 local workspace ready. Drafts are stored in this browser on this device.');
+  sibaliWelcome();
 }
-
-function saveTitlePage(){
-
-  titlePage.title=
-  document.getElementById('scriptTitle').value;
-
-  titlePage.writer=
-  document.getElementById('writerName').value;
-
-  titlePage.email=
-  document.getElementById('writerEmail').value;
-
-  titlePage.phone=
-  document.getElementById('writerPhone').value;
-
-  localStorage.setItem(
-    'titlePage',
-    JSON.stringify(titlePage)
-  );
-
-  closeModal('titleModal');
-}
-
-const savedTitle=
-localStorage.getItem('titlePage');
-
-if(savedTitle){
-
-  titlePage=JSON.parse(savedTitle);
-
-}
-function exportPDF(){
-
-  const doc = new jsPDF({
-
-    unit:'pt',
-    format:'letter'
-
+function buildNav(){
+  const nav=document.getElementById('nav');
+  let html=''; let lastGroup='';
+  SECTIONS.forEach(s=>{
+    if(s.group!==lastGroup){html+=`<div class="nav-label">${s.group}</div>`;lastGroup=s.group}
+    html+=`<button class="nav-btn ${s.id==='sec-dashboard'?'active':''}" onclick="go('${s.id}')" data-sec="${s.id}"><i>${s.icon}</i>${s.label}</button>`;
   });
+  nav.innerHTML=html;
+}
+function buildBottomNav(){
+  const mob=['sec-dashboard','sec-screenplay','sec-character','sec-world','sec-sibali'];
+  const b=document.getElementById('bottomNav');
+  b.innerHTML=mob.map(id=>{
+    const s=SECTIONS.find(x=>x.id===id);
+    return `<button class="${id==='sec-dashboard'?'active':''}" data-mob="${id}" onclick="go('${id}')"><i>${s.icon}</i>${s.label.split(' ')[0]}</button>`;
+  }).join('');
+}
+function buildStudioCards(){
+  const cards=[
+    {id:'sec-screenplay',title:'Screenplay Studio',desc:'Professional editor, FADE IN tools',icon:'✎'},
+    {id:'sec-story',title:'Story Intelligence',desc:'Premise → spine analysis',icon:'◐'},
+    {id:'sec-character',title:'Character Studio',desc:`${projectCharacters().length} characters`,icon:'◎'},
+    {id:'sec-world',title:'World Builder',desc:`${projectLocations().length} locations`,icon:'⬙'},
+  ];
+  document.getElementById('studioCards').innerHTML=cards.map(c=>`
+    <div class="card2" style="cursor:pointer" onclick="go('${c.id}')">
+      <div style="display:flex;justify-content:space-between"><span class="badge purple">${c.icon}</span><span style="font-size:16px">→</span></div>
+      <h4 style="margin-top:8px;font-size:13px">${c.title}</h4><p style="font-size:11px;color:var(--text2);margin-top:2px">${c.desc}</p>
+    </div>`).join('');
+}
+function go(id){
+  document.querySelectorAll('.section').forEach(el=>el.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.sec===id));
+  document.querySelectorAll('#bottomNav button').forEach(b=>b.classList.toggle('active',b.dataset.mob===id));
+  document.getElementById('sidebar').classList.remove('open');
+  const ed=document.getElementById('screenplayEditor');
+  if(id!=='sec-screenplay' && ed){
+    ed.blur();
+    showMobileScriptToolbar(false);
+  }
+  window.scrollTo(0,0);
+  if(id==='sec-production') renderProduction();
+  if(id==='sec-story') loadProjectDossier();
+}
+function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open')}
 
-  /* =========================
-     TITLE PAGE
-     ========================= */
+function renderAll(){
+  renderStats();
+  renderProjects();
+  renderChars();
+  renderLocs();
+  renderNotifs();
+  renderStudioCardsRef();
+}
+function renderStudioCardsRef(){buildStudioCards()}
+function renderStats(){
+  const words=screenplay.trim()?screenplay.trim().split(/\s+/).length:0;
+  const scenes=(screenplay.match(/INT\.|EXT\./g)||[]).length;
+  const stats=[
+    {k:'Projects',v:projects.length},{k:'Characters',v:projectCharacters().length},{k:'Scenes',v:scenes},{k:'Words',v:words}
+  ];
+  document.getElementById('statsRow').innerHTML=stats.map(s=>`<div class="stat"><b>${s.v}</b><span>${s.k}</span></div>`).join('');
+  document.getElementById('statsFull').innerHTML=stats.map(s=>`<div class="card2"><span>${s.k}</span><b style="font-size:22px;display:block;margin-top:4px">${s.v}</b></div>`).join('')+
+    `<div class="card2"><span>Locations in active project</span><b style="font-size:22px;display:block;margin-top:4px">${projectLocations().length}</b></div>`;
+  const used=new Blob([localStorage.getItem(LS.projects)||'',localStorage.getItem(LS.characters)||'',localStorage.getItem(LS.screenplay)||'']).size;
+  document.getElementById('storageInfo').innerHTML=`localStorage keys: <span class="mono">${Object.values(LS).join(', ')}</span><br>Approx used: ${used} bytes • Survives refresh • Stored in this browser; clearing browser data can delete it.<br><br><span class="badge green">Live — not hard-coded</span>`;
+}
+function renderProjects(){
+  const el=document.getElementById('recentProjects');
+  if(!projects.length){el.innerHTML='<div class="empty">No projects yet. Create your first film.</div>';return}
+  el.innerHTML=projects.slice(0,6).map(p=>`<div class="project"><div><h4>${esc(p.name)}</h4><p>${esc(p.type)} • ${esc(p.updated)}</p></div><button class="btn btn-ghost btn-sm" onclick="openProject('${p.id}')">Open</button></div>`).join('');
+}
+function renderChars(){
+  const el=document.getElementById('charList');
+  const visibleCharacters=projectCharacters();
+  if(!visibleCharacters.length){el.innerHTML='<div class="empty" style="grid-column:1/-1">No characters yet. Add your protagonist, antagonist, allies.</div>';return}
+  el.innerHTML=visibleCharacters.map(c=>`<div class="char-card"><div style="display:flex;justify-content:space-between;align-items:flex-start"><h4>${esc(c.name)}</h4><button class="btn btn-ghost btn-sm" onclick="removeChar('${c.id}')">✕</button></div><div class="meta"><span class="badge">${esc(c.role||'No role')}</span><span class="badge">Goal: ${esc(c.goal||'-')}</span></div><p style="font-size:12px;color:var(--text2)">Fear: ${esc(c.fear||'-')} • Secret: ${esc(c.secret||'-')}</p><p style="font-size:11px;color:var(--text3);margin-top:6px">${esc(c.notes||'')}</p></div>`).join('');
+}
+function renderLocs(){
+  const el=document.getElementById('locList');
+  const visibleLocations=projectLocations();
+  if(!visibleLocations.length){el.innerHTML='<div class="empty" style="grid-column:1/-1">No locations yet. Build your world.</div>';return}
+  el.innerHTML=visibleLocations.map(l=>`<div class="char-card"><div style="display:flex;justify-content:space-between"><h4>${esc(l.name)}</h4><button class="btn btn-ghost btn-sm" onclick="removeLoc('${l.id}')">✕</button></div><div class="meta"><span class="badge">${esc(l.type||'')}</span><span class="badge">${esc(l.atmo||'')}</span></div><p style="font-size:12px;color:var(--text2)">${esc(l.desc||'')}</p><p style="font-size:11px;color:var(--text3);margin-top:4px">Purpose: ${esc(l.purpose||'-')}</p></div>`).join('');
+}
+function renderNotifs(){
+  document.getElementById('notifList').innerHTML=notifs.map(n=>`<div class="card2" style="display:flex;justify-content:space-between;gap:10px"><div><h4 style="font-size:13px">${esc(n.title)}</h4><p style="font-size:12px;color:var(--text2);margin-top:2px">${esc(n.body)}</p><p style="font-size:10px;color:var(--text3);margin-top:6px">${esc(n.time)}</p></div><span class="badge">${esc(n.type||'info')}</span></div>`).join('');
+}
+function renderProduction(){
+  document.getElementById('breakdown').innerHTML=`Scenes detected: ${(screenplay.match(/INT\.|EXT\./g)||[]).length}<br>Characters: ${projectCharacters().length}<br>Locations: ${projectLocations().length}<br><br><span class="badge">Basic scene count only • full breakdown engine not connected</span>`;
+  const activeChars=projectCharacters();
+  document.getElementById('prodCast').innerHTML=activeChars.length?activeChars.map(c=>`<div class="project"><div><h4>${esc(c.name)}</h4><p>${esc(c.role||'')}</p></div><span class="badge">${esc(c.conflict||'cast')}</span></div>`).join(''):'<p style="font-size:12px;color:var(--text3)">Add characters to populate cast.</p>';
+  document.getElementById('budgetEst').innerText='R '+(projectLocations().length*15000+projectCharacters().length*8000+projects.length*5000).toLocaleString();
+  document.getElementById('budgetLoc').innerText=projectLocations().length;
+  const words=screenplay.trim().split(/\s+/).length;
+  document.getElementById('screenStats').innerHTML=`<div>Words: <b>${words}</b></div><div>Scenes: <b>${(screenplay.match(/INT\.|EXT\./g)||[]).length}</b></div><div>Characters in script: <b>${(screenplay.match(/CHARACTER/g)||[]).length}</b></div><div>Last saved: <b>${new Date().toLocaleTimeString()}</b></div>`;
+}
 
-  doc.setFont('Courier','normal');
+// V25: one active project at a time; script title, story file, characters, and locations follow it.
+function refreshProjectControls(){
+  const select=document.getElementById('activeProjectSelect');
+  const title=document.getElementById('scriptTitleInput');
+  if(select){
+    const id=currentProjectId();
+    select.innerHTML=projects.length ? projects.map(p=>`<option value="${esc(p.id)}" ${p.id===id?'selected':''}>${esc(p.name||'Untitled Film')}</option>`).join('') : '<option value="">No project yet — create one</option>';
+    select.disabled=!projects.length;
+  }
+  if(title){const p=activeProject();title.value=p?(p.storyTitle||p.name||''):'';title.disabled=!p;}
+}
+function updateScriptTitle(value){
+  const p=activeProject();
+  if(!p){toast('Create a project before naming the screenplay');return;}
+  p.storyTitle=String(value||'').trim();
+  p.name=p.storyTitle||'Untitled Film';
+  p.updated=new Date().toLocaleDateString();
+  save(LS.projects,projects);
+  renderProjects();
+  if(document.getElementById('dossierTitle')) document.getElementById('dossierTitle').value=p.storyTitle;
+  buildStudioCards();
+}
+function switchActiveProject(id){
+  if(!id || !projects.some(p=>p.id===id)) return;
+  saveScreenplay(true);
+  localStorage.setItem(LS.current,id);
+  const key=projectScreenplayKey(id);
+  const stored=localStorage.getItem(key);
+  screenplay=stored!==null ? stored : DEFAULT_SCREENPLAY;
+  localStorage.setItem(LS.screenplay,screenplay);
+  const ed=document.getElementById('screenplayEditor'); if(ed) ed.innerText=screenplay;
+  refreshProjectControls(); loadProjectDossier(); renderAll();
+  if(document.getElementById('sec-production')?.classList.contains('active')) renderProduction();
+  toast('Active project: '+(projects.find(p=>p.id===id)?.name||'Untitled Film'));
+}
 
-  doc.setFontSize(28);
+// Film
+function openNewFilmModal(){document.getElementById('filmModal').classList.add('open')}
+function closeModal(id){document.getElementById(id).classList.remove('open')}
+function createFilm(){
+  const name=document.getElementById('filmName').value.trim()||'Untitled Film';
+  const type=document.getElementById('filmType').value;
+  const logline=document.getElementById('filmLogline').value.trim();
+  const p={id:'p_'+Date.now(),name,type,logline,storyTitle:name,updated:new Date().toLocaleDateString(),created:Date.now()};
+  projects.unshift(p);
+  save(LS.projects,projects);
+  localStorage.setItem(LS.current,p.id);
+  localStorage.setItem(projectScreenplayKey(p.id), DEFAULT_SCREENPLAY);
+  screenplay=DEFAULT_SCREENPLAY;
+  const editor=document.getElementById('screenplayEditor'); if(editor) editor.innerText=screenplay;
+  localStorage.setItem(LS.screenplay,screenplay);
+  closeModal('filmModal');
+  document.getElementById('filmName').value='';document.getElementById('filmLogline').value='';
+  addNotif('Project created',`"${name}" created as ${type}`);
+  renderAll(); refreshProjectControls(); loadProjectDossier(); toast(`"${name}" created`);
+}
+function openProject(id){
+  // Save the screenplay currently on screen before switching projects.
+  saveScreenplay(true);
+  localStorage.setItem(LS.current,id);
+  const key=projectScreenplayKey(id);
+  const stored=localStorage.getItem(key);
+  screenplay=stored!==null ? stored : DEFAULT_SCREENPLAY;
+  localStorage.setItem(LS.screenplay,screenplay); // legacy compatibility
+  const ed=document.getElementById('screenplayEditor');
+  if(ed) ed.innerText=screenplay;
+  renderAll(); refreshProjectControls(); loadProjectDossier();
+  if(typeof updateChecks==='function') updateChecks();
+  toast('Opened ' + (projects.find(p=>p.id===id)?.name || 'project') + (stored===null ? ' • new draft' : ''));
+  go('sec-screenplay');
+}
 
-  doc.text(
-    titlePage.title || 'UNTITLED SCREENPLAY',
-    306,
-    300,
-    {align:'center'}
-  );
+// Screenplay
+/* Professional screenplay editor */
+const SCRIPT_FORMAT = {
+  character: 22,      // Hollywood standard: 2.2 inches = ~22 spaces in Courier 12
+  characterMax: 38,   // Max chars for character name (professional limit)
+  parenthetical: 15,
+  dialogue: 10,       // Dialogue: 1.0 inch = 10 spaces
+  dialogueWidth: 35,  // Max width for dialogue
+  transition: 52,
+  action: 0
+};
+const CHARACTER_LIMIT = 32;
+const LIMITS = {
+  scene: 60,        // INT./EXT. - full width
+  action: 60,       // Action - 0 to 60 chars
+  character: 32,    // Character name
+  parenthetical: 28, // (text) - inside parens
+  dialogue: 38,     // Dialogue - 38 chars max per line (wraps)
+  transition: 22,   // CUT TO: etc
+  center: 30
+};
 
-  doc.setFontSize(16);
 
-  doc.text(
-    'Written by',
-    306,
-    350,
-    {align:'center'}
-  );
+let screenplayLastSelection = null;
 
-  doc.setFontSize(18);
+function saveEditorSelection(){
+  const ed=document.getElementById('screenplayEditor');
+  const sel=window.getSelection();
+  if(!ed || !sel || !sel.rangeCount) return;
+  const range=sel.getRangeAt(0);
+  if(ed.contains(range.startContainer)) screenplayLastSelection=range.cloneRange();
+}
 
-  doc.text(
-    titlePage.writer || 'Unknown Writer',
-    306,
-    390,
-    {align:'center'}
-  );
+function restoreEditorSelection(){
+  const ed=document.getElementById('screenplayEditor');
+  if(!ed) return;
+  ed.focus();
+  if(screenplayLastSelection){
+    const sel=window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(screenplayLastSelection);
+  }
+}
 
-  doc.setFontSize(12);
+function insertPlainText(text){
+  const ed=document.getElementById('screenplayEditor');
+  if(!ed) return;
+  restoreEditorSelection();
+  ed.focus();
+  const sel=window.getSelection();
+  if(sel && sel.rangeCount){
+    const range=sel.getRangeAt(0);
+    range.deleteContents();
+    const node=document.createTextNode(text);
+    range.insertNode(node);
+    // move caret after inserted text
+    range.setStartAfter(node);
+    range.setEndAfter(node);
+    sel.removeAllRanges();
+    sel.addRange(range);
+    screenplayLastSelection=range.cloneRange();
+  } else {
+    ed.innerText += text;
+  }
+  saveScreenplay(true);
+}
 
-  doc.text(titlePage.email || '',72,700);
-  doc.text(titlePage.phone || '',72,720);
+function lineContext(){
+  const ed=document.getElementById('screenplayEditor');
+  const sel=window.getSelection();
+  if(!ed || !sel || !sel.rangeCount) return {line:'', before:'', start:0};
+  const range=sel.getRangeAt(0);
+  let node=range.startContainer;
+  let offset=range.startOffset;
+  if(node.nodeType!==Node.TEXT_NODE){
+    const textNode=document.createTextNode('');
+    node.insertBefore(textNode,node.childNodes[offset]||null);
+    node=textNode; offset=0;
+  }
+  const full=node.textContent||'';
+  const before=full.slice(0,offset);
+  const start=before.lastIndexOf('\n')+1;
+  return {line:before.slice(start),before,start};
+}
 
-  /* =========================
-     SCRIPT PAGES
-     ========================= */
+function normalizeSceneHeading(prefix){
+  const ctx=lineContext();
+  const current=ctx.line.trim();
+  const add=(ctx.line && current) ? '\n\n' : '';
+  insertPlainText(add + prefix);
+}
 
-  doc.addPage();
+function screenplayButton(event,action){
+  if(event){
+    event.preventDefault();
+    event.stopPropagation();
+  }
+  saveEditorSelection();
+  if(typeof action==='function') action();
+}
 
-  doc.setFontSize(12);
+function scriptTool(type,value){
+  const ed=document.getElementById('screenplayEditor');
+  if(!ed) return;
+  ed.focus();
+  restoreEditorSelection();
 
-  let y=72;
+  if(type==='fadein'){
+    insertPlainText('FADE IN:\n\n');
+    return;
+  }
 
-  const lineHeight=14;
-  const pageHeight=792;
+  if(type==='scene'){
+    normalizeSceneHeading(value||'INT. ');
+    return;
+  }
 
-  e.querySelectorAll('div').forEach(div=>{
+  if(type==='action'){
+    const ctx=lineContext();
+    const add=(ctx.line.trim() ? '\n\n' : '');
+    insertPlainText(add);
+    return;
+  }
 
-    if(y > pageHeight - 72){
+  if(type==='character'){
+    const ctx=lineContext();
+    const add=(ctx.line.trim() ? '\n\n' : '');
+    insertPlainText(add + ' '.repeat(SCRIPT_FORMAT.character));
+    return;
+  }
+  // Helper to enforce character name rules
+  window.enforceCharacterFormat = function(lineEl){
+    // will be called on input
+  }
 
-      doc.addPage();
-      y=72;
+  if(type==='dialogue'){
+    const ctx=lineContext();
+    const add=(ctx.line.trim() ? '\n' : '');
+    insertPlainText(add + ' '.repeat(SCRIPT_FORMAT.dialogue));
+    return;
+  }
 
+  if(type==='parenthetical'){
+    const ctx=lineContext();
+    const add=(ctx.line.trim() ? '\n' : '');
+    insertPlainText(add + ' '.repeat(SCRIPT_FORMAT.parenthetical) + '(');
+    return;
+  }
+
+  if(type==='transition'){
+    const ctx=lineContext();
+    const add=(ctx.line.trim() ? '\n\n' : '');
+    insertPlainText(add + ' '.repeat(SCRIPT_FORMAT.transition) + String(value||'CUT TO:').toUpperCase());
+    insertPlainText('\n\n');
+    return;
+  }
+
+  if(type==='fadeout'){
+    const ctx=lineContext();
+    const add=(ctx.line.trim() ? '\n\n' : '');
+    insertPlainText(add + 'FADE OUT.\n\n');
+  }
+}
+
+function insertAtCursor(text){
+  insertPlainText(text);
+}
+
+function getCurrentLineInfo(){
+  const ctx=lineContext();
+  const leading=(ctx.line.match(/^\s*/)||[''])[0].length;
+  const trimmed=ctx.line.trim();
+  let type='action';
+  if(leading>=SCRIPT_FORMAT.character-2 && leading<=SCRIPT_FORMAT.character+4) type='character';
+  else if(leading>=SCRIPT_FORMAT.parenthetical-2 && leading<=SCRIPT_FORMAT.parenthetical+4) type='parenthetical';
+  else if(leading>=SCRIPT_FORMAT.dialogue-2 && leading<=SCRIPT_FORMAT.dialogue+4) type='dialogue';
+  else if(leading>=SCRIPT_FORMAT.transition-4) type='transition';
+  else if(/^(INT\.|EXT\.|INT\/EXT\.)/i.test(trimmed)) type='scene';
+  else if(trimmed.length===0) type='empty';
+  else type='action';
+  return {ctx, leading, trimmed, raw: ctx.line, type};
+}
+
+function enforceProfessionalFormat(showToast=true){
+  const info=getCurrentLineInfo();
+  const ed=document.getElementById('screenplayEditor');
+  if(!ed) return false;
+  const sel=window.getSelection();
+  if(!sel || !sel.rangeCount) return false;
+
+  let limit = LIMITS[info.type] || 60;
+  let shouldUpper = (info.type==='character' || info.type==='scene' || info.type==='transition');
+  let trimmed = info.trimmed;
+
+  // Auto uppercase for CHARACTER, SCENE, TRANSITION
+  if(shouldUpper && trimmed && trimmed!==trimmed.toUpperCase() && trimmed.length>1){
+    const range=sel.getRangeAt(0);
+    const node=range.startContainer;
+    if(node.nodeType===3){
+      const idx=node.textContent.lastIndexOf(info.ctx.line) >=0 ? node.textContent.indexOf(trimmed) : -1;
+      if(idx>=0){
+        const before=node.textContent.slice(0, idx);
+        const after=node.textContent.slice(idx+trimmed.length);
+        const upper=trimmed.toUpperCase();
+        node.textContent = before + upper + after;
+        // keep caret
+        const newOffset = before.length + upper.length;
+        try{
+          range.setStart(node, Math.min(newOffset, node.textContent.length));
+          range.setEnd(node, Math.min(newOffset, node.textContent.length));
+          sel.removeAllRanges(); sel.addRange(range);
+          screenplayLastSelection=range.cloneRange();
+        }catch{}
+        info.trimmed = upper;
+        trimmed = upper;
+      }
     }
+  }
 
-    const text=div.textContent;
-
-    if(!text.trim()){
-
-      y+=lineHeight;
-      return;
-
+  // Check overflow for ALL types
+  if(trimmed.length > limit){
+    const range=sel.getRangeAt(0);
+    const node=range.startContainer;
+    if(node.nodeType===3){
+      // For dialogue and action, auto-wrap to new line with same indent instead of trimming
+      if(info.type==='dialogue' || info.type==='action' || info.type==='parenthetical'){
+        // Find last space before limit to wrap nicely
+        const wrapAt = trimmed.lastIndexOf(' ', limit-1);
+        const splitPos = wrapAt>10 ? wrapAt : limit;
+        const firstPart = trimmed.slice(0, splitPos).trim();
+        const secondPart = trimmed.slice(splitPos).trim();
+        
+        // Replace current line with firstPart
+        const fullText = node.textContent;
+        const lineStart = fullText.lastIndexOf('\n', range.startOffset-1)+1;
+        // Actually simpler: replace trimmed with firstPart, then insert newline + indent + secondPart
+        const before = fullText.slice(0, fullText.indexOf(trimmed));
+        const after = fullText.slice(fullText.indexOf(trimmed)+trimmed.length);
+        
+        // For parenthetical, keep inside ()
+        let second = secondPart;
+        if(info.type==='parenthetical' && !secondPart.endsWith(')')){
+          // keep ) at end of first part?
+        }
+        
+        node.textContent = before + firstPart + '\n' + ' '.repeat(info.leading) + second + after;
+        
+        // Move caret to end of second part
+        const newOffset = before.length + firstPart.length + 1 + info.leading + second.length;
+        try{
+          range.setStart(node, Math.min(newOffset, node.textContent.length));
+          range.setEnd(node, Math.min(newOffset, node.textContent.length));
+          sel.removeAllRanges(); sel.addRange(range);
+          screenplayLastSelection=range.cloneRange();
+        }catch{}
+        
+        if(showToast && typeof toast==='function' && firstPart.length>=limit-2){
+          toast(info.type.toUpperCase()+' auto-wrapped at '+limit+' chars (professional)');
+        }
+        saveScreenplay(true);
+        return true;
+      } else {
+        // For character, scene, transition - hard trim (cannot wrap)
+        const before = node.textContent.slice(0, node.textContent.indexOf(trimmed));
+        const after = node.textContent.slice(node.textContent.indexOf(trimmed)+trimmed.length);
+        const trimmedUpper = trimmed.slice(0, limit).toUpperCase();
+        node.textContent = before + trimmedUpper + after;
+        const newOffset = before.length + limit;
+        try{
+          range.setStart(node, Math.min(newOffset, node.textContent.length));
+          range.setEnd(node, Math.min(newOffset, node.textContent.length));
+          sel.removeAllRanges(); sel.addRange(range);
+          screenplayLastSelection=range.cloneRange();
+        }catch{}
+        if(showToast && typeof toast==='function'){
+          toast(info.type.toUpperCase()+' too long - trimmed to '+limit+' chars (Hollywood standard)');
+        }
+        saveScreenplay(true);
+        return true;
+      }
     }
+  }
+  return false;
+}
 
-    let x=108;
-    let align='left';
-    let fontStyle='normal';
+// Keep old name for compatibility
+function enforceLongCharacterName(){ return enforceProfessionalFormat(false); }
 
-    if(div.classList.contains('character')){
 
-      x=320;
-      align='center';
+function handleScreenplayEnter(e){
+  if(e.key!=='Enter') return;
+  const ed=document.getElementById('screenplayEditor');
+  const ctx=lineContext();
+  const trimmed=ctx.line.trim();
+  if(!ed || !trimmed) return;
 
+  const leading=(ctx.line.match(/^\s*/)||[''])[0].length;
+
+  // Character name → dialogue line (professional flow).
+  if(leading>=SCRIPT_FORMAT.character-2 && leading<=SCRIPT_FORMAT.character+2){
+    // Before moving, enforce length
+    if(trimmed.length>CHARACTER_LIMIT){
+      e.preventDefault();
+      // Trim it
+      const sel=window.getSelection();
+      if(sel && sel.rangeCount){
+        const range=sel.getRangeAt(0);
+        const node=range.startContainer;
+        if(node.nodeType===3){
+          node.textContent = node.textContent.replace(trimmed, trimmed.slice(0, CHARACTER_LIMIT).toUpperCase());
+        }
+      }
+      if(typeof toast==='function') toast('Character name trimmed - max '+CHARACTER_LIMIT);
     }
+    e.preventDefault();
+    insertPlainText('\n' + ' '.repeat(SCRIPT_FORMAT.dialogue));
+    return;
+  }
 
-    if(div.classList.contains('dialogue')){
+  // Parenthetical → dialogue line.
+  if(leading===SCRIPT_FORMAT.parenthetical && trimmed.startsWith('(')){
+    e.preventDefault();
+    insertPlainText('\n' + ' '.repeat(SCRIPT_FORMAT.dialogue));
+    return;
+  }
 
-      x=180;
+  // Dialogue continues at the professional dialogue indent.
+  if(leading===SCRIPT_FORMAT.dialogue){
+    e.preventDefault();
+    insertPlainText('\n' + ' '.repeat(SCRIPT_FORMAT.dialogue));
+    return;
+  }
 
-    }
+  // Scene heading or action return to left margin after a blank line.
+  if(leading===0){
+    e.preventDefault();
+    insertPlainText('\n\n');
+  }
+}
 
-    if(div.classList.contains('parenthetical')){
-
-      x=220;
-      fontStyle='italic';
-
-    }
-
-    if(div.classList.contains('transition')){
-
-      x=540;
-      align='right';
-
-    }
-
-    doc.setFont('Courier',fontStyle);
-
-    doc.text(text,x,y,{
-
-      align:align,
-      maxWidth:300
-
+function showMobileScriptToolbar(show){
+  const bar=document.getElementById('mobileScriptToolbar');
+  if(!bar) return;
+  bar.classList.toggle('visible',!!show);
+  document.body.classList.toggle('script-editing',!!show);
+  if(show){
+    requestAnimationFrame(()=>{
+      if(window.visualViewport){
+        const kh=Math.max(0,window.innerHeight - window.visualViewport.height - window.visualViewport.offsetTop);
+        bar.style.bottom=kh+'px';
+      } else {
+        bar.style.bottom='0px';
+      }
     });
+  }
+}
 
-    y+=lineHeight*1.2;
 
-    if(div.classList.contains('scene-heading')){
+// V15 FINAL - Working integrated keyboard, all buttons present and tappable
+let kbShift=false;
+let savedRange=null;
 
-      y+=6;
+function saveRange(){
+  const sel=window.getSelection();
+  if(sel && sel.rangeCount){
+    try{ savedRange=sel.getRangeAt(0).cloneRange(); }catch{}
+  }
+}
+function restoreRange(){
+  if(savedRange){
+    const sel=window.getSelection();
+    try{ sel.removeAllRanges(); sel.addRange(savedRange); }catch{}
+  }
+}
 
+function formatAction(type){
+  saveRange();
+  restoreRange();
+  const ed=document.getElementById('screenplayEditor');
+  if(!ed) return;
+  ed.focus();
+  restoreRange();
+  
+  // Use existing scriptTool if available (V10 engine)
+  if(typeof scriptTool==='function'){
+    const map={
+      'fadein':()=>scriptTool('fadein'),
+      'fadeout':()=>scriptTool('fadeout'),
+      'int':()=>{ scriptTool('scene','INT. '); },
+      'ext':()=>{ scriptTool('scene','EXT. '); },
+      'intext':()=>{ scriptTool('scene','INT./EXT. '); },
+      'day':()=>{ insertPlainText(' - DAY'); },
+      'night':()=>{ insertPlainText(' - NIGHT'); },
+      'act':()=>scriptTool('act'),
+      'character':()=>scriptTool('character'),
+      'dialogue':()=>scriptTool('dialogue'),
+      'paren':()=>scriptTool('parenthetical'),
+      'action':()=>scriptTool('action'),
+      'shot':()=>scriptTool('scene','SHOT - '),
+      'center':()=>scriptTool('center'),
+      'title':()=>scriptTool('titlecard'),
+      'cut':()=>scriptTool('cut'),
+      'smash':()=>scriptTool('smash'),
+      'dissolve':()=>{ insertPlainText('\n\n'+' '.repeat(55)+'DISSOLVE TO:\n\n'); },
+      'intercut':()=>{ insertPlainText('\n\nINTERCUT:\n\n'); },
+      'montage':()=>{ insertPlainText('\n\nMONTAGE - \n\n'); },
+      'flash':()=>{ insertPlainText('\n\nFLASHBACK - \n\n'); },
+      'vo':()=>{ insertPlainText(' (V.O.)'); },
+      'os':()=>{ insertPlainText(' (O.S.)'); },
+      'contd':()=>{ insertPlainText(' (CONT\'D)'); }
+    };
+    if(map[type]){ map[type](); if(navigator.vibrate) navigator.vibrate(10); return; }
+  }
+  
+  // Fallback
+  const inserts={
+    'fadein':'FADE IN:\n\n','fadeout':'\n\nFADE OUT.\n\n',
+    'int':'INT. ','ext':'EXT. ','intext':'INT./EXT. ',
+    'character':'\n\n'+' '.repeat(30),'dialogue':'\n'+' '.repeat(20),
+    'paren':'\n'+' '.repeat(25)+'(','action':'\n\n'
+  };
+  if(inserts[type]) insertPlainText(inserts[type]);
+}
+
+function pressKey(ch){
+  saveRange();
+  restoreRange();
+  const ed=document.getElementById('screenplayEditor');
+  if(!ed) return;
+  ed.focus();
+  restoreRange();
+  
+  let out=ch;
+  if(kbShift && ch.length===1) out=ch.toUpperCase();
+  
+  if(document.queryCommandSupported('insertText')){
+    document.execCommand('insertText', false, out);
+  } else {
+    insertPlainText(out);
+  }
+  
+  if(kbShift && ch.length===1 && ch!==' '){
+    kbShift=false;
+    const btn=document.getElementById('shiftKey');
+    if(btn) btn.style.background='#1e1b2f';
+    // update keys
+    document.querySelectorAll('.kb-key').forEach(k=>{
+      if(k.textContent.length===1 && /[A-Z]/i.test(k.textContent) && !k.classList.contains('wide') && !k.classList.contains('space') && !k.classList.contains('enter')){
+        k.textContent = k.textContent.toLowerCase();
+      }
+    });
+  }
+  saveRange();
+  if(typeof saveScreenplay==='function') setTimeout(()=>saveScreenplay(true), 50);
+}
+
+function pressDelete(){
+  const ed=document.getElementById('screenplayEditor');
+  if(!ed) return;
+  ed.focus();
+  restoreRange();
+  document.execCommand('delete', false, null);
+  saveRange();
+}
+
+function pressEnter(){
+  const ed=document.getElementById('screenplayEditor');
+  if(!ed) return;
+  ed.focus();
+  restoreRange();
+  // Smart enter
+  if(typeof handleScreenplayEnter==='function'){
+    const e={key:'Enter', preventDefault:()=>{}, stopPropagation:()=>{}};
+    handleScreenplayEnter(e);
+  } else {
+    document.execCommand('insertText', false, '\n');
+  }
+  saveRange();
+}
+
+function toggleShift(){
+  kbShift=!kbShift;
+  const btn=document.getElementById('shiftKey');
+  if(btn){
+    btn.style.background = kbShift ? '#9b5cff' : '#1e1b2f';
+  }
+  document.querySelectorAll('.kb-key').forEach(k=>{
+    const t=k.textContent.trim();
+    if(t.length===1 && /[a-z]/i.test(t) && !k.classList.contains('wide') && k.id!=='shiftKey'){
+      k.textContent = kbShift ? t.toUpperCase() : t.toLowerCase();
     }
+  });
+}
 
+function showKB(){
+  const kb=document.getElementById('integratedKeyboard');
+  if(!kb) return;
+  // V18: this is a screenplay-formatting toolbar, not a second typing keyboard.
+  kb.classList.add('visible');
+  kb.style.display='flex';
+  const vv=window.visualViewport;
+  const keyboardHeight=(vv && window.innerWidth<=900) ? Math.max(0,window.innerHeight-vv.height-vv.offsetTop) : 0;
+  kb.style.bottom=keyboardHeight+'px';
+  const ed=document.getElementById('screenplayEditor');
+  if(ed) ed.style.paddingBottom = (kb.offsetHeight + keyboardHeight + 24) + 'px';
+}
+function hideKB(){
+  const inScreenplay = document.getElementById('sec-screenplay')?.classList.contains('active');
+  if(!inScreenplay){
+    const kb=document.getElementById('integratedKeyboard');
+    if(kb){ kb.classList.remove('visible'); kb.style.display='none'; }
+  }
+}
+
+// Override old toolbar functions
+window.syncKeyboardToolbar = function(){
+  const inScreenplay = document.getElementById('sec-screenplay')?.classList.contains('active');
+  if(inScreenplay && window.innerWidth<=900){
+    showKB();
+  }
+};
+window.showMobileScriptToolbar = function(s){ if(s) showKB(); };
+window.syncV6Keyboard = function(){};
+
+setTimeout(()=>{
+  const ed=document.getElementById('screenplayEditor');
+  if(ed){
+    ed.addEventListener('focus', ()=>{ if(window.innerWidth<=900) showKB(); });
+    ed.addEventListener('click', ()=>{ saveRange(); if(window.innerWidth<=900) showKB(); });
+    ed.addEventListener('keyup', saveRange);
+    ed.addEventListener('mouseup', saveRange);
+  }
+  const origGo=window.go;
+  if(origGo){
+    window.go=function(id){
+      origGo(id);
+      setTimeout(()=>{
+        if(id==='sec-screenplay' && window.innerWidth<=900) showKB();
+        else {
+          const kb=document.getElementById('integratedKeyboard');
+          if(kb){ kb.classList.remove('visible'); kb.style.display='none'; }
+        }
+      }, 150);
+    };
+  }
+  if(window.visualViewport){
+    window.visualViewport.addEventListener('resize',()=>{
+      const ed=document.getElementById('screenplayEditor');
+      if(ed && document.activeElement===ed && window.innerWidth<=900) showKB();
+    });
+  }
+}, 500);
+
+function syncKeyboardToolbar(){
+  const vv=window.visualViewport;
+  const ed=document.getElementById('screenplayEditor');
+  const active=ed && document.activeElement===ed;
+  const bar=document.getElementById('mobileScriptToolbar');
+  if(!bar) return;
+  if(!vv){
+    bar.style.bottom='0px';
+    showMobileScriptToolbar(!!active);
+    return;
+  }
+  const keyboardHeight=Math.max(0,window.innerHeight - vv.height - vv.offsetTop);
+  if(window.innerWidth<=900){
+    bar.style.bottom = keyboardHeight + 'px';
+    if(ed && active){
+      ed.style.marginBottom = (keyboardHeight + bar.offsetHeight + 20) + 'px';
+    }
+  }
+  showMobileScriptToolbar(!!active);
+}
+function typeChar(ev,ch){
+  if(ev){ev.preventDefault(); ev.stopPropagation();}
+  saveEditorSelection();
+  insertPlainText(ch);
+}
+function deleteChar(ev){
+  if(ev){ev.preventDefault(); ev.stopPropagation();}
+  const ed=document.getElementById('screenplayEditor');
+  if(!ed) return;
+  ed.focus();
+  restoreEditorSelection();
+  const sel=window.getSelection();
+  if(sel && sel.rangeCount){
+    const range=sel.getRangeAt(0);
+    if(!range.collapsed){ range.deleteContents(); }
+    else {
+      const node=range.startContainer;
+      if(node.nodeType===3 && range.startOffset>0){
+        const txt=node.textContent;
+        node.textContent = txt.slice(0, range.startOffset-1) + txt.slice(range.startOffset);
+        range.setStart(node, range.startOffset-1);
+        range.setEnd(node, range.startOffset-1);
+        sel.removeAllRanges(); sel.addRange(range);
+      }
+    }
+    if(sel.rangeCount) screenplayLastSelection=sel.getRangeAt(0).cloneRange();
+    saveScreenplay(true);
+  }
+}
+
+function setupScreenplayMobile(){
+  const ed=document.getElementById('screenplayEditor');
+  if(!ed) return;
+
+  ed.addEventListener('focus',()=>{
+    ed.classList.add('screenplay-focused');
+    setTimeout(syncKeyboardToolbar,80);
   });
 
-  doc.save(
-    (titlePage.title || 'screenplay')+'.pdf'
-  );
+  ed.addEventListener('blur',()=>{
+    saveEditorSelection();
+    setTimeout(syncKeyboardToolbar,120);
+  });
+
+  ed.addEventListener('keyup',(e)=>{
+    saveEditorSelection();
+    if(e.key.length===1 || e.key==='Backspace' || e.key===' '){
+      enforceProfessionalFormat(false);
+      updateCharCounter();
+    }
+  });
+  ed.addEventListener('mouseup',saveEditorSelection);
+  ed.addEventListener('touchend',()=>setTimeout(saveEditorSelection,0));
+  ed.addEventListener('keydown',handleScreenplayEnter);
+  ed.addEventListener('input',()=>{
+    enforceProfessionalFormat(false);
+    updateCharCounter();
+  });
+
+  const bar=document.getElementById('mobileScriptToolbar');
+  if(bar){
+    // Do not cancel the toolbar's touch events: cancellation prevented buttons from firing
+    // and also blocked horizontal scrolling on Android. Each button now handles pointerdown
+    // directly so the editor keeps its selection while the keyboard stays open.
+  }
+
+  if(window.visualViewport){
+    window.visualViewport.addEventListener('resize',syncKeyboardToolbar);
+    window.visualViewport.addEventListener('scroll',syncKeyboardToolbar);
+  }
+  window.addEventListener('resize',syncKeyboardToolbar);
+  window.addEventListener('orientationchange',()=>setTimeout(syncKeyboardToolbar,300));
 }
+
+function saveScreenplay(silent=false){
+  const ed=document.getElementById('screenplayEditor');
+  if(!ed) return;
+  screenplay=ed.innerText;
+  const titleNode=document.getElementById('scriptTitleInput'); const active=activeProject();
+  if(active && titleNode){const title=titleNode.value.trim(); active.storyTitle=title; if(title) active.name=title;}
+  localStorage.setItem(LS.screenplay,screenplay); // legacy/current workspace fallback
+  const projectId=localStorage.getItem(LS.current);
+  if(projectId) localStorage.setItem(projectScreenplayKey(projectId),screenplay);
+  const p=projects.find(x=>x.id===projectId);
+  if(p){
+    p.updated=new Date().toLocaleDateString();
+    p.words=screenplay.trim()?screenplay.trim().split(/\s+/).length:0;
+    p.scenes=(screenplay.match(/^(?:INT\.|EXT\.|INT\/EXT\.)/gmi)||[]).length;
+    save(LS.projects,projects);
+    renderProjects();
+  }
+  renderStats();
+  if(typeof updateChecks==='function') updateChecks();
+  if(!silent) addNotif('Screenplay saved','Your screenplay was saved locally.',false);
+}
+function startAutosave(){
+  setInterval(()=>{
+    const ed=document.getElementById('screenplayEditor');
+    if(!ed) return;
+    const cur=ed.innerText;
+    if(cur!==screenplay){
+      screenplay=cur;
+      localStorage.setItem(LS.screenplay,screenplay);
+      const projectId=localStorage.getItem(LS.current);
+      if(projectId) localStorage.setItem(projectScreenplayKey(projectId),screenplay);
+      const p=projects.find(x=>x.id===projectId);
+      if(p){p.updated=new Date().toLocaleDateString();p.words=screenplay.trim()?screenplay.trim().split(/\s+/).length:0;save(LS.projects,projects)}
+      renderStats();
+    }
+  },2000);
+}
+function exportScreenplay(){
+  const blob=new Blob([screenplay],{type:'text/plain'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);const title=(activeProject()?.storyTitle||activeProject()?.name||'screenplay').replace(/[^a-z0-9_-]+/gi,'_').replace(/^_+|_+$/g,'')||'screenplay';a.download=title+'.txt';a.click();
+  toast('Exported screenplay.txt');
+}
+function sceneAssist(){
+  const prompt=document.getElementById('scenePrompt').value.trim();
+  if(!prompt){toast('Describe what should happen next');return}
+  const suggestions=[
+    `Consider raising stakes: If ${prompt.slice(0,40)}... what does the protagonist lose if they fail?`,
+    `Try a reversal: Let the character think they succeeded, then reveal ${prompt.toLowerCase().includes('letter')?'the letter is not what they expected':'a hidden opposition'}.`,
+    `South African lens: How would this moment play in Johannesburg? Sound, light, community? Use location ${locations[0]?.name||'as character'}.`,
+    `Character focus: Which fear from Character Studio can you trigger here? ${characters[0]?.fear||'Fear creates truth'}.`
+  ];
+  document.getElementById('sceneResult').innerHTML=`<div class="card2" style="background:var(--panel)"><b style="font-size:12px">Prototype Suggestion</b><p style="margin-top:6px">${esc(suggestions[Math.floor(Math.random()*suggestions.length)])}</p><p style="margin-top:8px;font-size:11px;color:var(--text3)">Future: Sibali AI will generate scene, dialogue, action aligned to your story spine.</p></div>`;
+}
+
+// Story
+function activeProject(){
+  const id=localStorage.getItem(LS.current);
+  return projects.find(p=>p.id===id)||projects[0]||null;
+}
+function loadProjectDossier(){
+  const p=activeProject();
+  const fields={dossierTitle:'storyTitle',dossierLogline:'storyLogline',dossierGenre:'storyGenre',dossierFormat:'storyFormat',dossierStoryline:'storyline',dossierTheme:'storyTheme',dossierNotes:'storyNotes'};
+  Object.entries(fields).forEach(([el,key])=>{const node=document.getElementById(el);if(node)node.value=p?(p[key]||(key==='storyTitle'?p.name:key==='storyLogline'?(p.logline||''):key==='storyFormat'?(p.type||'Feature Film'):'')):'';});
+}
+function saveProjectDossier(){
+  const p=activeProject();
+  if(!p){toast('Create or select a project first');return;}
+  p.storyTitle=document.getElementById('dossierTitle').value.trim();
+  p.storyLogline=document.getElementById('dossierLogline').value.trim();
+  p.storyGenre=document.getElementById('dossierGenre').value.trim();
+  p.storyFormat=document.getElementById('dossierFormat').value;
+  p.storyline=document.getElementById('dossierStoryline').value;
+  p.storyTheme=document.getElementById('dossierTheme').value;
+  p.storyNotes=document.getElementById('dossierNotes').value;
+  if(p.storyTitle){p.name=p.storyTitle;}
+  p.logline=p.storyLogline;
+  p.type=p.storyFormat;
+  p.updated=new Date().toLocaleDateString();
+  save(LS.projects,projects);
+  renderProjects(); refreshProjectControls(); buildStudioCards();
+  toast('Project story file saved on this device');
+}
+
+function analyzeStory(){
+  const premise=document.getElementById('premiseInput').value.trim();
+  if(!premise){toast('Enter a premise');return}
+  const lower=premise.toLowerCase();
+  const prot=premise.split(' ').slice(0,3).join(' ')||'Protagonist';
+  const analysis={
+    Protagonist: premise.match(/(photographer|young|detective|woman|man|student|artist|musician)/i)?.[0] || 'Emerging protagonist from premise',
+    Goal: lower.includes('discovers')?'To understand/control discovery': 'To achieve transformation',
+    Conflict: lower.includes('future')?'Man vs fate / knowledge': 'Internal + external opposition',
+    Opposition: 'System, secret keeper, or self-doubt',
+    Stakes: 'If they fail, truth remains hidden / community suffers',
+    Theme: lower.includes('future')?'Seeing vs being ready to see':'Identity, courage, belonging',
+    'Dramatic question': `Will ${prot} confront what they've found?`,
+    Transformation: 'From observer to participant',
+    Direction: 'Act I: Inciting discovery. Act II: Trials in Joburg. Act III: Choice that defines future.'
+  };
+  document.getElementById('storyOutput').innerHTML=Object.entries(analysis).map(([k,v])=>`<div style="margin-bottom:12px"><div style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);font-weight:600">${k}</div><div style="font-size:13px;margin-top:2px">${esc(v)}</div></div>`).join('')+`<div class="divider"></div><span class="badge purple">Prototype heuristic</span><p style="font-size:11px;color:var(--text3);margin-top:6px">Future: Live AI will do deep analysis + suggestions. Architecture ready: replace analyzeStory() with fetch('/api/story').</p>`;
+}
+
+// Characters
+function openCharModal(){if(!activeProject()){toast('Create a film project first');openNewFilmModal();return;}document.getElementById('charModal').classList.add('open')}
+function saveCharacter(){
+  const projectId=currentProjectId();
+  if(!projectId){toast('Create or select a project first');return;}
+  const data={
+    id:'c_'+Date.now(),
+    projectId,
+    name:document.getElementById('c_name').value.trim()||'Unnamed',
+    role:document.getElementById('c_role').value.trim(),
+    goal:document.getElementById('c_goal').value.trim(),
+    fear:document.getElementById('c_fear').value.trim(),
+    secret:document.getElementById('c_secret').value.trim(),
+    conflict:document.getElementById('c_conflict').value.trim(),
+    notes:document.getElementById('c_notes').value.trim()
+  };
+  characters.unshift(data);save(LS.characters,characters);
+  closeModal('charModal');
+  ['c_name','c_role','c_goal','c_fear','c_secret','c_conflict','c_notes'].forEach(i=>document.getElementById(i).value='');
+  renderAll();addNotif('Character added',`${data.name} added.`);toast(`${data.name} saved`);
+}
+function removeChar(id){characters=characters.filter(c=>c.id!==id);save(LS.characters,characters);renderAll();toast('Character removed')}
+
+// Locations
+function openLocModal(){if(!activeProject()){toast('Create a film project first');openNewFilmModal();return;}document.getElementById('locModal').classList.add('open')}
+function saveLocation(){
+  const projectId=currentProjectId();
+  if(!projectId){toast('Create or select a project first');return;}
+  const data={
+    id:'l_'+Date.now(),
+    projectId,
+    name:document.getElementById('l_name').value.trim()||'Untitled Location',
+    type:document.getElementById('l_type').value.trim(),
+    atmo:document.getElementById('l_atmo').value.trim(),
+    desc:document.getElementById('l_desc').value.trim(),
+    purpose:document.getElementById('l_purpose').value.trim()
+  };
+  locations.unshift(data);save(LS.locations,locations);
+  closeModal('locModal');
+  ['l_name','l_type','l_atmo','l_desc','l_purpose'].forEach(i=>document.getElementById(i).value='');
+  renderAll();addNotif('Location added',`${data.name} added.`);toast('Location saved');
+}
+function removeLoc(id){locations=locations.filter(l=>l.id!==id);save(LS.locations,locations);renderAll();toast('Location removed')}
+
+// Sibali
+function sibaliWelcome(){
+  const chat=document.getElementById('sibaliChat');
+  chat.innerHTML=`<div style="align-self:flex-start;background:var(--panel);border:1px solid var(--border);border-radius:12px 12px 12px 2px;padding:10px 12px;max-width:85%;font-size:13px"><b style="color:var(--purple)">Sibali</b> — Hello. I'm Sibali, your creative companion. I'm running in honest prototype mode right now — no external AI connected yet. I can still guide your story using local heuristics. Try: "help me with my protagonist's fear" or "suggest a twist for act 2".<br><br><span class="badge" style="margin-top:6px">Prototype • Future AI API</span></div>`;
+}
+function sendSibali(){
+  const input=document.getElementById('sibaliInput');
+  const txt=input.value.trim(); if(!txt) return;
+  const chat=document.getElementById('sibaliChat');
+  chat.innerHTML+=`<div style="align-self:flex-end;background:var(--purple-soft);border:1px solid var(--purple-soft2);border-radius:12px 12px 2px 12px;padding:10px 12px;max-width:85%;font-size:13px">${esc(txt)}</div>`;
+  input.value='';
+  setTimeout(()=>{
+    let reply='Prototype thought: ';
+    const low=txt.toLowerCase();
+    if(low.includes('character')||low.includes('protagonist')) reply+=`Consider ${characters[0]?.name||'your protagonist'}'s fear "${characters[0]?.fear||'fear'}" as the engine. What would they never do? Make them do it in the next scene.`;
+    else if(low.includes('dialogue')) reply+='Write dialogue as action: what does the character want from the other person in this moment? Keep it under 2 lines, then silence.';
+    else if(low.includes('twist')||low.includes('act')) reply+='Twist idea: The location '+ (locations[0]?.name||'you built') +' betrays them. Someone they trusted uses it against them. That raises stakes and theme.';
+    else if(low.includes('south')||low.includes('african')) reply+='African lens: Ground this in Johannesburg sound, texture, community. Let the city be a character. Whispering Words is built for that.';
+    else reply+=`I hear you: "${txt.slice(0,80)}". Here's a prototype nudge — write the scene where your protagonist fails, then show what they learn. Save to screenplay and tag with CHARACTER beat.`;
+    reply+=`<br><br><span style="font-size:11px;color:var(--text3)">Future: This will be live AI with screenplay, characters, world context. Architecture: fetch('/api/sibali', {premise, screenplay, characters})</span>`;
+    chat.innerHTML+=`<div style="align-self:flex-start;background:var(--panel);border:1px solid var(--border);border-radius:12px 12px 12px 2px;padding:10px 12px;max-width:85%;font-size:13px"><b style="color:var(--purple)">Sibali</b><br>${reply}</div>`;
+    chat.scrollTop=chat.scrollHeight;
+  },400);
+  chat.scrollTop=chat.scrollHeight;
+}
+function saveShot(){
+  const s={id:Date.now(),type:document.getElementById('shotType').value,move:document.getElementById('camMove').value,notes:document.getElementById('shotNotes').value,at:Date.now()};
+  shots.unshift(s);save(LS.shots,shots);
+  document.getElementById('shotSaved').innerText=`Saved ${s.type} • ${s.move} at ${new Date().toLocaleTimeString()}`;
+  addNotif('Shot note saved',`${s.type} - ${s.move}`);
+  toast('Shot saved');
+}
+
+// Helpers
+function addNotif(title,body,show=true){
+  if(show!==false){notifs.unshift({id:Date.now(),title,body,time:new Date().toLocaleString(),type:'system'})}
+  else {notifs.unshift({id:Date.now(),title,body,time:new Date().toLocaleString(),type:'auto'})}
+  if(notifs.length>30) notifs=notifs.slice(0,30);
+  save(LS.notifs,notifs); renderNotifs();
+}
+function toast(msg){
+  const t=document.getElementById('toast');t.innerText=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200);
+}
+function esc(s){return (s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+document.querySelectorAll('.modal-bg').forEach(bg=>bg.addEventListener('click',e=>{if(e.target===bg) bg.classList.remove('open')}));
+
+// init
+init();
+</script>
+
+<style id="v6-css">
+.screenplay-v6-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin:14px 0 10px}.screenplay-status{font-size:11px;color:var(--text3);margin-top:5px}.screenplay-head-actions{display:flex;gap:7px;flex-wrap:wrap}.screenplay-page-tools{display:flex;gap:7px;overflow-x:auto;padding:8px 0;scrollbar-width:none}.screenplay-page-tools::-webkit-scrollbar{display:none}.screenplay-page-tools button{white-space:nowrap;background:var(--panel2);border:1px solid var(--border);color:var(--text2);border-radius:8px;padding:8px 10px;font-size:11px}.v6-tools{position:relative}.v6-tools button{white-space:nowrap}.script-checks{display:grid;gap:7px}.script-check{padding:9px 10px;border:1px solid var(--border);border-radius:9px;background:var(--panel2);font-size:12px}.script-check.ok{border-color:rgba(52,211,153,.35)}.script-check.warn{border-color:rgba(251,191,36,.35)}/* Screenplay editor layout from long names */
+#screenplayEditor{
+  overflow-wrap:break-word;word-break:break-word;white-space:pre-wrap;word-wrap:break-word;
+  /* Lock margins - prevent shift */
+  tab-size:4;
+
+font-family:"Courier New",Courier,monospace!important;font-size:12pt!important;line-height:1.35!important;white-space:pre-wrap!important;tab-size:4!important;min-height:70vh;padding:0.8in 0.7in!important;background:#fff!important;color:#111!important;letter-spacing:0!important}.screenplay-editor-wrap{background:#e9e9ec!important;padding:22px!important;border-radius:12px}.mobile-script-toolbar{z-index:120!important}.v6-mobile-tools{position:fixed!important;left:0;right:0;bottom:0;display:flex!important;overflow-x:auto;gap:6px;padding:7px max(8px,env(safe-area-inset-left)) calc(7px + env(safe-area-inset-bottom)) max(8px,env(safe-area-inset-right));background:rgba(9,7,14,.97);border-top:1px solid var(--border2);backdrop-filter:blur(10px)}.v6-mobile-tools button{flex:0 0 auto}.v6-screenplay-active #bottomNav{display:none!important}.modal{max-width:620px}.community-results{display:grid;gap:8px;margin-top:10px}.community-result{padding:10px;border:1px solid var(--border);border-radius:10px;background:var(--panel2)}@media(max-width:700px){.screenplay-v6-head{align-items:flex-start}.screenplay-head-actions{width:100%;overflow-x:auto;flex-wrap:nowrap;padding-bottom:2px}.screenplay-head-actions .btn{flex:0 0 auto}.screenplay-editor-wrap{padding:8px;margin:0 -4px}.screenplay-page-tools{margin-bottom:2px}/* Screenplay editor layout from long names */
+#screenplayEditor{
+  overflow-wrap:break-word;word-break:break-word;white-space:pre-wrap;word-wrap:break-word;
+  /* Lock margins - prevent shift */
+  tab-size:4;
+
+min-height:68vh;padding:.55in .5in!important;font-size:12pt!important}.v6-tools{overflow-x:auto;scrollbar-width:none}.v6-tools::-webkit-scrollbar{display:none}}
+@media print{body *{visibility:hidden!important}#sec-screenplay,#sec-screenplay *{visibility:visible!important}#sec-screenplay{position:absolute!important;left:0!important;top:0!important;width:100%!important;background:#fff!important;color:#111!important}/* Screenplay editor layout from long names */
+#screenplayEditor{
+  overflow-wrap:break-word;word-break:break-word;white-space:pre-wrap;word-wrap:break-word;
+  /* Lock margins - prevent shift */
+  tab-size:4;
+
+min-height:auto!important;padding:.5in .6in!important;background:#fff!important;color:#111!important;font-family:"Courier New",Courier,monospace!important;font-size:12pt!important}.screenplay-v6-head,.screenplay-toolbar,.screenplay-page-tools,.mobile-script-toolbar,#sceneAssistant{display:none!important}.screenplay-editor-wrap{padding:0!important;background:#fff!important}}
+
+/* V19: Celtx-inspired screenplay page, separated scrolling, and stable toolbars */
+#sec-screenplay{overflow:visible!important}
+#sec-screenplay .screenplay-v6-head{
+  position:sticky;top:0;z-index:40;background:rgba(8,7,13,.97);
+  padding:10px 0;margin-top:10px;backdrop-filter:blur(10px);
+}
+#sec-screenplay .v6-tools{
+  position:sticky;top:84px;z-index:39;background:rgba(8,7,13,.97);
+  padding:8px 0;margin:0 0 10px;backdrop-filter:blur(10px);
+  overflow-x:auto;scrollbar-width:thin;
+}
+#sec-screenplay .screenplay-page-tools{position:sticky;top:132px;z-index:38;background:rgba(8,7,13,.97)}
+#sec-screenplay .screenplay-editor-wrap{
+  width:100%;max-width:100%;padding:24px;background:#dedee4!important;
+  border:1px solid #393644;border-radius:12px;overflow-x:auto;overflow-y:visible;
+}
+#screenplayEditor{
+  box-sizing:border-box!important;display:block;width:100%;max-width:816px;min-width:0;
+  min-height:1056px;margin:0 auto;padding:96px 96px 96px 144px!important;
+  background:#fff!important;color:#111!important;border:1px solid #d2d2d2!important;
+  border-radius:1px!important;box-shadow:0 5px 22px rgba(0,0,0,.18)!important;
+  font-family:'Courier New',Courier,monospace!important;font-size:12pt!important;
+  font-weight:400!important;line-height:1!important;letter-spacing:0!important;
+  white-space:pre-wrap!important;overflow-wrap:break-word!important;word-break:normal!important;
+  tab-size:4!important;overflow:visible!important;
+}
+#screenplayEditor:focus{outline:2px solid #9b5cff!important;outline-offset:1px}
+@media(max-width:700px){
+  #sec-screenplay .screenplay-v6-head{top:0;padding:8px 0}
+  #sec-screenplay .v6-tools{display:none!important}
+  #sec-screenplay .screenplay-page-tools{display:none!important}
+  #sec-screenplay .screenplay-editor-wrap{padding:8px;margin:0;background:#dedee4!important;border-radius:8px}
+  #screenplayEditor{width:100%;max-width:100%;min-height:1056px;padding:56px 28px 180px 54px!important;font-size:12pt!important;line-height:1.05!important}
+  #integratedKeyboard.integrated-kb.visible{max-height:155px!important;overflow-x:hidden!important;overflow-y:auto!important}
+  #integratedKeyboard .kb-qwerty{display:none!important}
+}
+@media print{
+  #sec-screenplay .screenplay-v6-head,#sec-screenplay .v6-tools,#sec-screenplay .screenplay-page-tools{display:none!important}
+  #sec-screenplay .screenplay-editor-wrap{padding:0!important;background:#fff!important;border:0!important;overflow:visible!important}
+  #screenplayEditor{width:100%!important;max-width:none!important;min-height:0!important;padding:1in 1in 1in 1.5in!important;box-shadow:none!important;border:0!important;overflow:visible!important;line-height:1!important}
+}
+
+/* V25: visible project/title controls and correctly proportioned screenplay paper */
+#sec-screenplay .screenplay-identification{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;min-width:0;flex:1 1 100%}
+.script-project-controls{display:grid;grid-template-columns:minmax(130px,1fr) minmax(150px,1.35fr) auto;align-items:end;gap:8px;width:100%;margin-top:10px}
+.script-control-label{display:flex;flex-direction:column;gap:5px;color:var(--text2);font-size:11px;font-weight:700;letter-spacing:.03em;min-width:0}
+.script-control-label .input{min-width:0;min-height:38px;font-size:13px}
+#sec-screenplay .screenplay-v6-head{align-items:flex-start;gap:10px}
+#sec-screenplay .screenplay-head-actions{flex-wrap:wrap}
+#sec-screenplay .screenplay-editor-wrap{box-sizing:border-box!important;overflow:auto!important;align-items:flex-start!important}
+#sec-screenplay #screenplayEditor{box-sizing:border-box!important;width:min(100%,816px)!important;max-width:816px!important;min-width:0!important;min-height:1056px!important;height:auto!important;aspect-ratio:8.5 / 11;overflow:visible!important;padding:96px 96px 96px 144px!important;}
+@media(max-width:700px){
+  #sec-screenplay .screenplay-identification{display:block}
+  #sec-screenplay .script-project-controls{grid-template-columns:1fr 1.3fr;gap:6px;margin-top:8px}
+  #sec-screenplay .script-project-controls button{grid-column:1/-1;justify-self:start;padding:6px 8px}
+  #sec-screenplay .script-control-label{font-size:10px}
+  #sec-screenplay .script-control-label .input{padding:8px;font-size:12px;min-height:36px}
+  #sec-screenplay .screenplay-head-actions{width:100%;gap:5px;flex-wrap:nowrap;overflow-x:auto}
+  #sec-screenplay #screenplayEditor{width:100%!important;max-width:100%!important;min-height:calc((100vw - 32px) * 1.294)!important;aspect-ratio:8.5 / 11;padding:12% 9% 15% 16%!important;font-size:12pt!important;line-height:1.15!important;}
+}
+@media(min-width:701px){
+  #sec-screenplay .screenplay-editor-wrap{padding:22px!important}
+  #sec-screenplay #screenplayEditor{width:816px!important;min-height:1056px!important;aspect-ratio:8.5 / 11}
+}
+@media print{
+  #sec-screenplay .screenplay-identification,#sec-screenplay .screenplay-head-actions{display:none!important}
+  #screenplayEditor{aspect-ratio:auto!important;width:100%!important;min-height:0!important;padding:1in 1in 1in 1.5in!important;}
+}
+</style>
+<script id="v6-js">
+(function(){
+const V6KEY='ww_workspace_v6';
+const V6H={};
+function v6load(){try{return JSON.parse(localStorage.getItem(V6KEY))||{}}catch(e){return {}}}
+function v6save(){localStorage.setItem(V6KEY,JSON.stringify(V6H))}
+function v6pid(){return localStorage.getItem(LS.current)||projects[0]?.id||'default'}
+function v6ws(){const id=v6pid();if(!V6H[id])V6H[id]={director:{mood:'',palette:'',lighting:'',notes:'',performance:''},production:{title:'',date:'',notes:''},post:{editing:'',sound:'',vfx:''},shots:[],lessons:[],screenplayHistory:[],screenplayRedo:[]};return V6H[id]}
+Object.assign(V6H,v6load());
+function v6persist(){v6save()}
+function v6hydrate(){const w=v6ws();const ed=document.getElementById('screenplayEditor');if(ed&&ed.innerText.trim()){}; ['mood','palette','lighting','visNotes'].forEach((id,i)=>{const e=document.getElementById(id);if(e)e.value=[w.director.mood,w.director.palette,w.director.lighting,w.director.notes][i]||''}); const p=w.production;[['prodTitle',p.title],['prodDate',p.date]].forEach(([id,val])=>{const e=document.getElementById(id);if(e)e.value=val||''}); const txt=document.querySelector('#sec-production textarea'); if(txt)txt.value=p.notes||''; const pts=document.querySelectorAll('#sec-post textarea'); [w.post.editing,w.post.sound,w.post.vfx].forEach((v,i)=>{if(pts[i])pts[i].value=v||''});}
+function v6saveWorkspace(){const w=v6ws();w.director={mood:document.getElementById('mood')?.value||'',palette:document.getElementById('palette')?.value||'',lighting:document.getElementById('lighting')?.value||'',notes:document.getElementById('visNotes')?.value||'',performance:document.getElementById('performanceNotes')?.value||''};w.production={title:document.getElementById('prodTitle')?.value||'',date:document.getElementById('prodDate')?.value||'',notes:document.querySelector('#sec-production textarea')?.value||''};const pts=document.querySelectorAll('#sec-post textarea');w.post={editing:pts[0]?.value||'',sound:pts[1]?.value||'',vfx:pts[2]?.value||''};v6persist();toast('V6 workspace saved')}
+window.v6saveWorkspace=v6saveWorkspace;
+function v6initUI(){
+ const perf=document.querySelector('#sec-director textarea[placeholder*="Emotional"]');if(perf&&!perf.id)perf.id='performanceNotes';
+ const saveBtns=['mood','palette','lighting','visNotes','performanceNotes','prodTitle','prodDate'];saveBtns.forEach(id=>document.getElementById(id)?.addEventListener('input',()=>{clearTimeout(V6H._t);V6H._t=setTimeout(v6saveWorkspace,700)}));
+ const prodText=document.querySelector('#sec-production textarea');prodText?.addEventListener('input',()=>{clearTimeout(V6H._pt);V6H._pt=setTimeout(v6saveWorkspace,700)});document.querySelectorAll('#sec-post textarea').forEach(e=>e.addEventListener('input',()=>{clearTimeout(V6H._post);V6H._post=setTimeout(v6saveWorkspace,700)}));
+ const oldMobile=document.getElementById('mobileScriptToolbar');if(oldMobile){oldMobile.classList.add('v6-mobile-tools');}
+ const ed=document.getElementById('screenplayEditor');if(ed){ed.addEventListener('input',()=>{v6HistoryPush();updateChecks()});ed.addEventListener('keydown',v6Enter,{capture:true});ed.addEventListener('focus',()=>{document.body.classList.add('v6-screenplay-active');syncV6Keyboard()});ed.addEventListener('blur',()=>setTimeout(()=>{if(!document.activeElement?.closest?.('.mobile-script-toolbar,.v6-tools'))document.body.classList.remove('v6-screenplay-active')},300));}
+ v6hydrate(); updateChecks(); syncV6Keyboard();
+}
+function v6HistoryPush(){const w=v6ws(),ed=document.getElementById('screenplayEditor');if(!ed)return;const val=ed.innerText;const last=w.screenplayHistory[w.screenplayHistory.length-1];if(last===val)return;w.screenplayHistory.push(val);if(w.screenplayHistory.length>40)w.screenplayHistory.shift();w.screenplayRedo=[];v6persist()}
+function scriptHistoryUndo(){const w=v6ws(),ed=document.getElementById('screenplayEditor');if(!ed||w.screenplayHistory.length<2){toast('Nothing to undo');return}const current=ed.innerText;w.screenplayRedo.push(current);w.screenplayHistory.pop();ed.innerText=w.screenplayHistory[w.screenplayHistory.length-1]||'';saveScreenplay(true);v6persist();toast('Undo')}
+function scriptHistoryRedo(){const w=v6ws(),ed=document.getElementById('screenplayEditor');if(!ed||!w.screenplayRedo.length){toast('Nothing to redo');return}const val=w.screenplayRedo.pop();w.screenplayHistory.push(val);ed.innerText=val;saveScreenplay(true);v6persist();toast('Redo')}
+window.scriptHistoryUndo=scriptHistoryUndo;window.scriptHistoryRedo=scriptHistoryRedo;
+function insertV6(text){const ed=document.getElementById('screenplayEditor');if(!ed)return;ed.focus();document.execCommand('insertText',false,text);saveScreenplay(true);v6persist();updateChecks()}
+function insertDualDialogue(){
+  const ed=document.getElementById('screenplayEditor');
+  if(!ed)return;
+  // Two editable screenplay columns: character cues, then dialogue lines.
+  // No instructional placeholder text is inserted. Column spacing is monospaced.
+  const gap=' '.repeat(27);
+  const leftCharacter=' '.repeat(22);
+  const rightCharacter=' '.repeat(22)+gap;
+  const leftDialogue=' '.repeat(10);
+  const rightDialogue=' '.repeat(10)+gap;
+  const template='\\n\\n'+leftCharacter+rightCharacter+'\\n'+leftDialogue+rightDialogue+'\\n'+leftDialogue+rightDialogue+'\\n\\n';
+  insertV6(template);
+  saveEditorSelection();
+  toast('Dual dialogue columns inserted. Tap the left or right column to write.');
+}
+window.insertDualDialogue=insertDualDialogue;
+function currentLine(){const ed=document.getElementById('screenplayEditor');const sel=window.getSelection();if(!ed||!sel?.rangeCount)return '';let r=sel.getRangeAt(0);let el=r.startContainer;let text=el.nodeType===3?el.textContent||'':el.textContent||'';let pos=r.startOffset;return text.slice(0,pos).split(/\n/).pop()||''}
+function scriptButtonSafe(e,type){e?.preventDefault();e?.stopPropagation();saveEditorSelection();const map={dialogue:'dialogue',parenthetical:'parenthetical',vo:'vo',os:'os',contd:'contd',cut:'cut',smash:'smash'};v6ScriptTool(map[type]||type)}
+window.scriptButtonSafe=scriptButtonSafe;
+function v6ScriptTool(type,value){
+  const ed=document.getElementById('screenplayEditor');
+  if(!ed)return;
+  restoreEditorSelection();
+  ed.focus();
+  const line=currentLine().trim();
+  const hasText=!!line;
+  const put=(text)=>{insertV6(text);saveEditorSelection()};
+  if(type==='fadein'){put((ed.innerText.trim()?'\\n\\n':'')+'FADE IN:\\n\\n');return}
+  if(type==='fadeout'){put((hasText?'\\n\\n':'')+'FADE OUT.\\n\\n');return}
+  if(type==='scene'){put((hasText?'\\n\\n':'')+(value||'INT. '));return}
+  if(type==='character'){
+    // Character cues are uppercase while dialogue remains normal sentence case.
+    put((hasText?'\\n\\n':'')+' '.repeat(22));return;
+  }
+  if(type==='action'){put((hasText?'\\n\\n':'') );return}
+  if(type==='dialogue'){
+    // Dialogue starts on a new line at its own margin; never uppercase the dialogue text.
+    put((hasText?'\\n':'')+' '.repeat(10));return;
+  }
+  if(type==='parenthetical'){put((hasText?'\\n':'')+' '.repeat(15)+'(');return}
+  if(type==='vo'){put(' (V.O.)');return}
+  if(type==='os'){put(' (O.S.)');return}
+  if(type==='contd'){put(" (CONT'D)");return}
+  if(type==='cut'){put((hasText?'\\n\\n':'')+' '.repeat(52)+'CUT TO:\\n\\n');return}
+  if(type==='smash'){put((hasText?'\\n\\n':'')+' '.repeat(45)+'SMASH CUT TO:\\n\\n');return}
+  if(type==='act'){put((hasText?'\\n\\n':'')+'ACT\\n\\n');return}
+  if(type==='titlecard'){put((hasText?'\\n\\n':'')+'TITLE CARD: ');return}
+  if(type==='center'){put((hasText?'\\n\\n':'')+' '.repeat(30));return}
+}
+window.scriptTool=v6ScriptTool;
+function v6Enter(e){
+  if(e.key!=='Enter')return;
+  const line=currentLine().trim();
+  let prefix='\n';
+  if(/^(INT\.|EXT\.|INT\/EXT\.)/i.test(line)) prefix='\n\n';
+  else if(/^\(/.test(line)) prefix='\n'+' '.repeat(10);
+  else if(/^[A-Z][A-Z0-9 .’'\-]+$/.test(line)&&line.length<38) prefix='\n'+' '.repeat(10);
+  e.preventDefault();e.stopPropagation();insertV6(prefix);
+}
+function importScreenplayFile(e){
+ const f=e.target.files?.[0]; if(!f)return;
+ const ext=(f.name.split('.').pop()||'').toLowerCase();
+ if(!['txt','fountain','fdx'].includes(ext)){toast('Unsupported file. Please import a plain-text .TXT or .Fountain screenplay. Word/PDF files cannot be read as plain text.');e.target.value='';return;}
+ const reader=new FileReader();
+ reader.onload=()=>{
+  let text=String(reader.result||'').replace(/^\uFEFF/,'').replace(/\r\n?/g,'\n').replace(/\u0000/g,'');
+  // Fountain is plain text. Final Draft XML (.fdx) is converted to readable screenplay text.
+  if(ext==='fdx'){
+   try{const xml=new DOMParser().parseFromString(text,'application/xml');if(xml.querySelector('parsererror'))throw Error('invalid XML');
+    text=[...xml.querySelectorAll('Paragraph')].map(par=>{const type=par.getAttribute('Type')||'';const t=[...par.querySelectorAll('Text')].map(n=>n.textContent||'').join('');if(!t.trim())return '';if(type==='Scene Heading')return t.toUpperCase();if(type==='Character')return '                    '+t.toUpperCase();if(type==='Dialogue')return '          '+t;if(type==='Parenthetical')return '               '+t;return t;}).join('\n\n');
+   }catch(err){toast('This .fdx file could not be converted. Export it as plain-text .TXT from your screenplay app, then import again.');e.target.value='';return;}
+  }
+  const weird=(text.match(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g)||[]).length;
+  if(!text.trim()||weird>Math.max(4,text.length*0.01)||text.includes('PK\u0003\u0004')){toast('This file does not look like readable plain text. Please export your script as UTF-8 .TXT first. Your current draft was not changed.');e.target.value='';return;}
+  const ed=document.getElementById('screenplayEditor');if(!ed){toast('Screenplay editor not found');e.target.value='';return;}
+  if(!confirm('Import '+f.name+' and replace the text currently in the editor? Save/export your current draft first if you need it.')){e.target.value='';return;}
+  v6ws().screenplayHistory.push(ed.innerText);ed.innerText=text;saveScreenplay(true);updateChecks();toast('Readable screenplay imported: '+f.name);
+ };reader.onerror=()=>toast('Could not read this file. Please try a UTF-8 .TXT export.');
+ reader.readAsText(f,'UTF-8');e.target.value='';
+}
+window.importScreenplayFile=importScreenplayFile;
+function printScreenplay(){saveScreenplay(true);go('sec-screenplay');setTimeout(()=>window.print(),150)}window.printScreenplay=printScreenplay;
+function updateChecks(){const ed=document.getElementById("screenplayEditor");const box=document.getElementById("scriptChecksV6");if(!ed||!box)return;const text=ed.innerText||"";const lines=text.split(/\n/).map(function(x){return x.trim()}).filter(Boolean);const scenes=lines.filter(function(x){return /^(INT\.|EXT\.|INT\/EXT\.)/.test(x)}).length;const words=text.trim()?text.trim().split(/\s+/).length:0;const hasFadeIn=/FADE IN:/.test(text);const hasFadeOut=/FADE OUT\.?$/.test(text.trim());const hasChar=lines.some(function(x){return /^[A-Z][A-Z0-9 .\-]+$/.test(x)&&x.length<45});const checks=[["Scene headings",scenes>0,scenes+" detected"],["Character names",hasChar,"Names should be uppercase"],["FADE IN",hasFadeIn,"Opening transition recommended"],["FADE OUT",hasFadeOut,"Optional closing transition"],["Readable draft",words>50,words+" words — short drafts are okay"]];box.innerHTML=checks.map(function(c){return '<div class="script-check '+(c[1]?'ok':'warn')+'">'+(c[1]?'✓':'•')+' <b>'+esc(c[0])+'</b> — '+esc(c[2])+'</div>'}).join("")}
+function syncV6Keyboard(){const vv=window.visualViewport;const tb=document.getElementById('mobileScriptToolbar');if(!vv||!tb)return;const move=()=>{const kb=Math.max(0,window.innerHeight-vv.height-vv.offsetTop);tb.style.bottom=kb+'px'};vv.removeEventListener('resize',move);vv.removeEventListener('scroll',move);vv.addEventListener('resize',move);vv.addEventListener('scroll',move);move()}
+window.syncV6Keyboard=syncV6Keyboard;
+function openLesson(title,body,tag='WHISPERING SCHOOL'){document.getElementById('lessonTitle').innerText=title;document.getElementById('lessonBody').innerHTML=body;document.getElementById('lessonTag').innerText=tag;document.getElementById('lessonModal').classList.add('open')}
+window.openLesson=openLesson;
+function filterCommunity(q){const cards=[['Writer','Screenwriter / Story Developer','KwaBhaca • South Africa'],['Director','Independent Film Director','Eastern Cape • South Africa'],['Actor','Actor / Theatre Artist','Mount Frere • South Africa'],['DOP','Cinematographer / Camera','Eastern Cape • South Africa'],['Editor','Film & Video Editor','South Africa'],['Musician','Composer / Sound','South Africa']];const el=document.getElementById('communityResults');if(!el)return;const a=cards.filter(x=>(x.join(' ').toLowerCase()).includes((q||'').toLowerCase()));el.innerHTML=a.map(x=>`<div class="community-result"><b>${x[0]}</b><div style="color:var(--text2);margin-top:3px">${x[1]}</div><small style="color:var(--text3)">${x[2]}</small><span class="badge" style="float:right">Prototype profile</span></div>`).join('')||'<div class="empty">No local prototype matches. Real profiles require accounts + cloud database.</div>'}
+window.filterCommunity=filterCommunity;
+function v6LessonPatch(){const titles=[['Screenwriting — Story Structure','Build a dramatic spine: protagonist, goal, opposition, stakes and a question the audience needs answered. Then test every scene against that spine.'],['Directing — Visual Language','Choose a consistent visual identity: framing, movement, light, colour and performance direction. A visual choice should support the story, not only look beautiful.'],['Production — Indie Producing','Break the script into scenes, locations, cast, props, wardrobe, sound and equipment. Schedule around real constraints and protect the most important story moments.'],['Film Business — Distribution','Think from audience backward: festival strategy, community screenings, digital release, rights, marketing assets and a clear path from finished film to viewers.']];document.querySelectorAll('#sec-school .card2').forEach((c,i)=>{const b=c.querySelector('button');if(b)b.onclick=()=>openLesson(titles[i][0],titles[i][1])})}
+function v6CommunityPatch(){const inp=document.querySelector('#sec-community input');if(!inp)return;inp.id='communitySearch';const parent=inp.parentElement;let out=document.getElementById('communityResults');if(!out){out=document.createElement('div');out.id='communityResults';out.className='community-results';parent.appendChild(out)}inp.addEventListener('input',()=>filterCommunity(inp.value));filterCommunity('')}
+function v6ScreenplayPatch(){let checks=document.getElementById('scriptChecksV6');if(!checks){const h=document.createElement('div');h.className='card2';h.style.marginTop='12px';h.innerHTML='<div style="display:flex;justify-content:space-between;gap:8px;align-items:center"><b>Professional Script Checks</b><span class="badge">Foundation checks</span></div><div id="scriptChecksV6" class="script-checks" style="margin-top:10px"></div>';document.getElementById('sec-screenplay').appendChild(h)};const desc=document.querySelector('#sec-screenplay .sub');if(desc)desc.innerText='Professional screenplay workspace • local device save • no cloud or AI API connected yet.'}
+function v6OverrideSave(){
+  // V24: make save/export operate on the live editor and report storage errors.
+  window.saveScreenplay=function(silent=false){
+    const ed=document.getElementById('screenplayEditor');
+    if(!ed){if(!silent)toast('Screenplay editor is not available');return false;}
+    const text=ed.innerText||'';
+    const projectId=localStorage.getItem(LS.current);
+    try{
+      screenplay=text;
+      localStorage.setItem(LS.screenplay,text);
+      if(projectId)localStorage.setItem(projectScreenplayKey(projectId),text);
+      const project=projects.find(x=>x.id===projectId);
+      if(project){
+        project.updated=new Date().toLocaleDateString();
+        project.words=text.trim()?text.trim().split(/\s+/).length:0;
+        project.scenes=(text.match(/^(?:INT\.|EXT\.|INT\/EXT\.)/gmi)||[]).length;
+        save(LS.projects,projects);
+        renderProjects();
+      }
+      if(typeof updateChecks==='function')updateChecks();
+      renderStats();
+      if(!silent)toast('Screenplay saved on this device');
+      return true;
+    }catch(err){
+      console.error('Screenplay save failed',err);
+      toast('Save failed. Export a TXT backup and check device storage.');
+      return false;
+    }
+  };
+  window.exportScreenplay=function(){
+    const ed=document.getElementById('screenplayEditor');
+    const text=ed?(ed.innerText||''):String(screenplay||'');
+    const project=projects.find(p=>p.id===localStorage.getItem(LS.current));
+    const safe=(project?.name||'screenplay').replace(/[^a-z0-9_-]+/gi,'_').replace(/^_+|_+$/g,'').slice(0,70)||'screenplay';
+    try{
+      const blob=new Blob([text],{type:'text/plain;charset=utf-8'});
+      const url=URL.createObjectURL(blob);const a=document.createElement('a');
+      a.href=url;a.download=safe+'.txt';document.body.appendChild(a);a.click();a.remove();
+      setTimeout(()=>URL.revokeObjectURL(url),1000);toast('Exported '+safe+'.txt');
+    }catch(err){console.error('Export failed',err);toast('Export failed. Please try again or copy your draft as a backup.');}
+  };
+}
+
+function saveAdSettings(){
+  const cats={};
+  document.querySelectorAll('[data-adcat]').forEach(cb=>{cats[cb.dataset.adcat]=cb.checked});
+  localStorage.setItem('ww_ad_settings', JSON.stringify(cats));
+  document.getElementById('adSaveStatus').innerText='Saved • '+new Date().toLocaleTimeString()+' • '+Object.keys(cats).filter(k=>cats[k]).length+' categories allowed';
+  toast('Ad preferences saved locally');
+  addNotif('Monetization updated','Ad categories saved: ' + Object.entries(cats).filter(([,v])=>v).map(([k])=>k).join(', '));
+}
+function loadAdSettings(){
+  try{
+    const s=JSON.parse(localStorage.getItem('ww_ad_settings')||'{}');
+    document.querySelectorAll('[data-adcat]').forEach(cb=>{
+      if(s[cb.dataset.adcat]!==undefined) cb.checked=s[cb.dataset.adcat];
+    });
+  }catch{}
+}
+setTimeout(loadAdSettings,500);
+
+function updateCharCounter(){
+  const info=getCurrentLineInfo();
+  const counter=document.getElementById('charCounter');
+  const ruler=document.getElementById('rulerInfo');
+  if(!counter) return;
+  const len=info.trimmed.length;
+  const limit = LIMITS[info.type] || 60;
+  const typeLabel = info.type.toUpperCase();
+  
+  if(info.type!=='empty'){
+    counter.style.display='block';
+    counter.innerText=len+' / '+limit+' '+typeLabel;
+    counter.className='char-counter'+(len>limit?' error':len>limit-5?' warn':'');
+    if(ruler){
+      if(len>limit){
+        ruler.innerText=typeLabel+' TOO LONG ('+len+'/'+limit+') - AUTO-WRAP';
+      } else {
+        ruler.innerText=typeLabel+' '+len+'/'+limit+' • ENTER for next format • TAB for indent';
+      }
+    }
+  } else {
+    counter.style.display='none';
+    if(ruler) ruler.innerText='Ready • CHARACTER max 32 • DIALOGUE 38 • ACTION 60';
+  }
+}
+setInterval(updateCharCounter, 200);
+
+
+
+function v6Boot(){try{v6OverrideSave();v6ScreenplayPatch();v6LessonPatch();v6CommunityPatch();v6initUI();const ed=document.getElementById('screenplayEditor');if(ed){const w=v6ws();if(!w.screenplayHistory.length)w.screenplayHistory=[ed.innerText];v6persist()}updateChecks();toast('Whispering Words Studio V26 paper and scrolling fix ready')}catch(e){console.error('V6 boot',e);toast('V6 loaded with a minor compatibility warning')}}
+window.addEventListener('resize',syncV6Keyboard);v6Boot();
+})();
+</script>
+
+<script id="v16-project-safety">
+/* V16: project-specific screenplay persistence and honest prototype labels.
+   Existing legacy screenplay data is retained; this layer does not delete user data. */
+(function(){
+  try {
+    const currentId = localStorage.getItem('ww_current_v4');
+    const legacy = localStorage.getItem('ww_screenplay_v4');
+    const projectKey = currentId ? ('ww_screenplay_project_' + currentId) : '';
+    if (legacy !== null && projectKey && localStorage.getItem(projectKey) === null) {
+      localStorage.setItem(projectKey, legacy);
+    }
+  } catch (e) {
+    console.warn('V16 local migration skipped', e);
+  }
+})();
+</script>
+
+
+<script id="v26-caret-and-viewport-fix">
+(function(){
+  const ed=()=>document.getElementById('screenplayEditor');
+  const wrap=()=>document.querySelector('#sec-screenplay .screenplay-editor-wrap');
+  const kb=()=>document.getElementById('integratedKeyboard');
+  function mobile(){return window.innerWidth<=900;}
+  function caretNodeRect(){
+    const sel=window.getSelection();
+    if(!sel||!sel.rangeCount)return null;
+    const r=sel.getRangeAt(0).cloneRange();
+    if(!r.collapsed)r.collapse(false);
+    let rect=r.getBoundingClientRect();
+    if((!rect||(!rect.height&&!rect.width))&&r.startContainer.nodeType===Node.TEXT_NODE){
+      try{r.setStart(r.startContainer,Math.min(r.startOffset,r.startContainer.length));r.setEnd(r.startContainer,Math.min(r.startOffset+1,r.startContainer.length));rect=r.getBoundingClientRect()}catch(e){}
+    }
+    return rect&&rect.height?rect:null;
+  }
+  function keepCaretVisible(){
+    const editor=ed(), scroller=wrap();
+    if(!editor||!scroller||document.activeElement!==editor||!mobile())return;
+    requestAnimationFrame(()=>{
+      const rect=caretNodeRect(); if(!rect)return;
+      const wr=scroller.getBoundingClientRect();
+      const bar=kb(); const barH=bar&&bar.classList.contains('visible')?Math.min(bar.getBoundingClientRect().height,150):0;
+      const bottomLimit=Math.min(wr.bottom,window.innerHeight-barH-8);
+      const topLimit=wr.top+8;
+      if(rect.bottom>bottomLimit)scroller.scrollTop+=rect.bottom-bottomLimit+20;
+      else if(rect.top<topLimit)scroller.scrollTop-=topLimit-rect.top+14;
+    });
+  }
+  function fitViewport(){
+    const section=document.getElementById('sec-screenplay');
+    const bar=kb();
+    if(!section||!section.classList.contains('active')||!mobile())return;
+    const vv=window.visualViewport;
+    const keyboardHeight=vv?Math.max(0,window.innerHeight-vv.height-vv.offsetTop):0;
+    if(bar&&bar.classList.contains('visible'))bar.style.bottom=keyboardHeight+'px';
+    // Do not shrink the whole screenplay section by the keyboard height.
+    // Android browsers already resize the visual viewport; subtracting the
+    // keyboard again collapsed the paper into a thin line on some phones.
+    section.style.bottom='';
+    keepCaretVisible();
+  }
+  function init(){
+    const editor=ed(); if(!editor)return;
+    ['input','keyup','click','focus','keydown'].forEach(evt=>editor.addEventListener(evt,()=>{fitViewport();keepCaretVisible()}));
+    if(window.visualViewport){window.visualViewport.addEventListener('resize',fitViewport);window.visualViewport.addEventListener('scroll',fitViewport)}
+    window.addEventListener('resize',fitViewport);
+    document.addEventListener('selectionchange',()=>{if(document.activeElement===editor)keepCaretVisible()});
+    const oldGo=window.go;
+    if(typeof oldGo==='function'&&!oldGo.__v26Wrapped){
+      const wrapped=function(id){const result=oldGo.apply(this,arguments);setTimeout(()=>{if(id==='sec-screenplay'){fitViewport();keepCaretVisible()}else{const section=document.getElementById('sec-screenplay');if(section)section.style.bottom='';}},120);return result};
+      wrapped.__v26Wrapped=true;window.go=wrapped;
+    }
+    setTimeout(fitViewport,250);
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
+</script>
+
+
+<style id="v27-paper-visible-override">
+/* V27: prevent Android keyboard viewport calculations from collapsing the paper. */
+#sec-screenplay.active{display:flex!important;flex-direction:column!important;overflow:hidden!important;min-height:0!important;box-sizing:border-box!important}
+#sec-screenplay .screenplay-editor-wrap{display:block!important;flex:1 1 auto!important;min-height:220px!important;height:auto!important;max-height:none!important;overflow:auto!important;box-sizing:border-box!important;background:#d9d7df!important;padding:6px!important;-webkit-overflow-scrolling:touch!important}
+#sec-screenplay #screenplayEditor{display:block!important;position:relative!important;flex:none!important;box-sizing:border-box!important;width:100%!important;max-width:816px!important;min-width:0!important;min-height:680px!important;height:auto!important;margin:0 auto!important;padding:48px 7% 100px 15%!important;background:#fff!important;color:#111!important;font-family:'Courier New',Courier,monospace!important;font-size:11pt!important;line-height:1.2!important;white-space:pre-wrap!important;overflow-wrap:break-word!important;overflow:visible!important;box-shadow:0 2px 8px rgba(0,0,0,.18)!important}
+@media(max-width:900px){#sec-screenplay.active{top:0!important;bottom:0!important;left:0!important;right:0!important;padding:6px 8px 8px!important;gap:5px!important}#sec-screenplay .screenplay-editor-wrap{min-height:220px!important;flex:1 1 auto!important}#sec-screenplay #screenplayEditor{width:100%!important;min-height:max(680px, calc((100vw - 36px)*1.294))!important;padding:48px 7% 100px 15%!important}}
+@media(min-width:901px){#sec-screenplay #screenplayEditor{min-height:1056px!important;padding:96px 96px 96px 144px!important;font-size:12pt!important}}
+</style>
+
+
+<style id="v28-screenplay-toolbar-fix">
+/* V28 repair: preserve Whispering Words Studio's original purple/dark palette. */
+#sec-screenplay .screenplay-toolbar button,
+#integratedKeyboard .kb-format-row button{
+  touch-action:manipulation;
+  user-select:none;
+  -webkit-user-select:none;
+}
+#sec-screenplay .screenplay-toolbar button.primary-tool,
+#integratedKeyboard .kb-format-row button.primary{
+  background:var(--purple-soft);
+  border-color:var(--purple);
+  color:var(--text);
+}
+#sec-screenplay #screenplayEditor{
+  text-transform:none!important;
+  font-variant-ligatures:none;
+}
+</style>
+
+
+
+<style id="v29-screenplay-editor-repair">
+/* V29: preserve a visible, readable page and keep toolbar text from being transformed. */
+#sec-screenplay.active{display:flex!important;flex-direction:column!important;min-height:0!important;overflow:hidden!important;box-sizing:border-box!important}
+#sec-screenplay .screenplay-editor-wrap{display:block!important;flex:1 1 auto!important;min-height:220px!important;height:auto!important;max-height:none!important;overflow:auto!important;box-sizing:border-box!important;-webkit-overflow-scrolling:touch!important}
+#sec-screenplay #screenplayEditor{display:block!important;flex:0 0 auto!important;box-sizing:border-box!important;width:100%!important;max-width:816px!important;min-width:0!important;min-height:680px!important;height:auto!important;aspect-ratio:auto!important;margin:0 auto!important;background:#fff!important;color:#111!important;font-family:'Courier New',Courier,monospace!important;font-size:11pt!important;line-height:1.2!important;white-space:pre-wrap!important;overflow-wrap:break-word!important;text-transform:none!important;font-variant-ligatures:none!important}
+@media(min-width:901px){#sec-screenplay #screenplayEditor{width:816px!important;min-height:1056px!important;padding:96px 96px 96px 144px!important;font-size:12pt!important}}
+</style>
+
+<script id="v29-screenplay-tool-repair">
+(function(){
+  'use strict';
+  function editor(){ return document.getElementById('screenplayEditor'); }
+  function currentLineSafe(){
+    var ed=editor(), sel=window.getSelection();
+    if(!ed || !sel || !sel.rangeCount) return '';
+    var r=sel.getRangeAt(0);
+    if(!ed.contains(r.startContainer)) return '';
+    var node=r.startContainer;
+    var text=node.nodeType===3 ? (node.textContent||'') : (node.textContent||'');
+    var pos=r.startOffset;
+    return text.slice(0,pos).split('\n').pop() || '';
+  }
+  function insertTextSafe(text){
+    var ed=editor(); if(!ed) return;
+    if(typeof restoreEditorSelection==='function') restoreEditorSelection();
+    ed.focus();
+    var ok=false;
+    try { ok=document.execCommand('insertText',false,String(text)); } catch(e) {}
+    if(!ok){
+      var sel=window.getSelection();
+      if(sel && sel.rangeCount && ed.contains(sel.getRangeAt(0).startContainer)){
+        var range=sel.getRangeAt(0); range.deleteContents();
+        var node=document.createTextNode(String(text)); range.insertNode(node);
+        range.setStartAfter(node); range.collapse(true); sel.removeAllRanges(); sel.addRange(range);
+      } else { ed.appendChild(document.createTextNode(String(text))); }
+    }
+    if(typeof saveEditorSelection==='function') saveEditorSelection();
+    if(typeof saveScreenplay==='function') saveScreenplay(true);
+    if(typeof v6persist==='function') v6persist();
+    if(typeof updateChecks==='function') updateChecks();
+  }
+  function fixedScriptTool(type,value){
+    var ed=editor(); if(!ed) return;
+    if(typeof restoreEditorSelection==='function') restoreEditorSelection();
+    ed.focus();
+    var line=currentLineSafe().trim();
+    var hasText=!!line;
+    var put=function(s){insertTextSafe(s); if(typeof saveEditorSelection==='function') saveEditorSelection();};
+    switch(type){
+      case 'fadein': put((ed.innerText.trim()?'\n\n':'')+'FADE IN:\n\n'); return;
+      case 'fadeout': put((hasText?'\n\n':'')+'FADE OUT.\n\n'); return;
+      case 'scene': put((hasText?'\n\n':'')+(value||'INT. ')); return;
+      case 'character': put((hasText?'\n\n':'')+' '.repeat(22)); return;
+      case 'action': put(hasText?'\n\n':''); return;
+      case 'dialogue': put((hasText?'\n':'')+' '.repeat(10)); return;
+      case 'parenthetical': put((hasText?'\n':'')+' '.repeat(15)+'('); return;
+      case 'vo': put(' (V.O.)'); return;
+      case 'os': put(' (O.S.)'); return;
+      case 'contd': put(" (CONT'D)"); return;
+      case 'cut': put((hasText?'\n\n':'')+' '.repeat(52)+'CUT TO:\n\n'); return;
+      case 'smash': put((hasText?'\n\n':'')+' '.repeat(45)+'SMASH CUT TO:\n\n'); return;
+      case 'act': put((hasText?'\n\n':'')+'ACT\n\n'); return;
+      case 'titlecard': put((hasText?'\n\n':'')+'TITLE CARD: '); return;
+      case 'center': put((hasText?'\n\n':'')+' '.repeat(30)); return;
+      default: return;
+    }
+  }
+  function fixedDualDialogue(){
+    var ed=editor(); if(!ed) return;
+    if(typeof restoreEditorSelection==='function') restoreEditorSelection();
+    ed.focus();
+    var hasText=!!currentLineSafe().trim();
+    /* Blank, side-by-side writing columns; no instructional placeholder text. */
+    var gap=' '.repeat(8);
+    var characterRow=' '.repeat(22)+gap+' '.repeat(22);
+    var dialogueRow=' '.repeat(10)+gap+' '.repeat(10);
+    var template=(hasText?'\n\n':'')+characterRow+'\n'+dialogueRow+'\n'+dialogueRow+'\n\n';
+    insertTextSafe(template);
+    if(typeof saveEditorSelection==='function') saveEditorSelection();
+    if(typeof toast==='function') toast('Blank dual-dialogue columns inserted. Tap either column to write.');
+  }
+  window.v6ScriptTool=fixedScriptTool;
+  window.scriptTool=fixedScriptTool;
+  window.scriptButtonSafe=function(e,type){
+    if(e){e.preventDefault();e.stopPropagation();}
+    if(typeof saveEditorSelection==='function') saveEditorSelection();
+    fixedScriptTool(type);
+  };
+  window.insertDualDialogue=fixedDualDialogue;
+  /* Keep buttons from accidentally submitting forms or stealing the editor selection. */
+  document.addEventListener('pointerdown',function(e){
+    var b=e.target && e.target.closest && e.target.closest('#sec-screenplay .screenplay-toolbar button, #integratedKeyboard button');
+    if(b && b.type!=='button') b.type='button';
+    if(b && typeof saveEditorSelection==='function') saveEditorSelection();
+  },true);
+  document.addEventListener('DOMContentLoaded',function(){
+    var ed=editor();
+    if(ed){ed.style.textTransform='none';}
+  });
+})();
+</script>
+
+</body>
+</html>
